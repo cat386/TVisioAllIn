@@ -4,6 +4,7 @@
 
 namespace tvstudio
 {
+std::string defaultClangdCommand();
 std::string fileUri(const fs::path &path);
 fs::path uriFile(const std::string &uri);
 Json textPosition(const std::string &text, size_t offset, const std::string &encoding = "utf-16");
@@ -35,6 +36,7 @@ class LspClient
     std::deque<LspEvent> events_;
     std::map<int, LspEvent> pending_;
     std::map<std::string, int> versions_;
+    std::map<std::string, std::string> documents_;
     std::vector<Json> waiting_;
     int next_ = 1;
     bool initialized_ = false, started_ = false;
@@ -50,6 +52,8 @@ class LspClient
     }
     void start(const Project &project, const std::string &command = "clangd");
     void stop();
+    void sync(const fs::path &file, const std::string &text);
+    void close(const fs::path &file);
     bool running() const
     {
         return started_ && !process_.done();

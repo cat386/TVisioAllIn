@@ -713,6 +713,9 @@ class Studio : public tvision::TThemedApplication
     TFileEditor *messages_ = nullptr;
     BuildRunner builder_;
     LspClient lsp_;
+    bool lspAttempted_ = false;
+    std::set<fs::path> lspFiles_;
+    std::chrono::steady_clock::time_point lspSync_{};
     bool runAfter_ = false, building_ = false;
     std::string outputTail_;
     std::vector<Diagnostic> diagnostics_;
@@ -752,6 +755,7 @@ class Studio : public tvision::TThemedApplication
     {
         if (!messages_)
         {
+            auto *selected = deskTop->current;
             auto r = deskTop->getExtent();
             r.a.y = std::max(1, r.b.y - 6);
             messagesWindow_ = new PanelWindow(r, "Сообщения сборки — F8: ошибка");
@@ -760,6 +764,8 @@ class Studio : public tvision::TThemedApplication
             messages_->growMode = gfGrowHiX | gfGrowHiY;
             messagesWindow_->insert(messages_);
             deskTop->insert(messagesWindow_);
+            if (selected)
+                selected->select();
         }
         std::string value = editorText(*messages_);
         value += text;
@@ -818,6 +824,8 @@ class Studio : public tvision::TThemedApplication
         }
         builder_.stop();
         lsp_.stop();
+        lspAttempted_ = false;
+        lspFiles_.clear();
         runAfter_ = false;
         for (auto &p : forms_)
             TObject::destroy(p.second);
@@ -1117,13 +1125,56 @@ class Studio : public tvision::TThemedApplication
         openSource(d.file)->editor->go(d.line, d.column);
         log(d.message + "\n");
     }
+    void syncLsp()
+    {
+        if (!project_)
+            return;
+        auto now = std::chrono::steady_clock::now();
+        if (now - lspSync_ < std::chrono::milliseconds(350))
+            return;
+        lspSync_ = now;
+        std::set<fs::path> files;
+        for (auto *s : sources_)
+        {
+            auto ext = utf8(s->path.extension());
+            if (s->closed || s->path.empty() ||
+                (ext != ".c" && ext != ".cpp" && ext != ".cc" && ext != ".cxx" &&
+                 ext != ".h" && ext != ".hpp" && ext != ".hh" && ext != ".hxx"))
+                continue;
+            if (!lspAttempted_)
+            {
+                lspAttempted_ = true;
+                try
+                {
+                    lsp_.start(*project_, str(project_->extra, "clangd", defaultClangdCommand()));
+                }
+                catch (const std::exception &error)
+                {
+                    log(std::string("clangd: не удалось запустить сервер: ") + error.what() +
+                        "\nУкажите путь в меню «Проект → clangd: команда запуска».\n");
+                    return;
+                }
+                log("clangd: запуск сервера\n");
+            }
+            if (lsp_.running())
+            {
+                lsp_.sync(s->path, editorText(*s->editor));
+                files.insert(s->path);
+            }
+        }
+        if (lsp_.running())
+            for (auto &file : lspFiles_)
+                if (!files.count(file))
+                    lsp_.close(file);
+        lspFiles_ = std::move(files);
+    }
     void queryLsp(const std::string &method)
     {
         auto *s = source();
-        if (!s || !project_)
+        if (!s || !project_ || s->path.empty())
             return;
         if (!lsp_.running())
-            lsp_.start(*project_, str(project_->extra, "clangd", "clangd"));
+            lsp_.start(*project_, str(project_->extra, "clangd", defaultClangdCommand()));
         lsp_.query(method, s->path, editorText(*s->editor), s->editor->curPtr);
     }
     void lspEvents()
@@ -1135,6 +1186,8 @@ class Studio : public tvision::TThemedApplication
                 log("clangd: " + event.text + event.result.display() + "\n");
                 continue;
             }
+            if (event.tag == "ready" || event.tag == "log")
+                log(event.text);
             if (event.tag == "diagnostics")
             {
                 diagnostics_.erase(
@@ -1517,10 +1570,12 @@ class Studio : public tvision::TThemedApplication
         case Clangd:
             if (project_)
             {
-                std::string value = str(project_->extra, "clangd", "clangd");
+                std::string value = str(project_->extra, "clangd", defaultClangdCommand());
                 if (ask("clangd (необязательный LSP)", "Команда и аргументы:", value))
                 {
                     lsp_.stop();
+                    lspAttempted_ = false;
+                    lspFiles_.clear();
                     put(project_->extra, "clangd", Json::string(value));
                     project_->save();
                 }
@@ -1718,6 +1773,7 @@ class Studio : public tvision::TThemedApplication
                 enableCommand(c);
         try
         {
+            syncLsp();
             lspEvents();
             builder_.poll();
             for (auto &chunk : builder_.takeOutput())

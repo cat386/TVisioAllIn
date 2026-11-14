@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cctype>
+#include <cstdlib>
 #include <limits>
 #include <stdexcept>
 #include <tvstudio/lsp.h>
@@ -45,6 +46,35 @@ Json idObject(const std::string &uri)
     return Json::record({{"uri", Json::string(uri)}});
 }
 } // namespace
+std::string defaultClangdCommand()
+{
+#ifdef _WIN32
+    if (const char *path = std::getenv("PATH"))
+    {
+        std::string paths(path);
+        size_t start = 0;
+        while (start < paths.size())
+        {
+            auto end = paths.find(';', start);
+            auto part = paths.substr(start, end - start);
+            if (part.size() >= 2 && part.front() == '"' && part.back() == '"')
+                part = part.substr(1, part.size() - 2);
+            if (!part.empty() && fs::is_regular_file(pathFromUtf8(part) / "clangd.exe"))
+                return displayCommand({utf8(pathFromUtf8(part) / "clangd.exe")});
+            if (end == std::string::npos)
+                break;
+            start = end + 1;
+        }
+    }
+    for (const char *path : {"C:/Program Files/LLVM/bin/clangd.exe",
+                             "C:/msys64/clang64/bin/clangd.exe",
+                             "C:/msys64/ucrt64/bin/clangd.exe",
+                             "C:/msys64/mingw64/bin/clangd.exe"})
+        if (fs::is_regular_file(path))
+            return displayCommand({path});
+#endif
+    return "clangd";
+}
 std::string fileUri(const fs::path &path)
 {
     auto p = utf8(fs::absolute(path).lexically_normal());
@@ -257,8 +287,17 @@ void LspClient::start(const Project &project, const std::string &command)
     auto args = splitArguments(command);
     if (args.empty())
         throw std::runtime_error("Не задан clangd");
-    args.push_back("--background-index");
-    args.push_back("--compile-commands-dir=" + utf8(project.buildDirectory()));
+    auto hasOption = [&](const std::string &name)
+    {
+        return std::any_of(args.begin() + 1, args.end(), [&](const std::string &arg)
+                           { return arg == name || arg.rfind(name + "=", 0) == 0; });
+    };
+    if (!hasOption("--background-index"))
+        args.push_back("--background-index");
+    if (!hasOption("--log"))
+        args.push_back("--log=error");
+    if (!hasOption("--compile-commands-dir") && fs::is_directory(project.buildDirectory()))
+        args.push_back("--compile-commands-dir=" + utf8(project.buildDirectory()));
     process_.start(
         args, project.directory,
         [this](const std::string &bytes)
@@ -276,7 +315,11 @@ void LspClient::start(const Project &project, const std::string &command)
                 events_.push_back({"error", {}, e.what(), {}, true});
             }
         },
-        [](const std::string &) {});
+        [this](const std::string &bytes)
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            events_.push_back({"log", {}, bytes, {}});
+        });
     started_ = true;
     auto capabilities = tvision::parseJson(
         R"JSON({"general":{"positionEncodings":["utf-16","utf-8"]},"textDocument":{"completion":{"completionItem":{"snippetSupport":false}}}})JSON");
@@ -297,18 +340,21 @@ void LspClient::stop()
     pending_.clear();
     waiting_.clear();
     versions_.clear();
+    documents_.clear();
     encoding_ = "utf-16";
     framer_ = LspFramer{};
     std::lock_guard<std::mutex> lock(mutex_);
     incoming_.clear();
     events_.clear();
 }
-void LspClient::query(const std::string &method, const fs::path &file, const std::string &text,
-                      size_t cursor)
+void LspClient::sync(const fs::path &file, const std::string &text)
 {
     if (!running())
         throw std::runtime_error("clangd не запущен");
     auto uri = fileUri(file);
+    auto previous = documents_.find(uri);
+    if (previous != documents_.end() && previous->second == text)
+        return;
     int &version = versions_[uri];
     if (!version)
     {
@@ -329,6 +375,22 @@ void LspClient::query(const std::string &method, const fs::path &file, const std
                              {"contentChanges",
                               Json::list({Json::record({{"text", Json::string(text)}})})}}));
     }
+    documents_[uri] = text;
+}
+void LspClient::close(const fs::path &file)
+{
+    auto uri = fileUri(file);
+    if (documents_.erase(uri))
+    {
+        versions_.erase(uri);
+        notify("textDocument/didClose", Json::record({{"textDocument", idObject(uri)}}));
+    }
+}
+void LspClient::query(const std::string &method, const fs::path &file, const std::string &text,
+                      size_t cursor)
+{
+    sync(file, text);
+    auto uri = fileUri(file);
     Json params = Json::record(
         {{"textDocument", idObject(uri)}, {"position", textPosition(text, cursor, encoding_)}});
     if (method == "references")
@@ -356,6 +418,10 @@ std::vector<LspEvent> LspClient::poll()
             if (method == "textDocument/publishDiagnostics")
             {
                 auto params = get(j, "params");
+                auto version = versions_.find(str(params, "uri"));
+                if (version == versions_.end() ||
+                    integer(params, "version", version->second) != version->second)
+                    continue;
                 out.push_back(
                     {"diagnostics", uriFile(str(params, "uri")), "", get(params, "diagnostics")});
             }
@@ -396,6 +462,7 @@ std::vector<LspEvent> LspClient::poll()
                 send(std::move(message));
             }
             waiting_.clear();
+            out.push_back({"ready", {}, "clangd: готов\n", {}});
         }
         else
             out.push_back(std::move(event));
