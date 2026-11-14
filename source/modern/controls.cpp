@@ -323,11 +323,11 @@ bool TCombo::openList()
     int height = std::min<int>((int)std::min<size_t>(items_.size(), 8) + 5, (int)owner->size.y);
     if (width < 12 || height < 6)
         return false;
-    auto model = std::make_shared<VecTableModel>(std::vector<std::string>{"Value"});
     std::vector<std::vector<std::string>> rows;
     for (const auto &s : items_)
         rows.push_back({s});
-    model = std::make_shared<VecTableModel>(std::vector<std::string>{"Value"}, std::move(rows));
+    auto model =
+        std::make_shared<VecTableModel>(std::vector<std::string>{"Value"}, std::move(rows));
     auto *dialog = new TDialog(TRect(0, 0, width, height), "Choose value");
     dialog->options |= ofCentered;
     auto *table =
@@ -347,6 +347,16 @@ bool TCombo::openList()
         return true;
     }
     return false;
+}
+void TCombo::setData(void *record)
+{
+    TInputLine::setData(record);
+    for (size_t i = 0; i < items_.size(); ++i)
+        if (items_[i] == data)
+        {
+            current_ = i;
+            break;
+        }
 }
 void TCombo::handleEvent(TEvent &ev)
 {

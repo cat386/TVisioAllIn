@@ -314,6 +314,7 @@ class Demo : public TThemedApplication
         cancel_ = true;
         if (loading_.valid())
             loading_.wait();
+        shutDown();
     }
     void idle() override
     {

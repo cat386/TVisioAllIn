@@ -336,6 +336,11 @@ TEST(ModernInputs, HexAndFullSignedRangeWithoutOverflow)
     auto key = modernKey(kbDown);
     combo.handleEvent(key);
     EXPECT_EQ(std::string(combo.data), "Beta");
+    char restored[31] = "Alpha";
+    combo.setData(restored);
+    key = modernKey(kbDown);
+    combo.handleEvent(key);
+    EXPECT_EQ(std::string(combo.data), "Beta");
 }
 TEST(ModernColors, SelectorKeyboardAndDataTransfer)
 {

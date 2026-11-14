@@ -293,6 +293,7 @@ class TCombo : public TInputLine
     }
     void selectItem(size_t index);
     void setItems(std::vector<std::string> items);
+    void setData(void *record) override;
     bool openList();
     void handleEvent(TEvent &event) override;
     Boolean valid(ushort command) override;

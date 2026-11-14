@@ -79,6 +79,9 @@ TThemedApplication::TThemedApplication(Theme t)
                 &TApplication::initDeskTop),
       theme_(t), palette_(t, (TScreen::screenMode & TDisplay::smColor256) != 0)
 {
+    // The desktop and menus were first painted by TProgram's constructor,
+    // before virtual getPalette() could dispatch to this class.
+    redraw();
 }
 TPalette &TThemedApplication::getPalette() const
 {
