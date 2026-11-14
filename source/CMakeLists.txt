@@ -17,6 +17,7 @@ tv_set_warnings(${PROJECT_NAME})
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(${PROJECT_NAME} PUBLIC
+        /utf-8
         /permissive-
         /Zc:__cplusplus
         /Zc:externConstexpr
