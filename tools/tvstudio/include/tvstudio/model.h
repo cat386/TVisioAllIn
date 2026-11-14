@@ -126,6 +126,7 @@ struct Application
 };
 struct BuildOptions
 {
+    std::string directory = "build";
     std::string cmake = "cmake", generator, compiler, profile = "Debug", target;
     std::string extra, runArguments, executable;
     int jobs = 0;

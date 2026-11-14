@@ -268,6 +268,26 @@ TEST(StudioProject, RejectsFormPathTraversal)
     EXPECT_TRUE(rejects([&] { Project::load(dir); }));
     fs::remove_all(dir);
 }
+TEST(StudioProject, CmakeDatabaseUsesConfiguredBuildDirectory)
+{
+    auto dir = temp();
+    auto p = Project::create("cmake_paths", dir, dir, true);
+    p.build.directory = "out/debug with spaces";
+    p.build.generator = "Ninja";
+    p.build.compiler = "custom-c++";
+    p.build.extra = "-DCMAKE_EXPORT_COMPILE_COMMANDS=OFF -DFEATURE=ON";
+    p.save();
+    auto q = Project::load(p.file);
+    EXPECT_EQ(q.buildDirectory(), dir / "out/debug with spaces");
+    auto commands = buildCommands(q, "configure");
+    EXPECT_EQ(commands.size(), 1u);
+    EXPECT_EQ(commands[0][4], utf8(q.buildDirectory()));
+    EXPECT_EQ(commands[0].back(), "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON");
+    EXPECT_EQ(buildCommands(q, "build")[1][2], utf8(q.buildDirectory()));
+    q.build.directory = utf8(dir / "absolute");
+    EXPECT_EQ(q.buildDirectory(), dir / "absolute");
+    fs::remove_all(dir);
+}
 TEST(StudioProject, ExistingCmakeProjectIsNotOverwrittenOnOpen)
 {
     auto dir = temp();

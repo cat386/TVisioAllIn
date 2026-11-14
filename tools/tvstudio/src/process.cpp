@@ -561,8 +561,7 @@ std::vector<std::vector<std::string>> buildCommands(const Project &p, const std:
                                           dir,
                                           "-B",
                                           build,
-                                          "-DCMAKE_BUILD_TYPE=" + p.build.profile,
-                                          "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"};
+                                          "-DCMAKE_BUILD_TYPE=" + p.build.profile};
     if (!p.build.generator.empty())
     {
         configure.push_back("-G");
@@ -572,6 +571,8 @@ std::vector<std::vector<std::string>> buildCommands(const Project &p, const std:
         configure.push_back("-DCMAKE_CXX_COMPILER=" + p.build.compiler);
     auto extra = splitArguments(p.build.extra);
     configure.insert(configure.end(), extra.begin(), extra.end());
+    // База должна соответствовать тем же целям и параметрам, что и обычная сборка.
+    configure.push_back("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON");
     if (action != "clean")
         result.push_back(std::move(configure));
     if (action == "configure")

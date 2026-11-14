@@ -55,6 +55,7 @@ enum : ushort
     CodeEditor,
     FormDesigner,
     NewSource,
+    ConfigureLsp,
     Help
 };
 
@@ -664,6 +665,7 @@ Application studioMenus()
           item("Меню, команды, строка состояния...", AppModel), item("Генерировать C++", Generate),
           item("Настройки сборки...", BuildOptionsCommand),
           item("clangd: команда запуска...", Clangd),
+          item("CMake: обновить данные для clangd", ConfigureLsp),
           item("Определение символа", Definition, "F12"),
           item("Использования символа", References)}},
         {"~С~борка",
@@ -714,6 +716,10 @@ class Studio : public tvision::TThemedApplication
     BuildRunner builder_;
     LspClient lsp_;
     bool lspAttempted_ = false;
+    bool cmakeLspAttempted_ = false;
+    bool cmakeLspPending_ = false;
+    fs::path lspDatabase_;
+    fs::file_time_type lspDatabaseTime_{};
     std::set<fs::path> lspFiles_;
     std::chrono::steady_clock::time_point lspSync_{};
     bool runAfter_ = false, building_ = false;
@@ -826,6 +832,9 @@ class Studio : public tvision::TThemedApplication
         lsp_.stop();
         lspAttempted_ = false;
         lspFiles_.clear();
+        cmakeLspAttempted_ = cmakeLspPending_ = false;
+        lspDatabase_.clear();
+        lspDatabaseTime_ = {};
         runAfter_ = false;
         for (auto &p : forms_)
             TObject::destroy(p.second);
@@ -1083,6 +1092,8 @@ class Studio : public tvision::TThemedApplication
         outputTail_.clear();
         runAfter_ = run;
         builder_.start(*project_, action);
+        cmakeLspAttempted_ = true;
+        cmakeLspPending_ = action != "clean";
         building_ = true;
     }
     void runProgram()
@@ -1133,6 +1144,29 @@ class Studio : public tvision::TThemedApplication
         if (now - lspSync_ < std::chrono::milliseconds(350))
             return;
         lspSync_ = now;
+        auto database = project_->buildDirectory() / "compile_commands.json";
+        if (!cmakeLspAttempted_ && !builder_.active() && !fs::is_regular_file(database) &&
+            fs::is_regular_file(project_->directory / "CMakeLists.txt"))
+        {
+            cmakeLspAttempted_ = cmakeLspPending_ = true;
+            log("CMake: подготовка compile_commands.json для clangd\n");
+            builder_.start(*project_, "configure");
+            building_ = true;
+        }
+        // Перезапускаем сервер и заново передаём несохранённые буферы при смене базы.
+        std::error_code ec;
+        auto stamp = fs::last_write_time(database, ec);
+        if (!ec && (database != lspDatabase_ || stamp != lspDatabaseTime_))
+        {
+            lspDatabase_ = database;
+            lspDatabaseTime_ = stamp;
+            lsp_.stop();
+            lspAttempted_ = false;
+            lspFiles_.clear();
+            log("clangd: база команд CMake: " + utf8(database) + "\n");
+        }
+        if (cmakeLspPending_ && builder_.active() && !fs::is_regular_file(database))
+            return;
         std::set<fs::path> files;
         for (auto *s : sources_)
         {
@@ -1458,11 +1492,16 @@ class Studio : public tvision::TThemedApplication
             }
             break;
         case BuildOptionsCommand:
+            if (builder_.active())
+            {
+                notice("Дождитесь завершения CMake или остановите сборку");
+                break;
+            }
             if (project_)
             {
                 auto text = writeYaml(get(project_->toJson(), "build"));
                 if (editDocument(
-                        "CMake: generator, compiler, profile, target, extra, run_args, executable",
+                        "CMake: directory, generator, compiler, profile, target, extra",
                         text))
                 {
                     auto j = project_->toJson();
@@ -1473,6 +1512,16 @@ class Studio : public tvision::TThemedApplication
                     {
                         auto p = Project::load(project_->file);
                         project_->build = p.build;
+                        cmakeLspAttempted_ = false;
+                        lsp_.stop();
+                        lspAttempted_ = false;
+                        lspFiles_.clear();
+                        lspDatabase_.clear();
+                        if (!builder_.active())
+                        {
+                            builder_.start(*project_, "configure");
+                            cmakeLspAttempted_ = cmakeLspPending_ = building_ = true;
+                        }
                     }
                     catch (...)
                     {
@@ -1481,6 +1530,9 @@ class Studio : public tvision::TThemedApplication
                     }
                 }
             }
+            break;
+        case ConfigureLsp:
+            beginBuild("configure");
             break;
         case Build:
             beginBuild("build");
@@ -1792,6 +1844,17 @@ class Studio : public tvision::TThemedApplication
             if (building_ && !builder_.active())
             {
                 building_ = false;
+                if (cmakeLspPending_ && project_)
+                {
+                    cmakeLspPending_ = false;
+                    if (builder_.result() != 0)
+                        log("CMake: настройка/сборка не завершена; проверьте сообщения выше. "
+                            "Повтор: Проект → CMake: обновить данные для clangd.\n");
+                    else if (!fs::is_regular_file(project_->buildDirectory() / "compile_commands.json"))
+                        log("CMake не создал compile_commands.json. Выберите Ninja или Makefiles "
+                            "и отдельный build.directory в настройках сборки; Visual Studio и Xcode "
+                            "не экспортируют эту базу.\n");
+                }
                 log("\nЗавершено: " + std::to_string(builder_.result()) + "\n");
                 bool run = runAfter_ && builder_.result() == 0;
                 runAfter_ = false;

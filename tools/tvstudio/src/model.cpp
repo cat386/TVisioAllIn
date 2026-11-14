@@ -552,6 +552,7 @@ Project Project::load(const fs::path &input)
     p.openFiles = stringArray(get(j, "open_files"));
     auto &b = get(j, "build");
     p.build.cmake = str(b, "cmake", "cmake");
+    p.build.directory = str(b, "directory", "build");
     p.build.generator = str(b, "generator");
     p.build.compiler = str(b, "compiler");
     p.build.profile = str(b, "profile", "Debug");
@@ -583,6 +584,7 @@ Json Project::toJson() const
     put(j, "open_files", strings(openFiles));
     Json b = Json::record();
     for (auto p : {std::pair<const char *, std::string>{"cmake", build.cmake},
+                   {"directory", build.directory},
                    {"generator", build.generator},
                    {"compiler", build.compiler},
                    {"profile", build.profile},
@@ -689,7 +691,8 @@ std::vector<fs::path> Project::sourceFiles() const
 }
 fs::path Project::buildDirectory() const
 {
-    return directory / "build";
+    auto path = pathFromUtf8(build.directory.empty() ? "build" : build.directory);
+    return (path.is_absolute() ? path : directory / path).lexically_normal();
 }
 fs::path Project::executablePath() const
 {
