@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename - tfiledtr.cpp                                    */
+/* файл — tfiledtr.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*            TFileEditor member functions                    */
+/* функции:  */
+/* Методы TFileEditor */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -214,8 +214,8 @@ Boolean TFileEditor::saveFile() noexcept
     Boolean movedOriginal = False;
     if (backup)
     {
-        // DOS rename cannot replace a file. Stage the previous backup rather
-        // than deleting it before the source has been moved successfully.
+        // rename в DOS не заменяет файл. Временно переносим прежнюю резервную
+        // копию вместо удаления до успешного переноса исходного файла.
         if (stricmp(fileName, backupName) == 0)
         {
             editorDialog(edWriteError, fileName);
@@ -312,8 +312,8 @@ Boolean TFileEditor::setBufSize( uint newSize )
     if( newSize != bufSize )
         {
         char *temp = buffer;
-        /* Bypass safety pool to allocate buffer, but check for possible
-           NULL return value. */
+        /* Выделяем буфер в обход резервного пула, проверяя возможный NULL.
+ */
         if( (buffer = (char *) malloc( newSize )) == 0 )
             {
             free(temp);

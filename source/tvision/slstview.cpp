@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       slstview.cpp                              */
+/* файл — slstview.cpp */
 /*                                                            */
-/* Registeration object for the class TListViewer             */
+/* Объект регистрации класса TListViewer. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

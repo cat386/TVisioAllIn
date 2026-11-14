@@ -1,6 +1,6 @@
 *
 
-# Manually include root-level directories
+# Вручную включаем каталоги верхнего уровня.
 !examples/
 !examples/**/
 !include/

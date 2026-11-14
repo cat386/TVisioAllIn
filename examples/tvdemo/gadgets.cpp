@@ -1,11 +1,11 @@
 /*-------------------------------------------------------------------*/
 /*                                                                   */
-/*   Turbo Vision Demo                                               */
+/* Демонстрация Turbo Vision. */
 /*                                                                   */
-/*   Gadgets.cpp:  Gadgets for the Turbo Vision Demo.  Includes a    */
-/*        heap view and a clock view which display the clock at the  */
-/*        right end of the menu bar and the current heap space at    */
-/*        the right end of the status line.                          */
+/* Gadgets.cpp — дополнительные представления для демонстрации Turbo Vision. Включает */
+/* представление памяти и часы, показывающие время */
+/* у правого края строки меню, а текущий объём памяти — */
+/* у правого края строки состояния. */
 /*                                                                   */
 /*-------------------------------------------------------------------*/
 /*
@@ -36,8 +36,8 @@
 #include <psapi.h>
 #endif
 
+// Методы представления памяти.
 //
-// ------------- Heap Viewer functions
 //
 
 THeapView::THeapView(TRect& r) : TView( r )
@@ -73,7 +73,7 @@ uint32_t THeapView::heapSize()
     ostrstream totalStr( heapStr, sizeof heapStr);
 
 #if defined( __BORLANDC__ )
-    // When using Borland C++, display the unused physical memory.
+    // В Borland C++ показываем неиспользуемую физическую память.
 #if !defined( __DPMI16__ ) && !defined( __DPMI32__ )
     struct farheapinfo heap;
 #endif
@@ -104,7 +104,7 @@ uint32_t THeapView::heapSize()
 
     return(total);
 #elif defined( __GLIBC__ ) && !defined( __UCLIBC__ ) && !defined( __MUSL__ )
-    // When using Glibc, display the memory consumed by malloc allocations in use.
+    // В Glibc показываем память, занятую действующими выделениями malloc.
     size_t allocatedSize =
 #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 33)
         mallinfo2().uordblks;
@@ -114,7 +114,7 @@ uint32_t THeapView::heapSize()
     totalStr << setw(12) << allocatedSize << ends;
     return (uint32_t) allocatedSize;
 #elif defined( _WIN32 )
-    // When on Windows, display the virtual memory used by the process.
+    // В Windows показываем виртуальную память процесса.
     HANDLE hProcess = GetCurrentProcess();
     PROCESS_MEMORY_COUNTERS_EX pmc {};
     GetProcessMemoryInfo(hProcess, (PROCESS_MEMORY_COUNTERS *) &pmc, sizeof(pmc));
@@ -127,8 +127,8 @@ uint32_t THeapView::heapSize()
 }
 
 
+// Методы представления часов.
 //
-// -------------- Clock Viewer functions
 //
 
 TClockView::TClockView( TRect& r ) : TView( r )
@@ -155,7 +155,7 @@ void TClockView::update()
     char *date = ctime(&t);
 
     date[19] = '\0';
-    strcpy(curTime, &date[11]);        /* Extract time. */
+    strcpy(curTime, &date[11]);        /* Получаем время. */
 
     if( strcmp(lastTime, curTime) )
         {

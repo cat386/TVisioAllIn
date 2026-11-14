@@ -1,25 +1,25 @@
 #define Uses_TColorAttr
 #include <tvision/tv.h>
 
-//// RGB to XTerm16 conversion algorithm
+// Алгоритм преобразования RGB в XTerm16. XTerm16 — нерегулярная 4-битная
+// палитра RGBI, что часто игнорируется в других решениях. Решения на
+// основе CIEDE2000 тоже представляются неубедительными. Здесь
+// промежуточно преобразуем RGB в HSL. Затем определяем, нужно ли
+// приближать цвет оттенком серого. Для серого выбираем один из четырёх
+// уровней; для цветного — тёмный либо яркий вариант по компоненту L.
+// Окончательный цвет выбирается по H. Результат зрительно ближе к
+// исходному, чем в других известных автору решениях. Алгоритм пригоден
+// для вычисления в реальном времени: использует целочисленную арифметику
+// и не более одного деления.
 //
-// XTerm16 is actually what's known as a 4-bit RGBI color palette, which
-// is not regular. Many solutions out there overlook this fact. Others rely
-// on the so-called CIEDE2000 formula, which doesn't convince me either.
 //
-// The algorithm here consists in converting RGB to HSL as an intermediate
-// step. Then we do the following:
 //
-// * Decide whether the color should be approximated to grayscale or not.
-// * If it is grayscale, pick between the 4 levels of gray. Otherwise, pick
-//   between the dark and bright color variants. The L component is used for this.
-// * If it is color, choose the final color based on the H component.
 //
-// The result is perceptually closer to the original than the other solutions
-// I have seen around. Additionally, this algorithm can be computed in real-time.
 //
-// This implementation uses integer arithmetic and performs at most one integer
-// division.
+//
+//
+//
+//
 
 struct HCL
 {
@@ -68,7 +68,7 @@ TColorXTerm RGBtoXTerm16Impl(uint8_t r, uint8_t g, uint8_t b) noexcept
 {
     HCL c = RGBtoHCL(r, g, b);
 
-    if (c.c >= 12) // Color if Chroma >= 12.
+    if (c.c >= 12) // Цветной вариант, если Chroma >= 12.
     {
         constexpr uint8_t hueToXTerm[6] = {1, 3, 2, 6, 4, 5};
         uint8_t hue = uint8_t(c.h < HUE_MAX - HUE_PRECISION/2 ?
@@ -78,7 +78,7 @@ TColorXTerm RGBtoXTerm16Impl(uint8_t r, uint8_t g, uint8_t b) noexcept
         if (c.l < u8(0.5))
             return hueToXTerm[hue];
         if (c.l < u8(0.925))
-            return hueToXTerm[hue] + 8; // Bright: {9, 11, 10, 14, 12, 13}.
+            return hueToXTerm[hue] + 8; // Яркие цвета: {9, 11, 10, 14, 12, 13}.
         return 15;
     }
     else
@@ -132,7 +132,7 @@ constexpr TColorConversion::LUT<TColorXTerm, 256> TColorConversionInit::initXTer
 constexpr TColorConversion::LUT<TColorRGB, 256> TColorConversionInit::initXTerm256toRGBLUT() noexcept
 {
     TColorConversion::LUT<TColorRGB, 256> lut {};
-    // Indices 16..255 only.
+    // Только индексы 16..255.
     for (uint8_t i = 0; i < 6; ++i)
     {
         uint8_t R = i ? 55 + i*40 : 0;
@@ -166,30 +166,30 @@ TColorXTerm TColorConversion::RGBtoXTerm16(TColorRGB c) noexcept
 
 TColorXTerm TColorConversion::RGBtoXTerm256(TColorRGB c) noexcept
 {
-    // The xterm-256color palette consists of:
+    // Палитра xterm-256color состоит из 16 цветов xterm-16color в диапазоне
+    // [0..15], 216 цветов куба 6×6×6 в [16..231] и 24 оттенков серого в
+    // [232..255]. Эта функция не возвращает индексы [0..15]; для них
+    // используйте RGBtoXTerm16. В кубе недостаточно тёмных цветов: уровни
+    // каналов [0, 1, 2, 3, 4, 5] соответствуют значениям [0, 95, 135, 175,
+    // 215, 255]. Кроме нуля, расстояние между уровнями равно 40. Значения
+    // меньше 95 - 40/2 = 75 пришлось бы округлять в 0. Для частичной
+    // компенсации разрешаем отображать [55..74] в 1. Кроме того, используем
+    // оттенки серого, если куб округлил бы цвет до чисто чёрного: так
+    // сохраняются иначе теряемые детали.
     //
-    // * [0..15]: 16 colors as in xterm-16color.
-    // * [16..231]: 216 colors in a 6x6x6 cube.
-    // * [232..255]: 24 grayscale colors.
     //
-    // This function does not return indices in the range [0..15]. For that,
-    // use 'RGBtoXTerm16' instead.
     //
-    // Dark colors are underrepresented in the 6x6x6 cube. The channel values
-    // [0, 1, 2, 3, 4, 5] correspond to the 8-bit values
-    // [0, 95, 135, 175, 215, 255]. Thus there is a distance of 40 between
-    // values, except for 0. Any 8-bit value smaller than 95 - 40/2 = 75
-    // would have to be mapped into 0. To compensate a bit for this, we allow
-    // values [55..74] to also be mapped into 1.
     //
-    // Additionally, we fall back on the grayscale colors whenever using
-    // the 6x6x6 color cube would round the color to pure black. This
-    // makes it possible to preserve details that would otherwise be lost.
+    //
+    //
+    //
+    //
+    //
     auto cnvColor = [] (TColorRGB c)
     {
         auto scale = [] (uchar c)
         {
-            c += 20 & -(c < 75); // Compensate for underrepresented dark colors.
+            c += 20 & -(c < 75); // Компенсируем недостаточное представление тёмных цветов.
             return uchar(max<uchar>(c, 35) - 35)/40;
         };
         uchar r = scale(c.getRed()),
@@ -200,11 +200,11 @@ TColorXTerm TColorConversion::RGBtoXTerm256(TColorRGB c) noexcept
     auto cnvGray = [] (uchar l)
     {
         if (l < 8 - 5)
-            return 16; // Totally black.
+            return 16; // Полностью чёрный.
         if (l >= 238 + 5)
-            return 231; // Totally white.
-        // L is now in the range [3..242] and has to be mapped to one of the 24
-        // grayscale colors.
+            return 231; // Полностью белый. Теперь L находится в диапазоне [3..242] и должен
+        // соответствовать одному из 24 оттенков серого.
+        //
         return 232 + uchar(max<uchar>(l, 3) - 3)/uchar(10); // [232..255]
     };
 
@@ -213,12 +213,12 @@ TColorXTerm TColorConversion::RGBtoXTerm256(TColorRGB c) noexcept
     {
         uchar Xmin = min(min(c.getRed(), c.getGreen()), c.getBlue()),
               Xmax = max(max(c.getRed(), c.getGreen()), c.getBlue());
-        uchar C = Xmax - Xmin; // Chroma in the HSL/HSV theory.
-        // For low-chroma or dark colors which are not exactly representable
-        // in the 6x6x6 color cube, use the grayscale palette.
-        if (C < 12 || idx == 16) // Grayscale if Chroma < 12 or rounded to black.
+        uchar C = Xmax - Xmin; // Цветность в модели HSL/HSV. Для тёмных или малонасыщенных цветов, не
+        // представимых точно кубом 6×6×6, используем шкалу серого.
+        //
+        if (C < 12 || idx == 16) // Серый, если Chroma < 12 или цвет округлён до чёрного.
         {
-            uchar L = ushort(Xmax + Xmin)/2; // Lightness, as in HSL.
+            uchar L = ushort(Xmax + Xmin)/2; // Светлота, как в HSL.
             idx = cnvGray(L);
         }
     }

@@ -2,9 +2,9 @@
 /*                                                                         */
 /*   STDDLG.H                                                              */
 /*                                                                         */
-/*   defines the classes TFileInputLine, TFileCollection, TSortedListBox,  */
+/* Определяет классы TFileInputLine, TFileCollection, TSortedListBox, */
 /*   TFileList, TFileInfoPane, TFileDialog, TDirCollection, TDirListBox,   */
-/*   and TChDirDialog                                                      */
+/* и TChDirDialog. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -28,19 +28,19 @@
 
 const int
 
-//  Commands
+// Команды.
 
-    cmFileOpen    = 1001,   // Returned from TFileDialog when Open pressed
-    cmFileReplace = 1002,   // Returned from TFileDialog when Replace pressed
-    cmFileClear   = 1003,   // Returned from TFileDialog when Clear pressed
-    cmFileInit    = 1004,   // Used by TFileDialog internally
+    cmFileOpen    = 1001,   // Возвращается из TFileDialog при нажатии Open.
+    cmFileReplace = 1002,   // Возвращается из TFileDialog при нажатии Replace.
+    cmFileClear   = 1003,   // Возвращается из TFileDialog при нажатии Clear.
+    cmFileInit    = 1004,   // Используется внутри TFileDialog.
     cmChangeDir   = 1005,   //
-    cmRevert      = 1006,   // Used by TChDirDialog internally
+    cmRevert      = 1006,   // Используется внутри TChDirDialog.
 
-//  Messages
+// Сообщения.
 
-    cmFileFocused = 102,    // A new file was focused in the TFileList
-    cmFileDoubleClicked     // A file was selected in the TFileList
+    cmFileFocused = 102,    // В TFileList фокус перешёл на другой файл.
+    cmFileDoubleClicked     // В TFileList выбран файл.
             = 103;
 
 #endif  // __FILE_CMDS
@@ -321,10 +321,10 @@ inline TFileCollection *TFileList::list()
 #endif  // Uses_TFileList
 
 /* ---------------------------------------------------------------------- */
-/*      class TFileInfoPane                                               */
+/* класс TFileInfoPane */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal                                                      */
+/* Структура палитры */
+/* 1 = Обычный */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TFileInfoPane ) && !defined( __TFileInfoPane )
@@ -382,16 +382,16 @@ inline opstream& operator << ( opstream& os, TFileInfoPane* cl )
 #define __TFileDialog
 
 const int
-    fdOKButton      = 0x0001,      // Put an OK button in the dialog
-    fdOpenButton    = 0x0002,      // Put an Open button in the dialog
-    fdReplaceButton = 0x0004,      // Put a Replace button in the dialog
-    fdClearButton   = 0x0008,      // Put a Clear button in the dialog
-    fdHelpButton    = 0x0010,      // Put a Help button in the dialog
-    fdNoLoadDir     = 0x0100;      // Do not load the current directory
-                                   // contents into the dialog at Init.
-                                   // This means you intend to change the
-                                   // WildCard by using SetData or store
-                                   // the dialog on a stream.
+    fdOKButton      = 0x0001,      // Добавить в диалог кнопку OK.
+    fdOpenButton    = 0x0002,      // Добавить в диалог кнопку Open.
+    fdReplaceButton = 0x0004,      // Добавить в диалог кнопку Replace.
+    fdClearButton   = 0x0008,      // Добавить в диалог кнопку Clear.
+    fdHelpButton    = 0x0010,      // Добавить в диалог кнопку Help.
+    fdNoLoadDir     = 0x0100;      // Не загружать содержимое текущего каталога при инициализации диалога.
+                                   // Подразумевается изменение WildCard через SetData либо сохранение
+                                   // диалога в потоке.
+                                   //
+                                   //
 
 #if !defined( __DIR_H )
 #include <tvision/compat/borland/dir.h>
@@ -656,9 +656,9 @@ inline TDirCollection *TDirListBox::list()
 #define __TChDirDialog
 
 const int
-    cdNormal     = 0x0000, // Option to use dialog immediately
-    cdNoLoadDir  = 0x0001, // Option to init the dialog to store on a stream
-    cdHelpButton = 0x0002; // Put a help button in the dialog
+    cdNormal     = 0x0000, // Параметр немедленного использования диалога.
+    cdNoLoadDir  = 0x0001, // Параметр инициализации диалога для сохранения в потоке.
+    cdHelpButton = 0x0002; // Добавить в диалог кнопку справки.
 
 struct _FAR TEvent;
 class _FAR TInputLine;

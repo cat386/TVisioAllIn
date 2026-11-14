@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   OBJECTS.H                                                             */
 /*                                                                         */
-/*   defines the classes TPoint, TRect, TCollection, and TSortedCollection */
+/* Определяет классы TPoint, TRect, TCollection и TSortedCollection. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*

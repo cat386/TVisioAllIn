@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tbkgrnd.cpp                               */
+/* файл — tbkgrnd.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*          TBackground member functions                      */
+/* функции:  */
+/* Методы TBackground */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -19,7 +19,7 @@
 
 #include <tvision/tv.h>
 
-#define cpBackground "\x01"      // background palette
+#define cpBackground "\x01"      // Палитра фона.
 
 TBackground::TBackground( const TRect& bounds, char aPattern ) noexcept :
     TView(bounds),

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   TTEXT.H                                                               */
 /*                                                                         */
-/*   Defines functions related to multibyte string manipulation.           */
+/* Определяет функции работы с многобайтовыми строками. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -13,77 +13,77 @@ struct TTextMetrics
 {
     uint width;
     uint characterCount;
-    uint graphemeCount; // Number of non-combining characters.
+    uint graphemeCount; // Число некомбинируемых символов.
 };
 
 class TText
 {
 public:
 
-    // Returns the width of 'text'.
+    // Возвращает ширину text.
     static size_t width(TStringView text) noexcept;
 
-    // Returns the width, the character count and the grapheme count of 'text'.
+    // Возвращает ширину, число символов и число графем в text.
     static TTextMetrics measure(TStringView text) noexcept;
 
-    // Returns the length in bytes of the first character in 'text'.
+    // Возвращает длину первого символа text в байтах.
     static size_t next(TStringView text) noexcept;
 
-    // Increases 'index' by the length in bytes of the character starting at
-    // position 'index' of 'text'.
-    // (variant 2): Increases 'width' by the width of the character.
-    // Returns whether 'index' was increased at all.
+    // Увеличивает index на длину в байтах символа text, начинающегося в
+    // позиции index. Во втором варианте также увеличивает width на ширину
+    // символа. Возвращает признак изменения index.
+    //
     static Boolean next(TStringView text, size_t &index) noexcept;
     static Boolean next(TStringView text, size_t &index, size_t &width) noexcept;
 
-    // Returns the length in bytes of the character in 'text' right before
-    // position 'index'.
+    // Возвращает длину в байтах символа text непосредственно перед позицией
+    // index.
     static size_t prev(TStringView text, size_t index) noexcept;
 
-    // Compares two strings ignoring the case differences. Also takes into
-    // account characters encoded in extended ASCII.
+    // Сравнивает строки без учёта регистра, включая символы расширенной
+    // ASCII.
     static Boolean equalsIgnoreCase(TStringView a, TStringView b) noexcept;
 
-    // Converts the first character in 'text' to a code page character.
-    // If the character cannot be converted or 'text' is empty, returns '\0'.
+    // Преобразует первый символ text в символ кодовой страницы. Если
+    // преобразование невозможно или text пуст, возвращает '\0'.
     static char toCodePage(TStringView text) noexcept;
 
 #if !defined(__BORLANDC__)
-    // Converts the code page character 'c' into UTF-8. The returned view
-    // remains valid until the next call to 'setCodePageTranslation()'.
+    // Преобразует символ кодовой страницы c в UTF-8. Возвращённое представление
+    // действительно до следующего вызова setCodePageTranslation().
     static TStringView fromCodePage(char c) noexcept;
 
-    // Modifies the internal table used to convert code page characters
-    // to and from UTF-8. By default, code page 437 (United States) is used.
-    // If a null pointer is provided, the internal conversion table is reset
-    // to the default one.
+    // Изменяет внутреннюю таблицу преобразования символов кодовой страницы в
+    // UTF-8 и обратно. По умолчанию используется кодовая страница 437 (США).
+    // Нулевой указатель восстанавливает таблицу по умолчанию.
+    //
     static void setCodePageTranslation(const char (*utf8Translation)[256][4]) noexcept;
 #endif // __BORLANDC__
 
-    // Returns the length in bytes of a leading substring of 'text' which is
-    // 'count' columns wide. If 'text' is less than 'count' columns wide,
-    // returns 'text.size()'. Negative values of 'count' are treated as 0.
-    // (variant 2): the length and width of the substring are returned via the
-    //              output parameters 'length' and 'width',
-    // When column 'count' is in the middle of a double-width character in 'text',
-    // 'includeIncomplete' determines whether the double-width character must
-    // be included in the result.
+    // Возвращает длину в байтах начальной подстроки text шириной count
+    // столбцов. Если ширина text меньше count, возвращает text.size().
+    // Отрицательный count считается нулём. Во втором варианте длина и ширина
+    // передаются через выходные параметры length и width. Если столбец count
+    // попадает внутрь символа двойной ширины, includeIncomplete определяет,
+    // включать ли этот символ в результат.
+    //
+    //
     static size_t scroll(TStringView text, int count, Boolean includeIncomplete) noexcept;
     static void scroll( TStringView text, int count, Boolean includeIncomplete,
                         size_t &length, size_t &width ) noexcept;
 
-    // Fills 'cells' with the character 'c'.
-    // (variant 2): also sets the color attribute to 'attr'.
+    // Заполняет cells символом c. Во втором варианте также устанавливает
+    // атрибут цвета attr.
     static void drawChar(TSpan<TScreenCell> cells, char c) noexcept;
     static void drawChar(TSpan<TScreenCell> cells, char c, TColorAttr attr) noexcept;
 
-    // Copies text from 'text' into 'cells', starting at position 'indent' of
-    // 'cells' and at column 'textIndent' of 'text'. Returns the number of cells
-    // that were filled with text.
-    // (variants 2, 4): also sets the color attribute to 'attr'.
-    // (variants 3, 4): uses 'indent = 0' and 'textIndent = 0'.
-    // When column 'textIndent' of 'text' is in the middle of a double-width
-    // character, a whitespace is copied in its place.
+    // Копирует текст text в cells, начиная с позиции indent в cells и
+    // столбца textIndent в text. Возвращает число заполненных ячеек. В
+    // вариантах 2 и 4 также устанавливает атрибут attr; в вариантах 3 и 4
+    // используются indent = 0 и textIndent = 0. Если textIndent попадает
+    // внутрь символа двойной ширины, вместо него записывается пробел.
+    //
+    //
     static size_t drawStr( TSpan<TScreenCell> cells, size_t indent,
                            TStringView text, int textIndent ) noexcept;
     static size_t drawStr( TSpan<TScreenCell> cells, size_t indent,
@@ -92,23 +92,23 @@ public:
     static size_t drawStr(TSpan<TScreenCell> cells, TStringView text) noexcept;
     static size_t drawStr(TSpan<TScreenCell> cells, TStringView text, TColorAttr attr) noexcept;
 
-    // Reads a single character from a multibyte-encoded string, and writes it into
-    // a screen cell.
+    // Читает один символ многобайтовой строки и записывает в ячейку экрана.
+    // cells — диапазон ячеек TScreenCell; i — входной и выходной индекс в
+    // cells, увеличиваемый на число обновлённых ячеек; text — исходный
+    // текст; j — входной и выходной индекс в text, увеличиваемый на число
+    // прочитанных байтов. Во втором варианте attr задаёт цветовой атрибут.
+    // Возвращает false, когда i >= cells.size() && j >= text.size(). Ячейка
+    // может содержать один печатный символ шириной не менее одного столбца и
+    // несколько комбинируемых символов нулевой ширины. Если в text найден
+    // символ нулевой ширины и i > 0, он присоединяется к cells[i - 1]. При
+    // этом i не увеличивается, атрибут цвета не устанавливается.
     //
-    // * cells: range of TScreenCells to write to.
-    // * i (input/output parameter): index into 'cells'. Gets increased by
-    //   the number of cells that have been updated.
-    // * text: input text.
-    // * j (input/output parameter): index into 'text'. Gets increased by
-    //   the number of bytes read from 'text'.
-    // * (variant 2) attr: color attribute to set in the cell.
     //
-    // Returns false when 'i >= cells.size() && j >= text.size()'.
-    // A screen cell may contain one printable character (of width 1 or more)
-    // and several combining characters appended to it (of width 0).
-    // When a zero-width character is found in 'text', it is combined with the
-    // previous cell, i.e. cells[i - 1], if 'i > 0'. In this case, 'i' is not
-    // increased and the color attribute is not set.
+    //
+    //
+    //
+    //
+    //
     static Boolean drawOne( TSpan<TScreenCell> cells, size_t &i,
                             TStringView text, size_t &j ) noexcept;
     static Boolean drawOne( TSpan<TScreenCell> cells, size_t &i,
@@ -116,9 +116,9 @@ public:
                             TColorAttr attr ) noexcept;
 
 #ifndef __BORLANDC__
-    // Variants of the functions above which use a '(TColorAttr &) -> void'
-    // callback  to change the color attribute of each cell (rather than
-    // setting it to a fixed value).
+    // Варианты функций выше, использующие обратный вызов '(TColorAttr &) ->
+    // void' для изменения атрибута каждой ячейки вместо присвоения
+    // фиксированного значения.
     template <class Func>
     static void drawCharEx(TSpan<TScreenCell> cells, char c, Func &&transformAttr) noexcept;
     template <class Func>
@@ -126,7 +126,7 @@ public:
                              TStringView text, int textIndent,
                              Func &&transformAttr ) noexcept;
 
-    // UTF-32 variants of some of the functions above.
+    // Варианты некоторых функций выше для UTF-32.
     static Boolean next(TSpan<const uint32_t> text, size_t &index, size_t &width) noexcept;
     static void scroll( TSpan<const uint32_t> text, int count, Boolean includeIncomplete,
                         size_t &length, size_t &width ) noexcept;
@@ -246,7 +246,7 @@ inline void TText::drawChar(TSpan<TScreenCell> cells, char c, TColorAttr attr)
 inline size_t TText::drawStr( TSpan<TScreenCell> cells, size_t indent,
                               TStringView text, int textIndent )
 {
-    // BCC optimization: avoid using min/substr/subspan and use pointer-range loop.
+    // Оптимизация BCC: вместо min/substr/subspan используем цикл по диапазону указателей.
     if (indent < cells.size() && textIndent < text.size())
     {
         size_t count = cells.size() - indent;
@@ -268,7 +268,7 @@ inline size_t TText::drawStr( TSpan<TScreenCell> cells, size_t indent,
                               TStringView text, int textIndent,
                               TColorAttr attr )
 {
-    // BCC optimization: avoid using min/substr/subspan and use pointer-range loop.
+    // Оптимизация BCC: вместо min/substr/subspan используем цикл по диапазону указателей.
     if (indent < cells.size() && textIndent < text.size())
     {
         size_t count = cells.size() - indent;

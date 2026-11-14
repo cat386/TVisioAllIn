@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sscrlbar.cpp                              */
+/* файл — sscrlbar.cpp */
 /*                                                            */
-/* Registeration object for the class TScrollBar              */
+/* Объект регистрации класса TScrollBar. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -18,11 +18,11 @@
 namespace tvision
 {
 
-// A class implementing the behaviour of findfirst and findnext.
-// allocate() assigns a FindFirstRec to the provided find_t struct and sets
-// the search filters. get() simply retrieves the FindFirstRec that was
-// assigned to a find_t struct. next() performs the actual search and
-// automatically updates the find_t struct.
+// Класс реализует поведение findfirst и findnext. allocate() назначает
+// FindFirstRec переданной структуре find_t и задаёт фильтры поиска.
+// get() возвращает назначенный структуре find_t объект FindFirstRec.
+// next() выполняет поиск и автоматически обновляет find_t.
+//
 
 class FindFirstRec
 {
@@ -65,8 +65,8 @@ private:
     static void cvtTime(const WIN32_FIND_DATAW *findData, struct find_t *fileinfo) noexcept;
 #endif // _WIN32
 
-    // A vector of FindFirstRec that deallocates all directory streams
-    // on destruction.
+    // Вектор FindFirstRec, закрывающий все потоки каталогов при уничтожении.
+    //
     class RecList : std::vector<FindFirstRec>
     {
         friend class FindFirstRec;
@@ -84,6 +84,6 @@ private:
     } static recList;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_FINDFRST_H

@@ -1,4 +1,4 @@
-// Theme indices and Gruvbox palette ported from cat386/tvision-rs (MIT).
+// Индексы темы и палитра Gruvbox перенесены из cat386/tvision-rs, лицензия MIT.
 #include <algorithm>
 #include <tvision/themes.h>
 namespace tvision
@@ -92,8 +92,8 @@ TThemedApplication::TThemedApplication(Theme t)
                 &TApplication::initDeskTop),
       theme_(t), palette_(t, (TScreen::screenMode & TDisplay::smColor256) != 0)
 {
-    // The desktop and menus were first painted by TProgram's constructor,
-    // before virtual getPalette() could dispatch to this class.
+    // Рабочий стол и меню впервые отрисованы конструктором TProgram, когда
+    // виртуальный getPalette() ещё не мог обратиться к этому классу.
     refreshTheme(*this);
 }
 TPalette &TThemedApplication::getPalette() const
@@ -106,4 +106,4 @@ void TThemedApplication::setTheme(Theme t)
     palette_.setTheme(t, (TScreen::screenMode & TDisplay::smColor256) != 0);
     refreshTheme(*this);
 }
-} // namespace tvision
+} // пространство имён tvision

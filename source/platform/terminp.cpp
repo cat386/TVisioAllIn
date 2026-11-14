@@ -24,39 +24,39 @@ namespace tvision
 
 using namespace termkeys;
 
-/* Turbo Vision is designed to work with BIOS key codes. Mnemonics for some
- * key codes are defined in tkeys.h. Unless those are changed, it is
- * necessary to translate terminal keys to key codes. */
+/*
+ * Turbo Vision рассчитан на коды клавиш BIOS. Для некоторых кодов в tkeys.h определены мнемоники. Пока они не изменены, клавиши терминала нужно преобразовывать в эти коды.
+ */
 
-/* Turbo Vision stores key events in a KeyDownEvent struct, defined in
- * system.h. Its first field is a key code (16 bit), which can be decomposed
- * into the ASCII equivalent (lower byte) and a scan code (higher byte).
- * It has a second field with the state of the modifier keys, which can be
- * retrieved by performing a bit-wise AND with the kbShift, kbCtrlShift and
- * kbAltShift bitmasks. Turbo Vision expects this field to be filled even
- * if the key code is already named Shift/Ctrl/Alt+something. */
+/*
+ * Turbo Vision хранит событие клавиатуры в KeyDownEvent из system.h. Первое
+ * поле — 16-битный код: младший байт содержит ASCII-эквивалент, старший —
+ * скан-код. Второе поле содержит состояние модификаторов, проверяемое
+ * побитовым И с kbShift, kbCtrlShift и kbAltShift. Поле должно быть
+ * заполнено, даже если название кода уже включает Shift/Ctrl/Alt.
+ */
 
-/* The support for key combinations is the following:
-   - PrintScreen, Break are not likely to be captured by the terminal, but
-     Ctrl+C could be used as a replacement of the Ctrl+Break interrupt.
-   - Ctrl/Alt+F(n) don't work on the linux console and I strongly advice against
-     using them.
-   - Ctrl+Letter works, except for ^H, ^I, ^J and ^M, which have a special
-     meaning.
-   - Alt+Letter/Number seem to work quite well.
-   - Ctrl+Backspace/Enter can't be recognized on terminal emulators.
-   - Shift/Ctrl+Ins/Del/Home/End/PgDn/PgUp seem to work, too.
-   - Arrow keys work, as well as combined with Shift, but Turbo Vision doesn't
-     support Ctrl+Up/Down (EDIT: it now does).
-   - Tab and Backtab are supported too, although the linux console confuses the
-     latter with Alt+Tab.
-   - Some other key combinations are supported on terminal but not in Turbo Vision.
- * Still, it's up to your luck that the terminal sends any of these
- * combinations in a recognizable way. */
+/*
+ * Поддержка сочетаний: PrintScreen и Break терминал обычно не передаёт,
+ * но Ctrl+C может заменить прерывание Ctrl+Break. Ctrl/Alt+F(n) не
+ * работают в консоли Linux, использовать их настоятельно не
+ * рекомендуется. Ctrl+буква работает, кроме ^H, ^I, ^J и ^M с особым
+ * значением. Alt+буква/цифра обычно работают. Ctrl+Backspace/Enter в
+ * эмуляторах не распознаются. Shift/Ctrl+Ins/Del/Home/End/PgDn/PgUp
+ * обычно работают. Стрелки и Shift+стрелки работают; Ctrl+Up/Down
+ * изначально не поддерживались Turbo Vision, но теперь поддерживаются.
+ * Tab и Backtab поддерживаются, хотя консоль Linux путает Backtab с
+ * Alt+Tab. Некоторые сочетания доступны терминалу, но не Turbo Vision.
+ * Возможность их распознавания зависит от того, какую последовательность
+ * передаёт терминал.
+ *
+ *
+ *
+ */
 
 static constexpr KeyDownEvent fromNonPrintableAscii[32] =
 {
-    {{'@'},         kbLeftCtrl, {'@'}, 1}, // ^@, Null
+    {{'@'},         kbLeftCtrl, {'@'}, 1}, // ^@, нулевой символ.
     {{kbCtrlA},     kbLeftCtrl},
     {{kbCtrlB},     kbLeftCtrl},
     {{kbCtrlC},     kbLeftCtrl},
@@ -64,12 +64,12 @@ static constexpr KeyDownEvent fromNonPrintableAscii[32] =
     {{kbCtrlE},     kbLeftCtrl},
     {{kbCtrlF},     kbLeftCtrl},
     {{kbCtrlG},     kbLeftCtrl},
-    {{kbBack},      0}, // ^H, Backspace
-    {{kbTab},       0}, // ^I, Tab
-    {{kbEnter},     0}, // ^J, Line Feed
+    {{kbBack},      0}, // ^H, Backspace.
+    {{kbTab},       0}, // ^I, Tab.
+    {{kbEnter},     0}, // ^J, перевод строки.
     {{kbCtrlK},     kbLeftCtrl},
     {{kbCtrlL},     kbLeftCtrl},
-    {{kbEnter},     0}, // ^M, Carriage Return
+    {{kbEnter},     0}, // ^M, возврат каретки.
     {{kbCtrlN},     kbLeftCtrl},
     {{kbCtrlO},     kbLeftCtrl},
     {{kbCtrlP},     kbLeftCtrl},
@@ -83,11 +83,11 @@ static constexpr KeyDownEvent fromNonPrintableAscii[32] =
     {{kbCtrlX},     kbLeftCtrl},
     {{kbCtrlY},     kbLeftCtrl},
     {{kbCtrlZ},     kbLeftCtrl},
-    {{kbEsc},       0}, // ^[, Escape
-    {{'\\'},        kbLeftCtrl, {'\\'}, 1}, // ^\, File Separator
-    {{']'},         kbLeftCtrl, {']'}, 1}, // ^], Group Separator
-    {{'^'},         kbLeftCtrl, {'^'}, 1}, // ^^, Record Separator
-    {{'_'},         kbLeftCtrl, {'_'}, 1}, // ^_, Unit Separator
+    {{kbEsc},       0}, // ^[, Escape.
+    {{'\\'},        kbLeftCtrl, {'\\'}, 1}, // ^\, разделитель файлов.
+    {{']'},         kbLeftCtrl, {']'}, 1}, // ^], разделитель групп.
+    {{'^'},         kbLeftCtrl, {'^'}, 1}, // ^^, разделитель записей.
+    {{'_'},         kbLeftCtrl, {'_'}, 1}, // ^_, разделитель элементов.
 };
 
 static const const_unordered_map<ushort, KeyDownEvent> fromCursesKeyCode =
@@ -114,15 +114,15 @@ static const const_unordered_map<ushort, KeyDownEvent> fromCursesKeyCode =
     { KEY_SLEFT,        {{kbLeft},      kbShift}    },
     { KEY_SRIGHT,       {{kbRight},     kbShift}    },
     { KEY_SUSPEND,      {{kbCtrlZ},     kbLeftCtrl} },
-    // Avoid using these, as they are reserved by the Linux console.
+    // Не используйте эти значения: они зарезервированы консолью Linux.
     { KEY_SPREVIOUS,    {{kbPgUp},      kbShift}    },
     { KEY_SNEXT,        {{kbPgDn},      kbShift}    },
-    // Keypad
+    // Цифровая клавиатура.
     { KEY_A1,           {{kbHome},      0}          },
     { KEY_A3,           {{kbPgUp},      0}          },
     { KEY_C1,           {{kbEnd},       0}          },
     { KEY_C3,           {{kbPgDn},      0}          },
-    // Function keys F1-F12
+    // Функциональные клавиши F1–F12.
     { KEY_F0 + 1,       {{kbF1},        0}          },
     { KEY_F0 + 2,       {{kbF2},        0}          },
     { KEY_F0 + 3,       {{kbF3},        0}          },
@@ -135,7 +135,7 @@ static const const_unordered_map<ushort, KeyDownEvent> fromCursesKeyCode =
     { KEY_F0 + 10,      {{kbF10},       0}          },
     { KEY_F0 + 11,      {{kbF11},       0}          },
     { KEY_F0 + 12,      {{kbF12},       0}          },
-    // Shift+F1-F12
+    // Shift+F1–F12.
     { KEY_F0 + 13,      {{kbShiftF1},   kbShift}    },
     { KEY_F0 + 14,      {{kbShiftF2},   kbShift}    },
     { KEY_F0 + 15,      {{kbShiftF3},   kbShift}    },
@@ -148,9 +148,9 @@ static const const_unordered_map<ushort, KeyDownEvent> fromCursesKeyCode =
     { KEY_F0 + 22,      {{kbShiftF10},  kbShift}    },
     { KEY_F0 + 23,      {{kbShiftF11},  kbShift}    },
     { KEY_F0 + 24,      {{kbShiftF12},  kbShift}    },
-    /* Linux console support for function keys ends here, so please
-     * avoid using any of the following: */
-    // Ctrl+F1-F12
+    /* На этом поддержка функциональных сочетаний консоли Linux заканчивается; избегайте следующих:
+ */
+    // Ctrl+F1–F12.
     { KEY_F0 + 25,      {{kbCtrlF1},    kbLeftCtrl} },
     { KEY_F0 + 26,      {{kbCtrlF2},    kbLeftCtrl} },
     { KEY_F0 + 27,      {{kbCtrlF3},    kbLeftCtrl} },
@@ -163,7 +163,7 @@ static const const_unordered_map<ushort, KeyDownEvent> fromCursesKeyCode =
     { KEY_F0 + 34,      {{kbCtrlF10},   kbLeftCtrl} },
     { KEY_F0 + 35,      {{kbCtrlF11},   kbLeftCtrl} },
     { KEY_F0 + 36,      {{kbCtrlF12},   kbLeftCtrl} },
-    // Ctrl+Shift+F1-12
+    // Ctrl+Shift+F1–F12.
     { KEY_F0 + 37,      {{kbCtrlF1},    kbShift | kbLeftCtrl}},
     { KEY_F0 + 38,      {{kbCtrlF2},    kbShift | kbLeftCtrl}},
     { KEY_F0 + 39,      {{kbCtrlF3},    kbShift | kbLeftCtrl}},
@@ -176,7 +176,7 @@ static const const_unordered_map<ushort, KeyDownEvent> fromCursesKeyCode =
     { KEY_F0 + 46,      {{kbCtrlF10},   kbShift | kbLeftCtrl}},
     { KEY_F0 + 47,      {{kbCtrlF11},   kbShift | kbLeftCtrl}},
     { KEY_F0 + 48,      {{kbCtrlF12},   kbShift | kbLeftCtrl}},
-    // Alt+F1-F12
+    // Alt+F1–F12.
     { KEY_F0 + 49,      {{kbAltF1},     kbLeftAlt}  },
     { KEY_F0 + 50,      {{kbAltF2},     kbLeftAlt}  },
     { KEY_F0 + 51,      {{kbAltF3},     kbLeftAlt}  },
@@ -193,8 +193,8 @@ static const const_unordered_map<ushort, KeyDownEvent> fromCursesKeyCode =
 
 static const auto fromCursesHighKey =
     const_unordered_map<uint64_t, KeyDownEvent>::with_string_keys({
-    /* These keys are identified by name. The int value is not known
-     * at compilation time. */
+    /* Эти клавиши определяются по имени; целое значение неизвестно при компиляции.
+ */
     { "kDC3",       {{kbAltDel},        kbLeftAlt} },
     { "kEND3",      {{kbAltEnd},        kbLeftAlt} },
     { "kHOM3",      {{kbAltHome},       kbLeftAlt} },
@@ -235,7 +235,7 @@ static const auto fromCursesHighKey =
     { "kRIT6",      {{kbCtrlRight},     kbLeftCtrl | kbShift} },
     { "kUP6",       {{kbCtrlUp},        kbLeftCtrl | kbShift} },
     { "kDN6",       {{kbCtrlDown},      kbLeftCtrl | kbShift} },
-    { "kDC7",       {{kbAltDel},        kbLeftCtrl | kbLeftAlt} }, // Please do not attempt this one
+    { "kDC7",       {{kbAltDel},        kbLeftCtrl | kbLeftAlt} }, // Не пытайтесь использовать это сочетание.
     { "kEND7",      {{kbAltEnd},        kbLeftCtrl | kbLeftAlt} },
     { "kHOM7",      {{kbAltHome},       kbLeftCtrl | kbLeftAlt} },
     { "kIC7",       {{kbAltIns},        kbLeftCtrl | kbLeftAlt} },
@@ -258,10 +258,10 @@ static const auto fromCursesHighKey =
     { "kc2",        {{kbDown},          0} },
 });
 
-// Ncurses key codes (KEY_*) of the standard key capabilities, in the order
-// in which Ncurses adds them to its key table (sorted by the names of the
-// KEY_* constants). When several capabilities share the same sequence,
-// the last one in this list wins.
+// Коды Ncurses KEY_* для стандартных возможностей клавиатуры в порядке
+// добавления в таблицу Ncurses: по именам констант KEY_*. Если несколько
+// возможностей имеют одинаковую последовательность, приоритет у
+// последней в списке.
 struct StandardKey
 {
     const char *name;
@@ -314,7 +314,7 @@ static const StandardKey standardKeys[] =
 // KeyTrie
 
 KeyTrie::KeyTrie() noexcept :
-    nodes(1) // Dummy root node.
+    nodes(1) // Фиктивный корневой узел.
 {
 }
 
@@ -337,7 +337,7 @@ void KeyTrie::insert(TStringView seq, int value) noexcept
         int next = findChild(node, ch);
         if (next == -1)
         {
-            // Like Ncurses, new nodes are appended after their siblings.
+            // Как в Ncurses, новые узлы добавляются после соседних.
             next = (int) nodes.size();
             nodes.emplace_back();
             nodes[next].ch = ch;
@@ -352,7 +352,7 @@ void KeyTrie::insert(TStringView seq, int value) noexcept
 }
 
 int KeyTrie::findDefinition(int ptr, TStringView str) const noexcept
-// Port of Ncurses' 'find_definition()'.
+// Перенос find_definition() из Ncurses.
 {
     enum { OK = 0, ERR = -1 };
     int result = OK;
@@ -381,14 +381,14 @@ int KeyTrie::keyDefined(TStringView seq) const noexcept
     return findDefinition(nodes[0].child, seq);
 }
 
-/////////////////////////////////////////////////////////////////////////
-// TerminalInputGetter
+// TerminalInputGetter. Очередь ввода устроена как FIFO Ncurses: элементы
+// от начала до позиции peek, числом fifoPeek, уже обработаны и
+// возвращаются без изменений. Остальные, необработанные, участвуют в
+// распознавании последовательностей клавиш. Возвращённые unget элементы
+// всегда считаются обработанными.
 //
-// The input queue works like Ncurses' FIFO: the items between the front of
-// the queue and the 'peek' position ('fifoPeek' items) have already been
-// examined ("cooked") and are returned as they are. The rest ("raw") are
-// subject to key sequence recognition. Items put back with 'unget' are
-// always cooked.
+//
+//
 
 int TerminalInputGetter::rawGet(int ms) noexcept
 {
@@ -406,15 +406,15 @@ int TerminalInputGetter::rawGet(int ms) noexcept
 }
 
 bool TerminalInputGetter::hasActivity(int ms) noexcept
-// Whether there are bytes to be read from the terminal, waiting at most
-// 'ms' milliseconds. Like Ncurses' 'check_mouse_activity()'.
+// Проверяет наличие байтов для чтения из терминала, ожидая не более ms
+// миллисекунд. Аналог check_mouse_activity() из Ncurses.
 {
     if (rawBegin < rawEnd)
         return true;
     if (fd < 0)
         return false;
-    // We use 'select' instead of 'poll' because 'poll' does not support
-    // terminal devices on macOS.
+    // Используем select вместо poll, поскольку poll не поддерживает
+    // терминальные устройства macOS.
     if (fd < FD_SETSIZE)
     {
         fd_set readFds;
@@ -479,8 +479,8 @@ void TerminalInputGetter::fifoErase(size_t i) noexcept
 }
 
 int TerminalInputGetter::kgetch() noexcept
-// Port of Ncurses' 'kgetch()': reads a key sequence and returns its key code,
-// or the first byte if it does not form a key sequence.
+// Перенос kgetch() из Ncurses: читает последовательность клавиши и
+// возвращает её код либо первый байт, если последовательность не распознана.
 {
     int node = keyTrie.root();
     for (;;)
@@ -489,11 +489,11 @@ int TerminalInputGetter::kgetch() noexcept
             break;
         else if (fifoPeek >= fifoCount)
         {
-            // No raw items: read more input.
+            // Необработанных элементов нет: читаем ещё.
             int k = rawGet(0);
             if (k == -1 || !fifoPushBack(k))
             {
-                fifoPeek = 0; // The items stay uninterpreted.
+                fifoPeek = 0; // Элементы остаются неинтерпретированными.
                 return -1;
             }
         }
@@ -501,7 +501,7 @@ int TerminalInputGetter::kgetch() noexcept
         int ch = fifoAt(fifoPeek++);
         if (ch >= KEY_MIN)
         {
-            // A key code which was put back in the middle of the queue.
+            // Код клавиши, возвращённый в середину очереди.
             fifoPeek = 0;
             fifoErase(fifoCount - 1);
             return ch;
@@ -513,7 +513,7 @@ int TerminalInputGetter::kgetch() noexcept
             break;
         if (keyTrie.value(node) != 0)
         {
-            // Sequence terminated: remove it from the queue.
+            // Последовательность завершена: удаляем её из очереди.
             int value = keyTrie.value(node);
             size_t n = fifoPeek;
             fifoPeek = 0;
@@ -524,7 +524,7 @@ int TerminalInputGetter::kgetch() noexcept
         node = keyTrie.child(node);
 
         if (fifoPeek >= fifoCount && !hasActivity(escDelayMs))
-            break; // Ran out of time.
+            break; // Время ожидания истекло.
     }
     fifoPeek = 0;
     int ch = fifoPopFront();
@@ -533,17 +533,17 @@ int TerminalInputGetter::kgetch() noexcept
 }
 
 int TerminalInputGetter::get(int ms) noexcept
-// Port of Ncurses' 'wgetch()' in keypad mode.
+// Перенос wgetch() из Ncurses в режиме клавиатуры.
 {
     if (fifoPeek > 0)
         return fifoPopFront();
     if (fifoCount == 0 && !hasActivity(ms))
         return -1;
 
-    // Like Ncurses, accumulate mouse events while they keep arriving. Since
-    // we don't let Ncurses' mouse driver handle them, this just means that
-    // after a mouse sequence ('kmous'), we wait for some more input and put
-    // back the next item so that the mouse event can be parsed.
+    // Как Ncurses, накапливаем непрерывно поступающие события мыши.
+    // Поскольку драйвер мыши Ncurses не используется, после kmous просто
+    // ждём дополнительный ввод и возвращаем следующий элемент в очередь для
+    // разбора события.
     int runcount = 0;
     int ch;
     do
@@ -567,14 +567,14 @@ int TerminalInputGetter::get() noexcept
 }
 
 void TerminalInputGetter::unget(int k) noexcept
-// Port of Ncurses' 'ungetch()'.
+// Перенос ungetch() из Ncurses.
 {
     if (k == -1 || fifoCount >= fifoSize)
         return;
     bool wasEmpty = fifoCount == 0;
     fifoPushFront(k);
     if (wasEmpty)
-        fifoPeek = fifoCount; // No raw items.
+        fifoPeek = fifoCount; // Необработанных элементов нет.
     else
         ++fifoPeek;
 }
@@ -590,11 +590,11 @@ bool TerminalInputGetter::hasPending() const noexcept
 void TerminalInput::buildKeyTable( const TermInfo &termInfo, KeyTrie &keyTrie,
                                    std::vector<const char *> &extNames ) noexcept
 {
-    // Same as Ncurses' '_nc_init_keytry()': first, the standard key
-    // capabilities are added in the order of 'standardKeys' (a later one
-    // replaces an earlier one with the same sequence). Then, the user-defined
-    // capabilities whose name begins with 'k' are added unless their sequence
-    // is already defined.
+    // Как _nc_init_keytry() в Ncurses: сначала добавляем стандартные
+    // возможности в порядке standardKeys; более поздняя заменяет прежнюю с
+    // той же последовательностью. Затем добавляем пользовательские
+    // возможности с именами на k, если последовательность ещё не определена.
+    //
     for (const auto &key : standardKeys)
         if (const char *value = termInfo.getStr(key.name))
             keyTrie.insert(value, key.code);
@@ -615,8 +615,8 @@ KeyDownEvent TerminalInput::keyFromCode(int code, const std::vector<const char *
 {
     if (KEY_MIN < code && code < KEY_MAX)
         return fromCursesKeyCode[code];
-    // Note: Turbo Vision used to ignore the first user-defined key
-    // (whose code is KEY_MAX) because of an off-by-one error.
+    // Примечание: из-за ошибки на единицу Turbo Vision раньше игнорировала
+    // первую пользовательскую клавишу с кодом KEY_MAX.
     if (KEY_MAX <= code && size_t(code - KEY_MAX) < extNames.size())
         return fromCursesHighKey[extNames[code - KEY_MAX]];
     return {};
@@ -629,18 +629,18 @@ TerminalInput::TerminalInput( ConsoleCtl &aCon, TerminalDisplay &aDisplay,
     display(aDisplay),
     state(aState),
     mouseEnabled(mouse),
-    // Do not delay too much on ESC key presses, as the Alt modifier works well
-    // in most modern terminals. Still, this delay helps distinguish special key
-    // sequences.
-    // Make reads practically non-blocking. Some terminals may feed input slowly.
-    // Note that we only risk blocking when reading multibyte characters
-    // or parsing escape sequences.
+    // Не задерживаем слишком надолго нажатие Esc: в современных терминалах
+    // Alt обычно работает хорошо. Задержка всё же помогает различать
+    // специальные последовательности. Чтение практически неблокирующее;
+    // некоторые терминалы подают данные медленно. Риск блокировки есть
+    // только при чтении многобайтового символа или управляющей
+    // последовательности.
     in(aCon.in(), keyTrie, getEnv<int>("ESCDELAY", 10), readTimeoutMs)
 {
     buildKeyTable(display.termInfo, keyTrie, extKeyNames);
-    // Capture all keyboard input, without echo and without translating CR.
+    // Перехватываем весь ввод клавиатуры без эха и преобразования CR.
     display.setRawInputMode();
-    // Allow capturing function keys.
+    // Разрешаем перехват функциональных клавиш.
     display.setKeypadMode(true);
 
     TermIO::keyModsOn(con);
@@ -683,7 +683,7 @@ bool TerminalInput::getEvent(TEvent &ev) noexcept
 
     if (k != -1)
     {
-        // A Unicode character might be composed of up to 4 UTF-8 bytes.
+        // Символ Unicode может занимать до четырёх байтов UTF-8.
         int keys[4] = {k}, num_keys = 1;
 
         ev.what = evKeyDown;
@@ -695,12 +695,12 @@ bool TerminalInput::getEvent(TEvent &ev) noexcept
         if ((uint) keys[0] < 32)
             ev.keyDown = fromNonPrintableAscii[keys[0]];
         else if (keys[0] == 127)
-            ev.keyDown = {{kbBack}, 0}; // ^?, Delete
+            ev.keyDown = {{kbBack}, 0}; // ^?, Delete.
         else if (KEY_MIN < keys[0])
             ev.keyDown = keyFromCode(keys[0], extKeyNames);
 
-        // If it hasn't been transformed by any of the previous tables,
-        // and it's not a key code, treat it like a printable character.
+        // Если предыдущие таблицы не изменили значение и это не код клавиши,
+        // считаем его печатным символом.
         if (ev.keyDown.keyCode == kbNoKey && keys[0] < KEY_MIN)
             parsePrintableChar(ev, keys, num_keys);
 
@@ -719,10 +719,10 @@ bool TerminalInput::getEvent(TEvent &ev) noexcept
 
 void TerminalInput::detectAlt(int keys[4], bool &Alt) noexcept
 {
-/* Alt+Key combinations begin with the character ESC. To tell the difference,
- * we check if another character has been received. If it has, we consider this
- * an Alt+Key combination. Of course, many other things sent by the terminal
- * begin with ESC, but most of them have already been identified. */
+/*
+ * Сочетания Alt+клавиша начинаются с Esc. Проверяем наличие следующего символа: если он уже получен, считаем
+ * это Alt+клавиша. Другие данные терминала тоже могут начинаться с Esc, но большинство уже распознано.
+ */
     int k = getChNb();
     if (k != -1)
     {
@@ -733,23 +733,23 @@ void TerminalInput::detectAlt(int keys[4], bool &Alt) noexcept
 
 void TerminalInput::parsePrintableChar(TEvent &ev, int keys[4], int &num_keys) noexcept
 {
-    // Read any possible remaining bytes.
+    // Читаем возможные оставшиеся байты.
     readUtf8Char(keys, num_keys);
     for (int i = 0; i < num_keys; ++i)
         ev.keyDown.text[i] = (char) keys[i];
     ev.keyDown.textLength = (uchar) num_keys;
-    // If we are lucky enough, the character will be representable in
-    // the active codepage.
+    // Возможно, символ представим в активной кодовой странице.
+    //
     ev.keyDown.charScan.charCode = CpTranslator::fromUtf8({ev.keyDown.text, size_t(num_keys)});
-    // Prevent text from triggering Ctrl+Key shortcuts.
+    // Не допускаем срабатывания сочетаний Ctrl+клавиша от текстового ввода.
     if (ev.keyDown.keyCode <= kbCtrlZ)
         ev.keyDown.keyCode = kbNoKey;
 }
 
 void TerminalInput::readUtf8Char(int keys[4], int &num_keys) noexcept
 {
-/* Unicode characters are sent by the terminal byte by byte. To read one, we
- * have to predict the number of bytes it is composed of, then read as many. */
+/* Терминал передаёт Unicode побайтно. Нужно определить число байтов символа и прочитать их все.
+ */
     num_keys += Utf8BytesLeft((char) keys[0]);
     for (int i = 1; i < num_keys; ++i)
         if ((keys[i] = in.get()) == -1)
@@ -760,12 +760,12 @@ void TerminalInput::readUtf8Char(int keys[4], int &num_keys) noexcept
 }
 
 bool TerminalInput::parseMouse(TEvent &ev) noexcept
-// Pre: the sequence of the 'kmous' capability has just been read.
+// Предусловие: только что прочитана последовательность возможности kmous.
 {
-    // The 'kmous' capability is either "\x1B[M" or "\x1B[<", but we don't know
-    // which one was read. We could query terminal capabilities to deduce it,
-    // but it is also possible to just follow a trial and error approach.
-    // 'parseSGRMouse' is more likely to fail, so try it first.
+    // kmous имеет вид "\x1B[M" либо "\x1B[<", но неизвестно, какой вариант
+    // прочитан. Можно запросить возможности терминала либо попробовать оба
+    // разбора. parseSGRMouse с большей вероятностью обнаружит
+    // несоответствие, поэтому начинаем с него.
     for (auto &parseMouse : {TermIO::parseSGRMouse,
                              TermIO::parseX10Mouse})
     {
@@ -780,6 +780,6 @@ bool TerminalInput::parseMouse(TEvent &ev) noexcept
     return false;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

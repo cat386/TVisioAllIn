@@ -413,4 +413,4 @@ Boolean TCombo::valid(ushort command)
             return True;
     return False;
 }
-} // namespace tvision
+} // пространство имён tvision

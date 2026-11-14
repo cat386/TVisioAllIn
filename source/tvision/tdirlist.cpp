@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tdirlist.cpp                              */
+/* файл — tdirlist.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TDirListBox member functions              */
+/* функции:  */
+/* Методы TDirListBox */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -116,7 +116,7 @@ void TDirListBox::showDirs( TDirCollection *dirs )
     char *curDir = dir;
     char *end;
 
-    // Show root directory.
+    // Показываем корневой каталог.
     if( (end = strchr( curDir, '\\' )) != 0 )
         {
         char hold = *(++end);
@@ -129,7 +129,7 @@ void TDirListBox::showDirs( TDirCollection *dirs )
     else
         return;
 
-    // Show directories up to the current one.
+    // Показываем каталоги до текущего.
     while( (end = strchr( curDir, '\\' )) != 0 )
         {
         *end = EOS;
@@ -142,7 +142,7 @@ void TDirListBox::showDirs( TDirCollection *dirs )
 
     cur = dirs->getCount() - 1;
 
-    // Show subdirectories.
+    // Показываем подкаталоги.
     end = strrchr( dir, '\\' );
     char path[MAXPATH];
     strncpy( path, dir, size_t(end-dir+1) );
@@ -190,7 +190,7 @@ void TDirListBox::newDirectory( TStringView str )
     strnzcpy( dir, str, sizeof(dir) );
     TDirCollection *dirs = new TDirCollection( 5, 5 );
 #if !defined( _TV_UNIX )
-    // Add 'Drives' entry.
+    // Добавляем пункт Drives.
     dirs->insert( new TDirEntry( drives, drives ) );
 #endif
     if( str == drives )

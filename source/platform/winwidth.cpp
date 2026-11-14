@@ -10,8 +10,8 @@ std::atomic<size_t> WinWidth::lastReset {0};
 std::atomic<bool> WinWidth::isLegacyConsole {false};
 WinWidth thread_local &WinWidth::localInstance = *new WinWidth;
 
-// MinGW: work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83562
-// by deleting 'localInstance' through a static reference.
+// MinGW: обходим https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83562,
+// удаляя localInstance через статическую ссылку.
 struct WinWidth::Destructor
 {
     ~Destructor()
@@ -31,8 +31,8 @@ void WinWidth::setUp() noexcept
     {
         tearDown();
         currentReset = lastReset;
-        // Allocating a buffer in order to print characters is only necessary
-        // when not in the legacy console.
+        // Буфер для вывода символов нужен только в современной консоли.
+        //
         if (!isLegacyConsole)
         {
             cnHandle = CreateConsoleScreenBuffer(
@@ -69,13 +69,13 @@ int WinWidth::calcWidth(uint32_t u32) noexcept
         uint16_t u16[3];
         int len = utf32To16(u32, u16);
         if (cnHandle == INVALID_HANDLE_VALUE)
-            // In the legacy console, each code unit takes one cell.
+            // В старой консоли каждая кодовая единица занимает одну ячейку.
             return len;
         int res = -1;
         if (len > 0)
         {
-            // We print an additional character so that we can distinguish
-            // actual double-width characters from the ones affected by
+            // Выводим дополнительный символ, чтобы отличать настоящие широкие
+            // символы от затронутых
             // https://github.com/microsoft/terminal/issues/11756.
             u16[len] = '#';
             SetConsoleCursorPosition(cnHandle, {0, 0});
@@ -91,7 +91,7 @@ int WinWidth::calcWidth(uint32_t u32) noexcept
                     res = -1;
             }
         }
-        // Memoize the result.
+        // Кэшируем результат.
         results.emplace(u32, res);
         return res;
     }
@@ -99,6 +99,6 @@ int WinWidth::calcWidth(uint32_t u32) noexcept
         return it->second;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _WIN32

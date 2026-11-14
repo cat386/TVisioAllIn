@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sfildlg.cpp                               */
+/* файл — sfildlg.cpp */
 /*                                                            */
-/* Registeration object for the class TFileDialog             */
+/* Объект регистрации класса TFileDialog. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

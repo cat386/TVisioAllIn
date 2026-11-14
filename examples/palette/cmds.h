@@ -1,6 +1,6 @@
+// CMDS.H — команды системы сообщений: меню, строки состояния и диалогов.
 //
-// CMDS.H - Various commands used in the message system (menus,
-// status line, dialog boxes).
+//
 //
 
 #if !defined( _CMDS_H )

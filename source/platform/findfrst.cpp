@@ -11,10 +11,10 @@ FindFirstRec::RecList FindFirstRec::recList;
 FindFirstRec* FindFirstRec::allocate(struct find_t *fileinfo, unsigned attrib,
                                      const char *pathname) noexcept
 {
-    // The findfirst interface based on DOS call 0x4E doesn't provide a
-    // findclose function. The strategy here is the same as in Borland's RTL:
-    // new directory streams are allocated unless fileinfo is an address
-    // that has already been passed to us before.
+    // Интерфейс findfirst, основанный на вызове DOS 0x4E, не имеет
+    // findclose. Используется стратегия RTL Borland: выделяем новые потоки
+    // каталогов, если адрес fileinfo ранее нам не передавался.
+    //
     if (!fileinfo)
         return 0;
     std::lock_guard<std::mutex> lock(recList);
@@ -27,9 +27,9 @@ FindFirstRec* FindFirstRec::allocate(struct find_t *fileinfo, unsigned attrib,
             r = &recList[index];
             break;
         }
-    // At this point, 'index' is either the position of the matching FindFirstRec
-    // item or the size of recList, in which case a new item will be added
-    // at the end of the list and 'index' will be a valid index pointing at it.
+    // Теперь index — либо позиция соответствующего элемента FindFirstRec,
+    // либо размер recList. Во втором случае элемент будет добавлен в конец,
+    // и index станет его корректным индексом.
     if (r)
         r->close();
     else
@@ -38,8 +38,8 @@ FindFirstRec* FindFirstRec::allocate(struct find_t *fileinfo, unsigned attrib,
         r = &recList[index];
         r->finfo = fileinfo;
     }
-    // If pathname is a valid directory, make fileinfo point to the allocated
-    // FindFirstRec. Otherwise, return NULL.
+    // Если pathname — допустимый каталог, связываем fileinfo с выделенным
+    // FindFirstRec. Иначе возвращаем NULL.
     if (r->setParameters(attrib, pathname))
     {
         fileinfo->reserved = (long) index;
@@ -51,7 +51,7 @@ FindFirstRec* FindFirstRec::allocate(struct find_t *fileinfo, unsigned attrib,
 
 FindFirstRec* FindFirstRec::get(struct find_t *fileinfo) noexcept
 {
-    // Return the FindFirstRec instance pointed to by fileinfo.
+    // Возвращаем экземпляр FindFirstRec, на который указывает fileinfo.
     std::lock_guard<std::mutex> lock(recList);
     size_t pos = fileinfo->reserved;
     if (pos < recList.size() && recList[pos].finfo == fileinfo)
@@ -97,35 +97,35 @@ void FindFirstRec::close() noexcept
 
 bool FindFirstRec::setPath(const char* pathname) noexcept
 {
-    // Reject NULL or empty pathnames.
+    // Отклоняем NULL и пустые пути.
     if (pathname && *pathname)
     {
         searchDir = pathname;
         path_dos2unix(searchDir);
-        // Win32's FindFirst is designed to reject paths ending with a
-        // separator. But legacy code unaware of Unix separators may be unable
-        // to remove it and call findfirst with such a pathname. Therefore,
-        // we handle this case gracefully.
+        // Win32 FindFirst отклоняет пути с завершающим разделителем. Но старый
+        // код, не учитывающий разделители Unix, может не удалить его и вызвать
+        // findfirst с таким путём. Поэтому корректно обрабатываем этот случай.
+        //
         if (searchDir.back() == '/')
             wildcard = '.';
         else
         {
             auto lastSlash = searchDir.find_last_of('/');
-            // When pathname doesn't contain a '/', wildcard keeps the whole
-            // string and searchDir is set to the current directory.
+            // Если в pathname нет '/', wildcard содержит всю строку, а searchDir
+            // задаётся текущим каталогом.
             wildcard = searchDir.substr(lastSlash + 1);
             if (lastSlash == std::string::npos)
                 searchDir = "./";
             else
                 searchDir = searchDir.substr(0, lastSlash + 1);
-            // '*.*' stands for 'any name, any extension'. We shouldn't expect
-            // a dot in the filename in this case. In Borland C++, '*' yields
-            // the same result as '*.*' in 32-bit builds, while it only returns
-            // extensionless files in 16-bit builds.
+            // '*.*' означает любое имя и расширение, поэтому точка в имени не
+            // обязательна. В 32-битной сборке Borland C++ '*' даёт тот же результат;
+            // в 16-битной возвращает только файлы без расширения.
+            //
             if (wildcard == "*.*")
                 wildcard = '*';
         }
-        // At this point, searchDir always ends with a '/'.
+        // Теперь searchDir всегда заканчивается на '/'.
         return true;
     }
     return false;
@@ -140,7 +140,7 @@ bool FindFirstRec::matchEntry(struct dirent* e) noexcept
         unsigned fileAttr = cvtAttr(&st, e->d_name);
         if (attrMatch(fileAttr))
         {
-            // Match found, fill finfo.
+            // Совпадение найдено, заполняем finfo.
             finfo->size = st.st_size;
             finfo->attrib = fileAttr;
             cvtTime(&st, finfo);
@@ -153,9 +153,9 @@ bool FindFirstRec::matchEntry(struct dirent* e) noexcept
 
 bool FindFirstRec::attrMatch(unsigned attrib) noexcept
 {
-    // Behaviour from the original _dos_findnext: 'if requested attribute
-    // word includes hidden, system, or subdirectory bits, return
-    // normal files AND those with any of the requested attributes'.
+    // Поведение исходного _dos_findnext: если запрошены атрибуты скрытого,
+    // системного файла или подкаталога, возвращаются обычные файлы и файлы с
+    // любым из запрошенных атрибутов.
     return !(attrib & SPECIAL_BITS) || (searchAttr & attrib & SPECIAL_BITS);
 }
 
@@ -187,31 +187,31 @@ bool FindFirstRec::wildcardMatch(char const *wildcard, char const *filename) noe
 
 unsigned FindFirstRec::cvtAttr(const struct stat *st, const char* filename) noexcept
 {
-    // Returns file attributes in find_t format.
+    // Возвращает атрибуты файла в формате find_t.
     unsigned attr = 0; // _A_NORMAL
     if (filename[0] == '.')
         attr |= _A_HIDDEN;
     if (st->st_mode & S_IFDIR)
         attr |= _A_SUBDIR;
-    else if (!(st->st_mode & S_IFREG)) // If not a regular file
+    else if (!(st->st_mode & S_IFREG)) // Если это не обычный файл.
         attr |= _A_SYSTEM;
-    else if (!(st->st_mode & S_IWUSR)) // If no write access, innacurate.
+    else if (!(st->st_mode & S_IWUSR)) // Если нет права записи; проверка неточная.
         attr |= _A_RDONLY;
     return attr;
 }
 
 void FindFirstRec::cvtTime(const struct stat *st, struct find_t *fileinfo) noexcept
 {
-    // Updates fileinfo with the times in st.
+    // Обновляет времена fileinfo значениями из st.
     struct FatDate {
-        ushort  day     : 5, // Day of the month (1–31)
-                month   : 4, // Month (1-12)
-                year    : 7; // Year-1980
+        ushort  day     : 5, // День месяца, 1–31.
+                month   : 4, // Месяц, 1–12.
+                year    : 7; // Год минус 1980.
     } *wr_date = (FatDate *) &fileinfo->wr_date;
     struct FatTime {
-        ushort  sec     : 5, // Seconds divided by 2
-                min     : 6, // Minutes (0-59)
-                hour    : 5; // Hour (0-23)
+        ushort  sec     : 5, // Секунды, делённые на два.
+                min     : 6, // Минуты, 0–59.
+                hour    : 5; // Часы, 0–23.
     } *wr_time = (FatTime *) &fileinfo->wr_time;
 
     struct tm *lt = localtime(&st->st_mtime);
@@ -256,7 +256,7 @@ bool FindFirstRec::next() noexcept
         {
             unsigned attr = cvtAttr(&findData, findData.cFileName);
             if (attrMatch(attr)) {
-                // Match found, fill finfo.
+                // Совпадение найдено, заполняем finfo.
                 finfo->size = findData.nFileSizeLow;
                 finfo->attrib = attr;
                 cvtTime(&findData, finfo);
@@ -307,4 +307,4 @@ void FindFirstRec::cvtTime(const WIN32_FIND_DATAW *findData, struct find_t *file
 
 #endif // _WIN32
 
-} // namespace tvision
+} // пространство имён tvision

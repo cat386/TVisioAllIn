@@ -1,9 +1,9 @@
-// Built-in terminal descriptions, used when the terminal type cannot be
-// found in the terminfo database. They contain the subset of capabilities
-// Turbo Vision needs (keys, screen initialization, cursor movement,
-// alternate screen, keypad mode, cursor visibility and colors) and were
-// generated from the Ncurses descriptions of 'xterm-256color' and 'linux'.
-// User-defined capabilities (e.g. 'kDC5') are kept in their original order.
+// Встроенные описания используются при отсутствии типа терминала в базе
+// terminfo. Содержат нужные Turbo Vision возможности: клавиши,
+// инициализацию экрана, перемещение и видимость курсора, альтернативный
+// экран, режим клавиатуры и цвета. Созданы из описаний xterm-256color и
+// linux в Ncurses. Порядок пользовательских возможностей, например kDC5,
+// сохранён.
 
 struct BuiltinStrCap { const char *name; const char *value; };
 struct BuiltinNumCap { const char *name; int value; };

@@ -1,6 +1,6 @@
-// Replacements for functions in Borland's C/C++ Run Time Library.
-// The code below, although inspired by RTL version 1.5 from BC++ 4.52,
-// has been written from scratch.
+// Замены функций библиотеки времени выполнения C/C++ Borland. Код ниже
+// написан с нуля, хотя основан на идеях RTL 1.5 из BC++ 4.52.
+//
 
 #include <internal/findfrst.h>
 #include <internal/pathconv.h>
@@ -14,7 +14,7 @@ unsigned _dos_findfirst( const char *pathname, unsigned attrib,
                          struct find_t *fileinfo ) noexcept
 {
     using namespace tvision;
-    // The original findfirst sets errno on failure. We don't do this for now.
+    // Исходный findfirst устанавливает errno при ошибке. Пока этого не делаем.
     FindFirstRec *r;
     if ((r = FindFirstRec::allocate(fileinfo, attrib, pathname)))
         return r->next() ? 0 : -1;
@@ -83,20 +83,20 @@ void fnmerge( char *pathP, const char *driveP, const char *dirP,
         n += movestr(&pathP[n], extP, MAXPATH - n);
     }
 #ifdef _TV_UNIX
-    // fnmerge is often used before accessing files, so producing a
-    // UNIX-formatted path fixes most cases of filesystem access.
+    // fnmerge часто вызывается перед доступом к файлам, поэтому путь в формате
+    // Unix исправляет большинство случаев обращения к файловой системе.
     path_dos2unix(pathP);
 #endif
 }
 
 static bool CopyComponent(char* dstP, const char* startP, const char* endP, size_t MAX) noexcept
 {
-    // Copies a path component of length endP-startP into dstP.
-    // If the component is empty, returns false and does nothing.
+    // Копирует компонент пути длиной endP-startP в dstP. Для пустого
+    // компонента возвращает false и ничего не делает.
     if (endP != startP)
     {
         if (dstP)
-            // This always adds a trailing '\0', thus the +1.
+            // Всегда добавляет завершающий '\0', поэтому нужен +1.
             strnzcpy(dstP, startP, min<size_t>(MAX, endP-startP+1));
         return true;
     }
@@ -119,15 +119,15 @@ int fnsplit(const char *pathP, char *driveP, char *dirP, char *nameP, char *extP
         size_t len = strlen(pathP);
         const char *pathEnd = pathP+len;
         const char *caretP = 0;
-        const char *slashP = 0; // Rightmost slash
-        const char *lastDotP = 0; // Last dot in filename
-        const char *firstDotP = 0; // First dot in filename
+        const char *slashP = 0; // Крайняя правая косая черта.
+        const char *lastDotP = 0; // Последняя точка в имени файла.
+        const char *firstDotP = 0; // Первая точка в имени файла.
         for (size_t i = len - 1; i < len; --i)
             switch (pathP[i])
             {
                 case '?':
                 case '*':
-                    // Wildcards are only detected in filename or extension.
+                    // Подстановочные символы распознаются только в имени или расширении.
                     if (!slashP)
                         flags |= WILDCARDS;
                     break;
@@ -148,19 +148,19 @@ int fnsplit(const char *pathP, char *driveP, char *dirP, char *nameP, char *extP
                     if (i == 1)
                     {
                         caretP = pathP+i;
-                        i = 0; // Exit loop, we don't check the drive letter.
+                        i = 0; // Выходим из цикла; букву диска не проверяем.
                     }
                 default:
                     ;
             }
-        // These variables point after the last character of each component.
+        // Переменные указывают за последний символ каждого компонента.
         const char *driveEnd = caretP ? caretP+1 : pathP;
         const char *dirEnd = slashP ? slashP+1 : driveEnd;
         const char *nameEnd = lastDotP ? lastDotP : pathEnd;
-        // Special case: path ends with '.' or '..', thus there's no filename.
+        // Особый случай: путь заканчивается на '.' или '..', поэтому имени файла нет.
         if (lastDotP == pathEnd-1 && lastDotP - firstDotP < 2 && firstDotP == dirEnd)
             dirEnd = nameEnd = pathEnd;
-        // Copy components and set flags.
+        // Копируем компоненты и задаём флаги.
         CopyComponent(driveP, pathP, driveEnd, MAXDRIVE) && (flags |= DRIVE);
         CopyComponent(dirP, driveEnd, dirEnd, MAXDIR) && (flags |= DIRECTORY);
         CopyComponent(nameP, dirEnd, nameEnd, MAXFILE) && (flags |= FILENAME);
@@ -174,7 +174,7 @@ int getdisk() noexcept
 #ifdef _WIN32
     return _getdrive() - 1;
 #else
-    // Emulate drive C.
+    // Эмулируем диск C.
     return 'C' - 'A';
 #endif
 }
@@ -191,12 +191,12 @@ int setdisk(int drive) noexcept
 
 int getcurdir(int drive, char *direc) noexcept
 {
-    // direc is an array of length MAXDIR where the null-terminated directory
-    // name will be placed, without drive specification nor leading backslash.
-    // Note that drive 0 is the 'default' drive, 1 is drive A, etc.
+    // direc — массив длиной MAXDIR для имени каталога с завершающим нулём,
+    // без диска и начальной обратной косой черты. Диск 0 означает диск по
+    // умолчанию, 1 — диск A и далее.
     using namespace tvision;
 #ifdef _WIN32
-    enum { prefix = 3 }; // Drive + slash
+    enum { prefix = 3 }; // Диск и косая черта.
     enum { bufLen = MAXDIR + prefix };
     wchar_t buf[bufLen];
     wchar_t drv[3] = {wchar_t((drive ? drive - 1 : getdisk()) + 'A'), ':', '\0'};
@@ -206,7 +206,7 @@ int getcurdir(int drive, char *direc) noexcept
         return 0;
     return -1;
 #else
-    enum { prefix = 1 }; // Root slash
+    enum { prefix = 1 }; // Косая черта корня.
     if (drive == 0 || drive - 1 == getdisk())
     {
         char buf[MAXDIR + prefix];

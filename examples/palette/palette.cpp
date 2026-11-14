@@ -1,5 +1,5 @@
+// PALETTE.CPP — пример использования системы палитр.
 //
-// PALETTE.CPP - Example module for palette system.
 //
 
 #define Uses_TView
@@ -7,16 +7,16 @@
 #define Uses_TPalette
 #define Uses_TDrawBuffer
 #include <tv.h>
-#include "palette.h"                    // Class definitions for
-                                        // this module
-#include <stdio.h>                      // For sprintf()
+#include "palette.h"                    // Определения классов этого модуля
+                                        //
+#include <stdio.h>                      // Для sprintf().
 
+// Конструктор TTestView
 //
-//  TTestView constructor
 //
 
-#define cpTestView "\x9\xA\xB\xC\xD\xE" // SIX colors available
-                                        // in this view.
+#define cpTestView "\x9\xA\xB\xC\xD\xE" // В этом представлении доступны шесть цветов.
+                                        //
 
 TTestView::TTestView( TRect& r ) : TView( r )
 {
@@ -27,26 +27,26 @@ void TTestView::draw()
     TDrawBuffer buf;
     TColorAttr textAttr;
     char text[128];
-    for(int i = 1; i <= 6; i++)         // Loop through palette
-                                        // (6 entries).
+    for(int i = 1; i <= 6; i++)         // Перебираем палитру из шести элементов.
+                                        //
     {
-        textAttr = getColor( i );       // Obtain attribute for
-                                        // given index.
+        textAttr = getColor( i );       // Получаем атрибут по заданному индексу.
+                                        //
         sprintf(text, " This line uses index %02X, color is %02X ", i, (uchar) textAttr);
-        buf.moveStr(0, text, textAttr);      // Write to buffer.
-        writeLine(0, i-1, size.x, 1, buf);   // Write buffer to
-                                             // view.
+        buf.moveStr(0, text, textAttr);      // Записываем в буфер.
+        writeLine(0, i-1, size.x, 1, buf);   // Выводим буфер в представление.
+                                             //
     }
+// Последняя строка этого представления не использует палитры: она всегда
+// выводится пурпурным на чёрном фоне.
 //
-// The last line of this view will not use the palettes at all,
-// but rather will print in Purple on Black, always.
 //
     buf.moveStr(0, "   This line bypasses the palettes!    ", 5);
     writeLine(0, 6, size.x, 7, buf);
 }
 
+// getPalette создаёт и возвращает палитру с заданными значениями.
 //
-// getPalette: Create and return a palette with the given values.
 //
 
 TPalette& TTestView::getPalette() const
@@ -60,9 +60,9 @@ TPalette& TTestView::getPalette() const
 //
 
 #define cpTestWindow "\x88\x89\x8A\x8B\x8C\x8D"
-// SIX new colors!
+// Ещё шесть цветов!
 #define cpBlueWindow "\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F"
-// original palettes
+// Исходные палитры.
 #define cpCyanWindow "\x10\x11\x12\x13\x14\x15\x16\x17"
 #define cpGrayWindow "\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F"
 
@@ -77,13 +77,13 @@ TTestWindow::TTestWindow() :
     flags = wfMove | wfClose;
 }
 
+// getPalette: как и системная палитра, палитры окон имеют несколько
+// вариантов: синий, бирюзовый и серый. Новый набор цветов только один,
+// поэтому присоединяем его к каждому варианту с помощью объединения
+// соседних строковых литералов компилятором. Поэтому используются
+// #define, а не 'const char *'.
 //
-// getPalette: Like the system palette, windows employ more than
-// one possible set of colors: blue, cyan, and gray.  Only one
-// new set of colors has been defined though, so we simply
-// concatenate that set to each of the others by applying the
-// compiler feature that concatenates adjacent literal strings.
-// This is why we use #defines instead of a  'const char *'.
+//
 //
 
 TPalette& TTestWindow::getPalette() const
@@ -98,9 +98,9 @@ TPalette& TTestWindow::getPalette() const
                           sizeof( cpGrayWindow cpTestWindow )-1
                         );
     static TPalette *palettes[] = { &blue, &cyan, &gray };
-    return *(palettes[palette]);    // 'palette' is a member
-                                    // variable that
-                                    // represents the palette
-                                    // being used
-                                    // currently.
+    return *(palettes[palette]);    // Поле 'palette' задаёт используемую палитру.
+                                    //
+                                    //
+                                    //
+                                    //
 }

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       colorsel.cpp                              */
+/* файл — colorsel.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  Member function(s) of following classes   */
+/* функции:  */
+/* Методы следующих классов. */
 /*                      TColorSelector                        */
 /*                      TMonoSelector                         */
 /*                      TColorDisplay                         */
@@ -345,8 +345,8 @@ TColorDisplay::~TColorDisplay()
 void TColorDisplay::draw()
 {
     TColorAttr c = *color;
-    // BIOS color 0 has a special meaning in TDrawBuffer functions, so display
-    // it as an invalid color.
+    // Цвет BIOS 0 имеет особый смысл в TDrawBuffer, поэтому показываем его
+    // как недопустимый цвет.
     if( c == 0 )
         c = errorAttr;
     const int len = strwidth( text );

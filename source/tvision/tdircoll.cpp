@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tdircoll.cpp                              */
+/* файл — tdircoll.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TDirCollection member functions           */
+/* функции:  */
+/* Методы TDirCollection */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -44,24 +44,24 @@ Boolean driveValid( char drive ) noexcept
 {
 #if defined( __BORLANDC__ ) || defined( _WIN32 )
 #if !defined( __FLAT__ )
-I       MOV     AH, 19H     // Save the current drive in BL
+I       MOV     AH, 19H     // Сохраняем текущий диск в BL.
 I       INT     21H
 I       MOV     BL, AL
-I       MOV     DL, drive   // Select the given drive
+I       MOV     DL, drive   // Выбираем заданный диск.
 I       SUB     DL, 'A'
 I       MOV     AH, 0EH
 I       INT     21H
-I       MOV     AH, 19H     // Retrieve what DOS thinks is current
+I       MOV     AH, 19H     // Получаем текущий диск по данным DOS.
 I       INT     21H
-I       MOV     CX, 0       // Assume false
-I       CMP     AL, DL      // Is the current drive the given drive?
+I       MOV     CX, 0       // Предполагаем false.
+I       CMP     AL, DL      // Текущий диск совпадает с заданным?
 I       JNE   __1
-I       MOV     CX, 1       // It is, so the drive is valid
-I       MOV     DL, BL      // Restore the old drive
+I       MOV     CX, 1       // Совпадает, значит диск допустим.
+I       MOV     DL, BL      // Восстанавливаем прежний диск.
 I       MOV     AH, 0EH
 I       INT     21H
 __1:
-I       XCHG    AX, CX      // Put the return value into AX
+I       XCHG    AX, CX      // Помещаем результат в AX.
     return Boolean(_AX);
 #else
     drive = toupper((uchar) drive);
@@ -69,8 +69,8 @@ I       XCHG    AX, CX      // Put the return value into AX
     return Boolean( (GetLogicalDrives() & mask) != 0 );
 #endif
 #else
-    // Unless otherwise necessary, we will emulate there's only one disk:
-    // the one returned by getdisk(), which is C by default.
+    // Без особой необходимости эмулируем один диск: возвращаемый getdisk(),
+    // по умолчанию C.
     return Boolean( drive - 'A' == getdisk() );
 #endif
 }
@@ -94,7 +94,7 @@ Boolean pathValid( const char *path ) noexcept
     int len = strlen(expPath);
 #ifdef _TV_UNIX
     if( len == 1 && isSeparator(expPath[0]) )
-        return True; // Root directory is always valid.
+        return True; // Корневой каталог всегда допустим.
 #else
     if( len <= 3 )
         return driveValid(expPath[0]);

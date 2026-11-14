@@ -15,11 +15,11 @@ namespace tvision
 
 StderrRedirector::StderrRedirector() noexcept
 {
-    // Text written into standard error will mess up the display or simply
-    // get lost since the application is using the alternate screen buffer,
-    // with no scrollback.
-    // Make 'stderr' point to a pipe buffer so that the contents can be
-    // dumped to the screen after restoring the screen buffer.
+    // Текст в стандартном потоке ошибок испортит экран либо потеряется:
+    // приложение использует альтернативный буфер без истории прокрутки.
+    // Направляем stderr в канал, чтобы вывести накопленный текст после
+    // восстановления экрана.
+    //
     int flags;
     if ( fileno(stderr) == STDERR_FILENO
          && isatty(STDERR_FILENO)
@@ -76,12 +76,12 @@ static void dumpPipe(int src, int dst, size_t size)
 
 StderrRedirector::~StderrRedirector()
 {
-    // Restore standard error to the default state as long as it still
-    // refers to our buffer, then dump the buffer contents to it.
-    // There are some edge cases that are not being handled here:
-    // - read()/write() and EINTR.
-    // - If the pipe keeps being written to as we read from it.
-    // But this runs during program shutdown and we don't want to get stuck here.
+    // Восстанавливаем стандартный поток ошибок, если он всё ещё указывает на
+    // наш буфер, и выводим туда накопленное содержимое. Не обрабатываются
+    // read()/write() с EINTR и ситуация, когда запись в канал продолжается
+    // во время чтения. Код выполняется при завершении программы, поэтому
+    // зависать здесь нельзя.
+    //
     if (isSameFile(bufFd[1], STDERR_FILENO))
     {
         dup2(ttyFd, STDERR_FILENO);
@@ -96,6 +96,6 @@ StderrRedirector::~StderrRedirector()
             close(fd);
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

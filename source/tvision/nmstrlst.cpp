@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmstrlst.cpp                              */
+/* файл — nmstrlst.cpp */
 /*                                                            */
-/* defines the streamable name for class TStringList          */
+/* Определяет имя сериализуемого класса TStringList. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

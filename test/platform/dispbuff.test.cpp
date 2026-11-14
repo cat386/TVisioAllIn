@@ -14,8 +14,8 @@
 namespace tvision
 {
 
-// Records the calls made on it into 'calls', so that tests can check the
-// exact sequence of operations.
+// Записывает выполненные вызовы в calls, чтобы тест мог проверить точный
+// порядок операций.
 class TestDisplayAdapter : public DisplayAdapter
 {
 public:
@@ -85,7 +85,7 @@ TEST(DisplayBuffer, ShouldRenderProperlyOnFlushScreen)
     TestCharOps::init();
     static const TestCase<DisplayBufferFlushTestInput, DisplayBufferFlushTestOutput> testCases[] =
     {
-        // The cursor should advance by 2 when drawing a double-width character.
+        // При выводе широкого символа курсор должен сместиться на два столбца.
         {   {   TPoint {4, 1},
                 "[" SMILING_FACE_WITH_SMILING_EYES_UTF8 "]",
             },
@@ -104,15 +104,15 @@ TEST(DisplayBuffer, ShouldRenderProperlyOnFlushScreen)
         TestDisplayAdapter display(input.size);
         DisplayBuffer buf(0);
         buf.reloadScreenInfo(display);
-        // Flush once so that the caret size is settled and does not show up
-        // as a call below.
+        // Сначала обновляем экран, чтобы размер курсора установился и не
+        // появился среди вызовов ниже.
         buf.flushScreen(display);
 
         std::vector<TScreenCell> cells(input.size.x);
         TText::drawStr({cells.data(), cells.size()}, input.text);
         buf.screenWrite(0, 0, cells.data(), (int) cells.size());
 
-        // Only the calls made by the second 'flushScreen' are relevant to this test.
+        // Для теста важны только вызовы второго flushScreen.
         display.calls.clear();
         buf.flushScreen(display);
 
@@ -120,4 +120,4 @@ TEST(DisplayBuffer, ShouldRenderProperlyOnFlushScreen)
     }
 }
 
-} // namespace tvision
+} // пространство имён tvision

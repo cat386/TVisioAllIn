@@ -1,8 +1,8 @@
 #include <tvision/internal/platform.h>
 #include "test_charops.h"
 
-// Test-only implementation of Platform::CharOps that does not depend on the
-// system locale.
+// Тестовая реализация Platform::CharOps, не зависящая от системной
+// локали.
 
 void TestCharOps::init()
 {

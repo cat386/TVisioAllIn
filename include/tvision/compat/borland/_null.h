@@ -1,8 +1,8 @@
-/*  _null.h
-
-    Definition of NULL.
-
-*/
+/*
+ * _null.h — определение NULL.
+ *
+ *
+ */
 
 /*
  *      C/C++ Run Time Library - Version 6.0

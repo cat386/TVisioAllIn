@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   SCRNCELL.H                                                            */
 /*                                                                         */
-/*   Defines the structs TScreenCharacter and TScreenCell.                 */
+/* Определяет структуры TScreenCharacter и TScreenCell. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -11,8 +11,8 @@
 
 #if defined( __BORLANDC__ )
 
-// Struct that replicates the memory layout of a DOS text mode screen cell,
-// with optimized custom operators for converting to and from unsigned short.
+// Структура повторяет расположение в памяти ячейки текстового экрана DOS.
+// Собственные оптимизированные операторы преобразуют её в unsigned short и обратно.
 
 struct TScreenCell
 {
@@ -45,38 +45,38 @@ inline TScreenCell::operator ushort() const
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  struct TScreenCharacter                                                */
+/* структура TScreenCharacter */
 /*                                                                         */
-/*  Represents text in a screen cell. You should usually not need to       */
-/*  interact with this directly. In order to write text into a screen      */
-/*  cell, just use the functions in the TText namespace.                   */
+/* Представляет текст ячейки экрана. Обычно обращаться */
+/* к нему напрямую не нужно. Для записи текста в ячейку */
+/* используйте функции пространства имён TText. */
 /*                                                                         */
-/*  A TScreenCharacter stores one of the following:                        */
-/*    1. A single byte of ASCII or 'extended ASCII' text (1 column wide).  */
-/*    2. Up to 15 bytes of UTF-8 text (1 or 2 columns wide in total,       */
-/*       so it cannot contain just zero-width characters).                 */
-/*    3. A special value that marks it as wide char trail.                 */
+/* TScreenCharacter хранит один из следующих вариантов: */
+/* 1. Один байт ASCII или расширенной ASCII, занимающий один столбец. */
+/* 2. До 15 байтов UTF-8 суммарной шириной один или два столбца; */
+/* текст не может состоять только из символов нулевой ширины. */
+/* 3. Специальное значение — маркер продолжения широкого символа. */
 /*                                                                         */
-/*  In order for a double-width character to be displayed entirely, its    */
-/*  cell must be followed by another containing a wide char trail. If it   */
-/*  does not, or if a wide char trail is not preceded by a double-width    */
-/*  character, it will be assumed that a double-width character is being   */
-/*  partially overlapped.                                                  */
+/* Для полного отображения символа двойной ширины за его */
+/* ячейкой должна следовать ячейка с маркером продолжения. Иначе, */
+/* а также если перед маркером нет символа двойной */
+/* ширины, считается, что широкий символ частично */
+/* перекрыт. */
 /*                                                                         */
-/*  TScreenCharacter is designed to be compatible with 'memset' and        */
-/*  'memcpy', and it is therefore trivially constructible and copyable.    */
-/*  Because of this, variables of this type which are not explicitly       */
-/*  initialized will contain uninitialized data. Watch out!                */
+/* TScreenCharacter совместим с memset и */
+/* memcpy, поэтому его создание и копирование тривиальны. */
+/* Из-за этого переменные данного типа без явной */
+/* инициализации содержат неинициализированные данные. Будьте внимательны! */
 /*                                                                         */
-/*  A zero-initialized TScreenCharacter (using 'memset' or                 */
-/*  value-initialization) is valid and represents the text of an empty     */
-/*  screen cell.                                                           */
+/* TScreenCharacter, обнулённый через memset или */
+/* инициализацию значением, допустим и представляет текст пустой */
+/* ячейки экрана. */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
 
 struct TScreenCharacter
 {
-    TScreenCharacter() = default; // Watch out! This is a trivial constructor.
+    TScreenCharacter() = default; // Внимание: конструктор тривиальный и не инициализирует поля.
 
     constexpr TScreenCharacter(char c) noexcept;
 
@@ -101,7 +101,7 @@ private:
 
     char _text[15];
     uint8_t
-        // There is always at least one character, even if it is a null byte.
+        // Всегда содержит хотя бы один символ, даже если это нулевой байт.
         _textLengthMinusOne : 4,
         _flags : 4;
 };
@@ -120,7 +120,7 @@ constexpr void TScreenCharacter::initWithChar(char c) noexcept
 }
 
 constexpr void TScreenCharacter::initWithMultiByteChar(uint32_t mbc, bool wide) noexcept
-// Pre: 'mbc' is a bit-casted multibyte-encoded character.
+// Предусловие: mbc — многобайтовый символ с переинтерпретированными битами.
 {
     *this = {};
 #if !defined( TV_BIG_ENDIAN )
@@ -182,7 +182,7 @@ constexpr bool TScreenCharacter::isWideCharTrail() const noexcept
 }
 
 constexpr void TScreenCharacter::appendZeroWidthChar(TStringView mbc) noexcept
-// Pre: '_text' contains valid UTF-8 text.
+// Предусловие: _text содержит корректный текст UTF-8.
 {
     if (_flags & fOverflow)
         return;
@@ -205,28 +205,28 @@ constexpr void TScreenCharacter::appendZeroWidthChar(TStringView mbc) noexcept
 }
 
 constexpr TStringView TScreenCharacter::getText() const noexcept
-// Pre: 'isWideCharTrail() == false'.
+// Предусловие: isWideCharTrail() == false.
 {
     return {_text, size_t(_textLengthMinusOne + 1)};
 }
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  struct TScreenCell                                                     */
+/* структура TScreenCell */
 /*                                                                         */
-/*  Stores the text and color attributes in a screen cell. You should      */
-/*  usually not need to interact with this directly. In order to write     */
-/*  text into a screen cell, just use the functions in the TText           */
+/* Хранит текст и цветовые атрибуты ячейки экрана. Обычно */
+/* не нужно обращаться к ним напрямую. Для записи */
+/* текста в ячейку используйте функции пространства имён TText. */
 /*  namespace.                                                             */
 /*                                                                         */
-/*  TScreenCell is designed to be compatible with 'memset' and 'memcpy',   */
-/*  and it is therefore trivially constructible and copyable. Because of   */
-/*  this, variables of this type which are not explicitly initialized      */
-/*  will contain uninitialized data. Watch out!                            */
+/* TScreenCell совместим с memset и memcpy, */
+/* поэтому имеет тривиальные конструктор и копирование. По этой */
+/* причине переменные данного типа без явной инициализации */
+/* содержат неинициализированные данные. Будьте внимательны! */
 /*                                                                         */
-/*  A zero-initialized TScreenCell (using 'memset' or                      */
-/*  value-initialization) is valid and represents an empty screen cell     */
-/*  with default foreground and background colors and no style.            */
+/* а обнулённый TScreenCell через memset или */
+/* инициализацию значением допустим и представляет пустую ячейку */
+/* с цветами текста и фона по умолчанию, без стилей. */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
 
@@ -235,7 +235,7 @@ struct TScreenCell
     TScreenCharacter character;
     TColorAttr attribute;
 
-    TScreenCell() = default; // Watch out! This is a trivial constructor.
+    TScreenCell() = default; // Внимание: конструктор тривиальный и не инициализирует поля.
     constexpr TScreenCell(const TScreenCharacter &ch, TColorAttr attr) noexcept;
     constexpr TScreenCell(ushort bios) noexcept;
 

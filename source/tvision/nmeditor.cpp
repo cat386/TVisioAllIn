@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       nmeditor.cpp                              */
+/* файл — nmeditor.cpp */
 /*                                                            */
-/* defines the streamable names for classes                   */
-/*   TIndicator, TEditor, TMemo, TFileEditor, TEditWindow     */
+/* Определяет имена сериализуемых классов: */
+/* TIndicator, TEditor, TMemo, TFileEditor, TEditWindow. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

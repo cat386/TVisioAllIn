@@ -10,13 +10,13 @@
 namespace tvision
 {
 
-// These functions are used directly by TText. They are stored in an independent
-// global object so that they can be used regardless of whether the global
-// Platform instance has been initialized.
-// In addition, they are implemented in a separate translation unit so that
-// an application can link against it without linking against the entire
-// Platform class and its dependencies (e.g., a command-line utility that
-// uses TText).
+// Эти функции непосредственно использует TText. Они хранятся в отдельном
+// глобальном объекте и доступны независимо от инициализации Platform.
+// Реализация находится в отдельной единице трансляции, чтобы приложение
+// могло связаться с ней без всего класса Platform и его зависимостей,
+// например в консольной утилите с TText.
+//
+//
 
 Platform::CharOps Platform::charOps =
 {
@@ -28,13 +28,13 @@ void Platform::initLocale() noexcept
 {
     static int init = [] ()
     {
-        // We rely on the C runtime character conversion methods, which depend
-        // on the C locale.
+        // Используем преобразование символов из среды выполнения C, зависящее от
+        // локали C.
 #ifdef _WIN32
-        // On Windows, we set the ".utf8" locale explicitly, which also enables
-        // UTF-8 support for filesystem-related functions. This is also done
-        // in Win32ConsoleAdapter.
-        // See: https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/setlocale-wsetlocale#utf-8-support
+        // В Windows явно задаём локаль .utf8, также включающую поддержку UTF-8 в
+        // файловых функциях. Это делает и Win32ConsoleAdapter. См.
+        // https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/setlocale-wsetlocale#utf-8-support
+        //
         setlocale(LC_ALL, ".utf8");
 #else
         setlocale(LC_ALL, "");
@@ -57,10 +57,10 @@ static int unixCharWidth(uint32_t wc) noexcept
 #   ifdef __linux__
 static int linuxConsoleCharWidth(uint32_t wc) noexcept
 {
-    // The Linux Console does not support zero-width characters. It assumes
-    // all characters are either single or double-width. Additionally, the
-    // double-width characters are the same as in the wcwidth() implementation by
-    // Markus Kuhn from 2007-05-26 (https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c).
+    // Консоль Linux не поддерживает символы нулевой ширины: все считаются
+    // одинарными либо двойными. Набор широких символов совпадает с
+    // реализацией wcwidth() Маркуса Куна от 2007-05-26:
+    // https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
     return 1 +
         (wc >= 0x1100 &&
          (wc <= 0x115f ||
@@ -81,7 +81,7 @@ static int linuxConsoleCharWidth(uint32_t wc) noexcept
 
 static uint32_t charToLower(uint32_t ch) noexcept
 {
-    // Skip the conversion if the character does not fit in a single wchar_t.
+    // Пропускаем преобразование, если символ не помещается в один wchar_t.
     if (sizeof(uint32_t) > sizeof(wchar_t) && ch > WCHAR_MAX)
         return ch;
     return (uint32_t) towlower((wchar_t) ch);
@@ -126,4 +126,4 @@ uint32_t Platform::initCharToLower(uint32_t wc) noexcept
     return charOps.toLower(wc);
 }
 
-} // namespace tvision
+} // пространство имён tvision

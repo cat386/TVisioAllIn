@@ -35,7 +35,7 @@ char *fast_utoa(uint32_t value, char *buffer) noexcept
     return buffer + _fast_utoa(value, buffer);
 }
 
-// Several versions of GCC crash when generating the table below at compile time.
+// Некоторые версии GCC аварийно завершаются при вычислении этой таблицы на этапе компиляции.
 #if !defined(__GNUC__ ) || __GNUC__ >= 9 || (__GNUC__ == 5 && __GNUC_MINOR__ <= 3)
 #define BTOA_CONSTEXPR constexpr
 #define BTOA_CONSTEXPR_VAR constexpr
@@ -56,7 +56,7 @@ btoa_lut_t init_btoa_lut() noexcept
 extern BTOA_CONSTEXPR_VAR
 btoa_lut_t btoa_lut = init_btoa_lut();
 
-} // namespace tvision
+} // пространство имён tvision
 
 #if !defined(__BORLANDC__) && !defined(_WIN32)
 
@@ -82,9 +82,9 @@ char *strupr(char *s) noexcept
     return s;
 }
 
-// Quick and dirty implementation of itoa, ltoa, ultoa based on sprintf.
-// It won't provide the expected results in some cases, but at least will not
-// crash. Support for arbitrary bases can be later added if needed.
+// Простая временная реализация itoa, ltoa и ultoa на основе sprintf. В
+// некоторых случаях результат отличается от ожидаемого, зато не происходит
+// сбоя. При необходимости можно добавить произвольные основания счисления.
 
 #include <cstdio>
 

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tgroup.cpp                                */
+/* файл — tgroup.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TGroup member functions                   */
+/* функции:  */
+/* Методы TGroup */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -290,10 +290,10 @@ void TGroup::getBuffer() noexcept
             int sz = max(size.x * size.y * sizeof(TScreenCell), 0);
             TVMemMgr::reallocateDiscardable( (void *&)buffer, sz );
 #ifndef __BORLANDC__
-            // An uninitialized screen buffer is harmless in MS-DOS, since the worst
-            // you will see are random characters and colors. But in non-Borland mode,
-            // it may result in control characters being printed to screen, which will
-            // severely mess up the display. Do not allow this to happen.
+            // В MS-DOS неинициализированный экранный буфер лишь показывает случайные
+            // символы и цвета. Вне Borland он может вывести управляющие символы и
+            // серьёзно испортить экран. Не допускаем этого.
+            //
             if( buffer != 0 )
                 memset(buffer, 0, sz);
 #endif

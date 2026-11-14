@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmchkbox.cpp                              */
+/* файл — nmchkbox.cpp */
 /*                                                            */
-/* defines the streamable name for class TCheckBoxes          */
+/* Определяет имя сериализуемого класса TCheckBoxes. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

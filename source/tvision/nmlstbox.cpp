@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmlstbox.cpp                              */
+/* файл — nmlstbox.cpp */
 /*                                                            */
-/* defines the streamable name for class TListBox             */
+/* Определяет имя сериализуемого класса TListBox. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

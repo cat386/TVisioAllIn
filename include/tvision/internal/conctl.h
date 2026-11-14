@@ -34,13 +34,13 @@ class ConsoleCtl
 
 public:
 
-    // On Windows, the ConsoleCtl instance is created every time the alternate
-    // screen buffer is enabled and it is destroyed when restoring the console.
-    // On Unix, the ConsoleCtl instance is created just once.
+    // В Windows экземпляр ConsoleCtl создаётся при каждом включении
+    // альтернативного экранного буфера и уничтожается при восстановлении
+    // консоли. В Unix ConsoleCtl создаётся только один раз.
 
-    // Creates a global instance if none exists, and returns it.
+    // Создаёт глобальный экземпляр, если его ещё нет, и возвращает его.
     static ConsoleCtl &getInstance() noexcept;
-    // Destroys the global instance if it exists.
+    // Уничтожает глобальный экземпляр, если он существует.
     static void destroyInstance() noexcept;
 
     void write(const char *data, size_t bytes) const noexcept;
@@ -61,6 +61,6 @@ public:
 #endif // _WIN32
 };
 
-} //namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_CONCTL_H

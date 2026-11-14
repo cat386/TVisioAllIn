@@ -85,7 +85,7 @@ void Platform::checkConsole() noexcept
     console.lock([&] (ConsoleAdapter *&c) {
         if (!c->isAlive())
         {
-            // The console likely crashed (Windows).
+            // Вероятно, консоль аварийно завершилась; Windows.
             restoreConsole(c);
             setUpConsole(c);
         }
@@ -97,8 +97,8 @@ void Platform::waitForEvents(int ms) noexcept
     checkConsole();
 
     int waitTimeoutMs = ms;
-    // When the DisplayBuffer has pending changes, ensure we wake up so that
-    // they can be flushed in time.
+    // Если DisplayBuffer содержит ожидающие изменения, нужно своевременно
+    // пробудиться и вывести их.
     int flushTimeoutMs = displayBuf.timeUntilPendingFlushMs();
     if (ms < 0)
         waitTimeoutMs = flushTimeoutMs;
@@ -136,8 +136,8 @@ void Platform::signalCallback(bool enter) noexcept
 {
     if (instance && !instance->console.lockedByCurrentThread())
     {
-        // FIXME: In order to be truly signal-safe, we should avoid any memory
-        // allocations/deallocations in this callback.
+        // FIXME: для полной безопасности при обработке сигналов этот обратный
+        // вызов не должен выделять и освобождать память.
         if (enter)
             instance->restoreConsole();
         else
@@ -145,4 +145,4 @@ void Platform::signalCallback(bool enter) noexcept
     }
 }
 
-} // namespace tvision
+} // пространство имён tvision

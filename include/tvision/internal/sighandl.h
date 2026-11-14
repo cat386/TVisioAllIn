@@ -59,7 +59,7 @@ private:
 
 public:
 
-    // 'aCallback' must be noexcept and signal-safe.
+    // aCallback не должен выбрасывать исключения и должен быть безопасен для обработчиков сигналов.
     static void enable(SignalHandlerCallback &aCallback) noexcept;
     static void disable() noexcept;
 };
@@ -76,6 +76,6 @@ public:
 
 #endif // _TV_UNIX
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_SIGHANDL_H

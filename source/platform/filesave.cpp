@@ -56,13 +56,13 @@ bool saveFileAtomic(const char *path, const char *backup,
         return false;
     FILE *file = _wfdopen(fd, L"wb");
 #else
-    // Keep an existing symlink intact: replace the file it refers to.
+    // Сохраняем существующую символическую ссылку: заменяем файл, на который она указывает.
     char *resolved = realpath(path, nullptr);
     std::string target = resolved ? resolved : path;
     free(resolved);
     std::string backupPath = backup ? backup : "";
-    // realpath may add a platform prefix (e.g. /var -> /private/var on macOS).
-    // Compare the caller's names as well as the resolved destination.
+    // realpath может добавить платформенный префикс, например /var → /private/var в macOS.
+    // Сравниваем как исходные имена вызывающей стороны, так и разрешённый путь назначения.
     if (backup && (backupPath == path || backupPath == target))
         backupPath += ".bak";
     std::string pattern = target + ".tvXXXXXX";
@@ -114,7 +114,7 @@ bool saveFileAtomic(const char *path, const char *backup,
 #else
         if (backup && access(target.c_str(), F_OK) == 0)
         {
-            // Install the backup atomically. An error never truncates the source.
+            // Устанавливаем резервную копию атомарно. При ошибке исходный файл никогда не усекается.
             std::string bpattern = backupPath + ".tvXXXXXX";
             std::vector<char> btemp(bpattern.begin(), bpattern.end());
             btemp.push_back(0);

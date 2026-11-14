@@ -7,16 +7,16 @@
 #if !defined( _PALETTE_H )
 #define _PALETTE_H
 
+// Класс TTestView — представление, выводящее текст случайным цветом.
+// Методы: TTestView — конструктор; ~TTestView — деструктор; draw — вывод
+// текста; getPalette — получение цвета текста.
 //
-// class TTestView
-//      View that simply displays some text on the screen in a
-//      random color.
 //
-// Member functions:
-//      TTestView - Constructor
-//      ~TTestView - Destructor
-//      draw - Display the text
-//      getPalette - To have a color to display the text in.
+//
+//
+//
+//
+//
 //
 
 class TTestView : public TView
@@ -29,17 +29,17 @@ public:
 private:
 };
 
+// TTestWindow содержит TTestView и позволяет перемещать представление по
+// экрану и удалять его с рабочего стола почти без дополнительного кода:
+// TWindow автоматически вызывает cmClose. Методы: TTestWindow —
+// конструктор; getPalette — палитра; sizeLimits — разрешение меньшего
+// размера, чем стандартный минимум TWindow.
 //
-// TTestWindow - provides encapsulation for TTestView, as well as
-// the ability to move the view around the screen and remove it
-// from the desktop with little coding (since TWindow's
-// automatically call cmClose)
 //
-// Member functions:
-//      TTestWindow - constructor
-//      getPalette  -
-//      sizeLimits  - so we can have a smaller than regulation
-//                    TWindow.
+//
+//
+//
+//
 //
 
 #define TEST_WIDTH   42

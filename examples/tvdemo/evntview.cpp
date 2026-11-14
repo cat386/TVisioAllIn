@@ -28,8 +28,8 @@ TStreamableClass REventViewer( TEventViewer::name,
 
 void TEventViewer::write(opstream &os)
 {
-    // TTerminal does not override the TStreamable methods, so do not
-    // store it in the stream.
+    // TTerminal не переопределяет методы TStreamable, поэтому его нельзя
+    // сохранять в потоке.
     title = 0;
     remove(scrollBar);
     remove(interior);
@@ -111,7 +111,7 @@ void TEventViewer::shutDown()
 
 TEventViewer::~TEventViewer()
 {
-    title = 0; // So that TWindow doesn't delete it.
+    title = 0; // Чтобы TWindow не удалил этот объект.
 }
 
 void TEventViewer::handleEvent(TEvent &ev)

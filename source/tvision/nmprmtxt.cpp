@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmprmtxt.cpp                              */
+/* файл — nmprmtxt.cpp */
 /*                                                            */
-/* defines the streamable name for class TParamText           */
+/* Определяет имя сериализуемого класса TParamText. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -332,4 +332,4 @@ void TTreeView::handleEvent(TEvent &ev)
     }
     clearEvent(ev);
 }
-} // namespace tvision
+} // пространство имён tvision

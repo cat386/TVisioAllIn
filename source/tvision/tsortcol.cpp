@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tsortcol.cpp                              */
+/* файл — tsortcol.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TNSSortedCollection member functions      */
+/* функции:  */
+/* Методы TNSSortedCollection */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -42,10 +42,10 @@ ccIndex TNSSortedCollection::indexOf(void *item)
 ccIndex TNSSortedCollection::insert( void *item )
 {
     ccIndex  i;
-    if( search( keyOf(item), i ) == 0 || duplicates )   // order dependency!
-        atInsert( i, item );                            // must do Search
-                                                        // before calling
-                                                        // AtInsert
+    if( search( keyOf(item), i ) == 0 || duplicates )   // Порядок важен!
+        atInsert( i, item );                            // Search необходимо выполнить до AtInsert.
+                                                        //
+                                                        //
     return i;
 }
 

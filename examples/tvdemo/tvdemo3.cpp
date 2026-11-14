@@ -1,6 +1,6 @@
 /*----------------------------------------------------------*/
 /*                                                          */
-/*   Turbo Vision TVDEMO source file                        */
+/* Исходный файл TVDEMO для Turbo Vision. */
 /*                                                          */
 /*----------------------------------------------------------*/
 /*
@@ -38,8 +38,8 @@
 
 #include <tvision/help.h>
 
+// Функция диалога настройки мыши.
 //
-// Mouse Control Dialog Box function
 //
 
 void TVDemo::mouse()
@@ -48,9 +48,9 @@ void TVDemo::mouse()
 
     if (mouseCage != 0)
         {
-        // 'mouseReverse' will be received by the checkbox inserted into
-        // 'TMouseDialog'. 'TCheckBoxes' takes a pointer to a 'ushort' in
-        // 'getData'/'setData'.
+        // 'mouseReverse' будет получен флажком в TMouseDialog. TCheckBoxes
+        // принимает указатель на ushort в getData/setData.
+        //
         ushort mouseReverse = (ushort) TEventQueue::mouseReverse;
         mouseCage->helpCtx = hcOMMouseDBox;
         mouseCage->setData(&mouseReverse);
@@ -63,8 +63,8 @@ void TVDemo::mouse()
 }
 
 
+// Функция просмотра файлов.
 //
-// File Viewer function
 //
 
 void TVDemo::openFile( const char *fileSpec )
@@ -85,8 +85,8 @@ void TVDemo::openFile( const char *fileSpec )
 }
 
 
+// Функция «Недостаточно памяти», вызываемая validView().
 //
-// "Out of Memory" function ( called by validView() )
 //
 
 void TVDemo::outOfMemory()
@@ -95,8 +95,8 @@ void TVDemo::outOfMemory()
       mfError | mfOKButton );
 }
 
+// getPalette() возвращает палитру приложения.
 //
-// getPalette() function ( returns application's palette )
 //
 /*
 TPalette& TVDemo::getPalette() const
@@ -115,8 +115,8 @@ TPalette& TVDemo::getPalette() const
 }
 */
 
-//
-// isTileable() function ( checks a view on desktop is tileable or not )
+// isTileable() проверяет, можно ли расположить представление рабочего
+// стола мозаикой.
 //
 
 static Boolean isTileable(TView *p, void * )
@@ -127,8 +127,8 @@ static Boolean isTileable(TView *p, void * )
        return False;
 }
 
+// idle() обновляет представления памяти и часов приложения.
 //
-// idle() function ( updates heap and clock views for this program. )
 //
 
 void TVDemo::idle()
@@ -148,8 +148,8 @@ void TVDemo::idle()
         }
 }
 
+// Функция closeView().
 //
-// closeView() function
 //
 
 static void closeView(TView *p, void *p1)
@@ -157,8 +157,8 @@ static void closeView(TView *p, void *p1)
     message(p, evCommand, cmClose, p1);
 }
 
+// Функция loadDesktop().
 //
-// loadDesktop() function 
 //
 
 void TVDemo::loadDesktop(fpstream &s)
@@ -167,7 +167,7 @@ void TVDemo::loadDesktop(fpstream &s)
 
     if (deskTop->valid(cmClose))
         { 
-        deskTop->forEach(::closeView, 0);  // Clear the desktop
+        deskTop->forEach(::closeView, 0);  // Очищаем рабочий стол.
         do {
            s >> p;
            deskTop->insertBefore(validView(p), deskTop->last);
@@ -176,8 +176,8 @@ void TVDemo::loadDesktop(fpstream &s)
         }
 }
 
+// Инициализация строки меню.
 //
-// Menubar initialization.
 //
 
 TMenuBar *TVDemo::initMenuBar(TRect r)
@@ -187,7 +187,7 @@ TMenuBar *TVDemo::initMenuBar(TRect r)
         *new TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
          newLine() +
 #if defined( __BORLANDC__ )
-        // Changing the screen mode only makes sense on DOS or DPMI.
+        // Смена видеорежима имеет смысл только в DOS или DPMI.
         *new TMenuItem( "~V~ideo mode", cmVideoMode, kbNoKey, hcNoContext ) +
          newLine() +
 #endif

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sdirlist.cpp                              */
+/* файл — sdirlist.cpp */
 /*                                                            */
-/* Registeration object for the class TDirListBox             */
+/* Объект регистрации класса TDirListBox. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

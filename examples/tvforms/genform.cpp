@@ -1,12 +1,12 @@
 /*------------------------------------------------------------------*/
 /*                                                                  */
-/*   Turbo Vision Forms Demo                                        */
+/* Демонстрация форм Turbo Vision. */
 /*                                                                  */
 /*------------------------------------------------------------------*/
 /*                                                                  */
-/*    This program uses GENPHONE.H and GENPARTS.H to generate forms */
-/*  data files which are used by the TVFORMS demo program. Use      */
-/*  GENFORMS.MAK to create data files for TVFORMS demo.             */
+/* Эта программа использует GENPHONE.H и GENPARTS.H для создания */
+/* файлов данных, используемых демонстрацией TVFORMS. Используйте */
+/* GENFORMS.MAK для создания файлов данных примера TVFORMS. */
 /*                                                                  */
 /*------------------------------------------------------------------*/
 /*
@@ -53,29 +53,29 @@ int main(void)
 
     cout <<"Creating  " << rezFileName << "\n";
 
-    // Construct stream and resource
+    // Создаём поток и ресурс.
     s = new fpstream (rezFileName, ios::out|ios::binary);
     r = new TResourceFile(s);
 
-    // Form
+    // Форма.
     f = makeForm();
     r->put(f, "FormDialog");
 
-    // Data
+    // Данные.
     collection = new TDataCollection((dataCount + 10), 5, sizeof(TDataRec),
                           dataKeyType);
     collection->duplicates = allowDuplicates;
     for(i = 0; i < dataCount; ++i)
         {
         p = malloc(sizeof(TDataRec));
-        memset(p, 0 , sizeof(TDataRec));   // keep padding bytes initialized
-        f->setData((void *)&data[i]);      // move into object
-        f->getData(p);                     // move onto heap
-        collection->insert(p);             // insert in sorted order
+        memset(p, 0 , sizeof(TDataRec));   // Байты выравнивания должны быть инициализированы.
+        f->setData((void *)&data[i]);      // Переносим в объект.
+        f->getData(p);                     // Переносим в кучу.
+        collection->insert(p);             // Вставляем в отсортированном порядке.
         }
     r->put(collection, "FormData");
 
-    // Done
+    // Готово.
     TObject::destroy(f);
     TObject::destroy((TCollection *)collection);
     TObject::destroy(r);

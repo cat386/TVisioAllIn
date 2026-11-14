@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tclipbrd.cpp                              */
+/* файл — tclipbrd.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*          TClipboard member functions                       */
+/* функции:  */
+/* Методы TClipboard */
 /*------------------------------------------------------------*/
 
 #define Uses_TClipboard

@@ -16,7 +16,7 @@ size_t utf16To8(TSpan<const uint16_t> input, char *output) noexcept
             if ( 0xD800 <= lead && lead <= 0xDBFF &&
                  0xDC00 <= next && next <= 0xDFFF )
             {
-                // Surrogate pairs.
+                // Суррогатные пары.
                 trail = next;
                 ++i;
             }
@@ -28,4 +28,4 @@ size_t utf16To8(TSpan<const uint16_t> input, char *output) noexcept
     return j;
 }
 
-} // namespace tvision
+} // пространство имён tvision

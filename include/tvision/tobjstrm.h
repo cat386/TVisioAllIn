@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   TOBJSTRM.H                                                            */
 /*                                                                         */
-/*   defines the classes TStreamable, TStreamableClass, pstream,           */
-/*   ipstream, opstream, iopstream, ifpstream, ofpstream, and fpstream.    */
+/* Определяет классы TStreamable, TStreamableClass, pstream, */
+/* ipstream, opstream, iopstream, ifpstream, ofpstream и fpstream. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -18,11 +18,11 @@ typedef unsigned P_id_type;
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class TStreamable                                                     */
+/* класс TStreamable */
 /*                                                                         */
-/*   This is the base class for all storable objects.  It provides         */
-/*   three member functions, streamableName(), read(), and write(), which  */
-/*   must be overridden in every derived class.                            */
+/* Базовый класс всех сохраняемых объектов. Предоставляет */
+/* три метода: streamableName(), read() и write(), которые */
+/* должны переопределяться в каждом производном классе. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -59,8 +59,8 @@ struct fLink
 
 #else
 
-// Take advantage of the __COUNTER__ macro so that linking the same object twice
-// doesn't trigger a compilation error.
+// Используем макрос __COUNTER__, чтобы двойное подключение одного
+// объекта не вызывало ошибку компиляции.
 
 #define __link_declare( s, n )  \
   extern TStreamableClass s;    \
@@ -98,9 +98,9 @@ protected:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class TStreamableClass                                                */
+/* класс TStreamableClass */
 /*                                                                         */
-/*   Used internally by TStreamableTypes and pstream.                      */
+/* Используется внутри TStreamableTypes и pstream. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -115,7 +115,7 @@ const P_id_type P_id_notFound = UINT_MAX;
 
 typedef TStreamable *(*BUILDER)();
 
-// This is now computed at runtime by ipstream.
+// Теперь ipstream вычисляет это во время выполнения.
 #define __DELTA( d ) 0
 
 class TStreamableClass
@@ -127,7 +127,7 @@ class TStreamableClass
 
 public:
 
-    TStreamableClass( const char *n, BUILDER b, int /* unused */ = 0 ) noexcept;
+    TStreamableClass( const char *n, BUILDER b, int /* Не используется. */ = 0 ) noexcept;
 
 private:
 
@@ -140,11 +140,11 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class TStreamableTypes                                                */
+/* класс TStreamableTypes */
 /*                                                                         */
-/*   Maintains a database of all registered types in the application.      */
-/*   Used by opstream and ipstream to find the functions to read and       */
-/*   write objects.                                                        */
+/* Поддерживает базу всех зарегистрированных типов приложения. */
+/* Используется opstream и ipstream для поиска функций чтения и */
+/* записи объектов. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -173,13 +173,13 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class TPWrittenObjects                                                */
+/* класс TPWrittenObjects */
 /*                                                                         */
-/*   Maintains a database of all objects that have been written to the     */
-/*   current object stream.                                                */
+/* Поддерживает базу всех объектов, записанных в */
+/* текущий объектный поток. */
 /*                                                                         */
-/*   Used by opstream when it writes a pointer onto a stream to determine  */
-/*   whether the object pointed to has already been written to the stream. */
+/* Используется opstream при записи указателя в поток, чтобы определить, */
+/* был ли уже записан объект, на который он указывает. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -212,9 +212,9 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class TPWObj                                                          */
+/* класс TPWObj */
 /*                                                                         */
-/*   Used internally by TPWrittenObjects.                                  */
+/* Используется внутри TPWrittenObjects. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -236,13 +236,13 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class TPReadObjects                                                   */
+/* класс TPReadObjects */
 /*                                                                         */
-/*   Maintains a database of all objects that have been read from the      */
-/*   current persistent stream.                                            */
+/* Поддерживает базу всех объектов, прочитанных из */
+/* текущего потока сохраняемых объектов. */
 /*                                                                         */
-/*   Used by ipstream when it reads a pointer from a stream to determine   */
-/*   the address of the object being referred to.                          */
+/* Используется ipstream при чтении указателя из потока, чтобы определить */
+/* адрес соответствующего объекта. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -274,9 +274,9 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class pstream                                                         */
+/* класс pstream */
 /*                                                                         */
-/*   Base class for handling streamable objects.                           */
+/* Базовый класс для работы с сохраняемыми объектами. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -343,9 +343,9 @@ protected:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class ipstream                                                        */
+/* класс ipstream */
 /*                                                                         */
-/*   Base class for reading streamable objects                             */
+/* Базовый класс для чтения сохраняемых объектов. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -404,9 +404,9 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class opstream                                                        */
+/* класс opstream */
 /*                                                                         */
-/*   Base class for writing streamable objects                             */
+/* Базовый класс для записи сохраняемых объектов. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -466,9 +466,9 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class iopstream                                                       */
+/* класс iopstream */
 /*                                                                         */
-/*   Base class for reading and writing streamable objects                 */
+/* Базовый класс для чтения и записи сохраняемых объектов. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -500,9 +500,9 @@ protected:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class fpbase                                                          */
+/* класс fpbase */
 /*                                                                         */
-/*   Base class for handling streamable objects on file streams            */
+/* Базовый класс для работы с сохраняемыми объектами в файловых потоках. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -543,9 +543,9 @@ private:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class ifpstream                                                       */
+/* класс ifpstream */
 /*                                                                         */
-/*   Base class for reading streamable objects from file streams           */
+/* Базовый класс для чтения сохраняемых объектов из файловых потоков. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -581,9 +581,9 @@ public:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class ofpstream                                                       */
+/* класс ofpstream */
 /*                                                                         */
-/*   Base class for writing streamable objects to file streams             */
+/* Базовый класс для записи сохраняемых объектов в файловые потоки. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -620,10 +620,10 @@ public:
 
 /* ------------------------------------------------------------------------*/
 /*                                                                         */
-/*   class fpstream                                                        */
+/* класс fpstream */
 /*                                                                         */
-/*   Base class for reading and writing streamable objects to              */
-/*   bidirectional file streams                                            */
+/* Базовый класс для чтения и записи сохраняемых объектов в */
+/* двунаправленных файловых потоках. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 

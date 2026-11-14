@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   APP.H                                                                 */
 /*                                                                         */
-/*   defines the classes TBackground, TDeskTop, TProgram, and TApplication */
+/* Определяет классы TBackground, TDeskTop, TProgram и TApplication. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -137,7 +137,7 @@ inline opstream& operator << ( opstream& os, TDeskTop* cl )
 
 #endif
 
-// Turbo Vision 2.0 Color Palettes
+// Цветовые палитры Turbo Vision 2.0.
 
 #define cpAppColor \
         "\x71\x70\x78\x74\x20\x28\x24\x17\x1F\x1A\x31\x31\x1E\x71\x1F" /* 1-15    */ \
@@ -175,9 +175,9 @@ inline opstream& operator << ( opstream& os, TDeskTop* cl )
 #if defined( Uses_TProgram ) && !defined( __TProgram )
 #define __TProgram
 
-// Standard application help contexts
+// Стандартные контексты справки приложения.
 
-// Note: range $FF00 - $FFFF of help contexts are reserved by Borland
+// Примечание: диапазон контекстов справки $FF00–$FFFF зарезервирован Borland.
 
 const unsigned short hcNew          = 0xFF01;
 const unsigned short hcOpen         = 0xFF02;
@@ -229,23 +229,23 @@ protected:
 };
 
 /* ---------------------------------------------------------------------- */
-/*      class TProgram                                                    */
+/* класс TProgram */
 /*                                                                        */
-/*      Palette layout                                                    */
+/* Структура палитры */
 /*          1 = TBackground                                               */
-/*        2-7 = TMenuView and TStatusLine                                 */
-/*       8-15 = TWindow(Blue)                                             */
-/*      16-23 = TWindow(Cyan)                                             */
-/*      24-31 = TWindow(Gray)                                             */
-/*      32-63 = TDialog(Gray)                                             */
-/*      64-95 = TDialog(Blue)                                             */
-/*     96-127 = TDialog(Cyan)                                             */
-/*    128-135 = THelpWindow                                               */
+/* 2–7 = TMenuView и TStatusLine */
+/* 8–15 = TWindow, синий вариант */
+/* 16–23 = TWindow, бирюзовый вариант */
+/* 24–31 = TWindow, серый вариант */
+/* 32–63 = TDialog, серый вариант */
+/* 64–95 = TDialog, синий вариант */
+/* 96–127 = TDialog, бирюзовый вариант */
+/* 128–135 = THelpWindow */
 /* ---------------------------------------------------------------------- */
 
 const int
 
-//  TApplication palette entries
+// Элементы палитры TApplication.
 
     apColor      = 0,
     apBlackWhite = 1,

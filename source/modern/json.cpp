@@ -456,7 +456,7 @@ std::string dump(const Json &j, bool pretty, unsigned depth)
     }
     return out + (obj ? "}" : "]");
 }
-} // namespace
+} // пространство имён
 Json parseJson(const std::string &text, JsonProgress progress)
 {
     return Parser(text, std::move(progress)).parse();
@@ -542,4 +542,4 @@ bool JsonTableModel::sort(size_t c, bool asc)
                      });
     return true;
 }
-} // namespace tvision
+} // пространство имён tvision

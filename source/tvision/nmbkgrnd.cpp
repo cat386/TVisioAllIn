@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmbkgrnd.cpp                              */
+/* файл — nmbkgrnd.cpp */
 /*                                                            */
-/* defines the streamable name for class TBackground          */
+/* Определяет имя сериализуемого класса TBackground. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

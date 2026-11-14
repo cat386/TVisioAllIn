@@ -98,14 +98,14 @@ typedef unsigned int        UINT;
 
 // winuser.h
 
+// Стандартный набор виртуальных клавиш.
 //
-// Virtual Keys, Standard Set
 //
 
 #define VK_LBUTTON        0x01
 #define VK_RBUTTON        0x02
 #define VK_CANCEL         0x03
-#define VK_MBUTTON        0x04 // NOT contiguous with L & RBUTTON
+#define VK_MBUTTON        0x04 // Значение не следует непосредственно за L и RBUTTON.
 
 #define VK_BACK           0x08
 #define VK_TAB            0x09
@@ -138,8 +138,8 @@ typedef unsigned int        UINT;
 #define VK_DELETE         0x2E
 #define VK_HELP           0x2F
 
-// VK_0 thru VK_9 are the same as ASCII '0' thru '9' (0x30 - 0x39)
-// VK_A thru VK_Z are the same as ASCII 'A' thru 'Z' (0x41 - 0x5A)
+// VK_0–VK_9 совпадают с ASCII-кодами '0'–'9' (0x30–0x39); VK_A–VK_Z
+// совпадают с ASCII-кодами 'A'–'Z' (0x41–0x5A).
 
 #define VK_LWIN           0x5B
 #define VK_RWIN           0x5C
@@ -189,9 +189,9 @@ typedef unsigned int        UINT;
 #define VK_NUMLOCK        0x90
 #define VK_SCROLL         0x91
 
-// VK_L* & VK_R* - left and right Alt, Ctrl and Shift virtual keys.
-// Used only as parameters to GetAsyncKeyState() and GetKeyState().
-// No other API or message will distinguish left and right keys in this way.
+// VK_L* и VK_R* — виртуальные коды левых и правых Alt, Ctrl и Shift.
+// Используются только как параметры GetAsyncKeyState() и GetKeyState().
+// Другие API и сообщения не различают левые и правые клавиши этим способом.
 
 #define VK_LSHIFT         0xA0
 #define VK_RSHIFT         0xA1
@@ -214,15 +214,15 @@ typedef unsigned int        UINT;
 #define VK_PA1            0xFD
 #define VK_OEM_CLEAR      0xFE
 
+// Предопределённые форматы буфера обмена.
 //
-// Predefined Clipboard Formats
 //
 
 #define CF_TEXT             1
 
 // winnls.h
 
-#define CP_UTF8 65001 // UTF-8 translation
+#define CP_UTF8 65001 // Преобразование UTF-8.
 
 // wincon.h
 
@@ -254,19 +254,19 @@ typedef struct _KEY_EVENT_RECORD {
     DWORD dwControlKeyState;
 } KEY_EVENT_RECORD;
 
+// Флаги ControlKeyState.
 //
-// ControlKeyState flags
 //
 
-#define RIGHT_ALT_PRESSED     0x0001 // the right alt key is pressed.
-#define LEFT_ALT_PRESSED      0x0002 // the left alt key is pressed.
-#define RIGHT_CTRL_PRESSED    0x0004 // the right ctrl key is pressed.
-#define LEFT_CTRL_PRESSED     0x0008 // the left ctrl key is pressed.
-#define SHIFT_PRESSED         0x0010 // the shift key is pressed.
-#define NUMLOCK_ON            0x0020 // the numlock light is on.
-#define SCROLLLOCK_ON         0x0040 // the scrolllock light is on.
-#define CAPSLOCK_ON           0x0080 // the capslock light is on.
-#define ENHANCED_KEY          0x0100 // the key is enhanced.
+#define RIGHT_ALT_PRESSED     0x0001 // Нажата правая клавиша Alt.
+#define LEFT_ALT_PRESSED      0x0002 // Нажата левая клавиша Alt.
+#define RIGHT_CTRL_PRESSED    0x0004 // Нажата правая клавиша Ctrl.
+#define LEFT_CTRL_PRESSED     0x0008 // Нажата левая клавиша Ctrl.
+#define SHIFT_PRESSED         0x0010 // Нажата клавиша Shift.
+#define NUMLOCK_ON            0x0020 // Включён индикатор Num Lock.
+#define SCROLLLOCK_ON         0x0040 // Включён индикатор Scroll Lock.
+#define CAPSLOCK_ON           0x0080 // Включён индикатор Caps Lock.
+#define ENHANCED_KEY          0x0100 // Клавиша относится к расширенному набору.
 
 typedef struct _MOUSE_EVENT_RECORD {
     COORD dwMousePosition;
@@ -301,11 +301,11 @@ typedef struct _INPUT_RECORD {
     } Event;
 } INPUT_RECORD;
 
+// Флаги EventType:
 //
-//  EventType flags:
 //
 
-#define MOUSE_EVENT       0x0002 // Event contains mouse event record
+#define MOUSE_EVENT       0x0002 // Событие содержит запись события мыши.
 
 typedef struct _CHAR_INFO {
     union {
@@ -315,18 +315,18 @@ typedef struct _CHAR_INFO {
     WORD Attributes;
 } CHAR_INFO;
 
+// Флаги атрибутов:
 //
-// Attributes flags:
 //
 
-#define FOREGROUND_BLUE      0x0001 // text color contains blue.
-#define FOREGROUND_GREEN     0x0002 // text color contains green.
-#define FOREGROUND_RED       0x0004 // text color contains red.
-#define FOREGROUND_INTENSITY 0x0008 // text color is intensified.
-#define BACKGROUND_BLUE      0x0010 // background color contains blue.
-#define BACKGROUND_GREEN     0x0020 // background color contains green.
-#define BACKGROUND_RED       0x0040 // background color contains red.
-#define BACKGROUND_INTENSITY 0x0080 // background color is intensified.
+#define FOREGROUND_BLUE      0x0001 // Цвет текста содержит синий компонент.
+#define FOREGROUND_GREEN     0x0002 // Цвет текста содержит зелёный компонент.
+#define FOREGROUND_RED       0x0004 // Цвет текста содержит красный компонент.
+#define FOREGROUND_INTENSITY 0x0008 // Повышенная яркость текста.
+#define BACKGROUND_BLUE      0x0010 // Цвет фона содержит синий компонент.
+#define BACKGROUND_GREEN     0x0020 // Цвет фона содержит зелёный компонент.
+#define BACKGROUND_RED       0x0040 // Цвет фона содержит красный компонент.
+#define BACKGROUND_INTENSITY 0x0080 // Повышенная яркость фона.
 
 typedef struct _CONSOLE_SCREEN_BUFFER_INFO {
     COORD dwSize;
@@ -348,7 +348,7 @@ typedef struct _CONSOLE_CURSOR_INFO {
 
 #endif // __BORLANDC__ || _WIN32
 
-// Flags that are often missing from outdated headers.
+// Флаги, которые часто отсутствуют в устаревших заголовках.
 
 #ifndef MOUSE_WHEELED
 #define MOUSE_WHEELED   0x0004

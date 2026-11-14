@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sbkgrnd.cpp                               */
+/* файл — sbkgrnd.cpp */
 /*                                                            */
-/* Registeration object for the class TBackground             */
+/* Объект регистрации класса TBackground. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

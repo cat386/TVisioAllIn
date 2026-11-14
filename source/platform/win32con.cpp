@@ -67,12 +67,12 @@ DWORD Win32ConsoleAdapter::initInputMode(ConsoleCtl &con) noexcept
     DWORD consoleMode = 0;
     GetConsoleMode(con.in(), &consoleMode);
     DWORD startupMode = consoleMode;
-    consoleMode |= ENABLE_WINDOW_INPUT; // Report changes in buffer size
-    consoleMode |= ENABLE_MOUSE_INPUT; // Report mouse events.
-    consoleMode &= ~ENABLE_PROCESSED_INPUT; // Report CTRL+C and SHIFT+Arrow events.
-    consoleMode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT); // Report Ctrl+S.
-    consoleMode |= ENABLE_EXTENDED_FLAGS;   /* Disable the Quick Edit mode, */
-    consoleMode &= ~ENABLE_QUICK_EDIT_MODE; /* which inhibits the mouse.    */
+    consoleMode |= ENABLE_WINDOW_INPUT; // Сообщать об изменении размера буфера.
+    consoleMode |= ENABLE_MOUSE_INPUT; // Сообщать о событиях мыши.
+    consoleMode &= ~ENABLE_PROCESSED_INPUT; // Сообщать о Ctrl+C и Shift+стрелка.
+    consoleMode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT); // Сообщать о Ctrl+S.
+    consoleMode |= ENABLE_EXTENDED_FLAGS;   /* Отключаем режим Quick Edit, */
+    consoleMode &= ~ENABLE_QUICK_EDIT_MODE; /* который блокирует мышь. */
     SetConsoleMode(con.in(), consoleMode);
     return startupMode;
 }
@@ -81,23 +81,23 @@ bool Win32ConsoleAdapter::initOutputMode(ConsoleCtl &con) noexcept
 {
     DWORD consoleMode = 0;
     GetConsoleMode(con.out(), &consoleMode);
-    consoleMode &= ~ENABLE_WRAP_AT_EOL_OUTPUT; // Avoid scrolling when reaching end of line.
+    consoleMode &= ~ENABLE_WRAP_AT_EOL_OUTPUT; // Не прокручиваем экран при достижении конца строки.
     SetConsoleMode(con.out(), consoleMode);
 
     bool isLegacyConsole;
     if (isWine())
-        // Wine is not exactly a legacy console, but it does not support VT
-        // sequences even though it returns no errors when setting the
-        // ENABLE_VIRTUAL_TERMINAL_PROCESSING flag.
-        // Therefore, we have to handle this case separately.
+        // Wine не совсем старая консоль, но VT-последовательности не
+        // поддерживает, хотя установка ENABLE_VIRTUAL_TERMINAL_PROCESSING не
+        // выдаёт ошибок. Поэтому обрабатываем отдельно.
+        //
         isLegacyConsole = true;
     else
     {
-        consoleMode |= DISABLE_NEWLINE_AUTO_RETURN; // Do not do CR on LF.
-        consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING; // Allow ANSI escape sequences.
+        consoleMode |= DISABLE_NEWLINE_AUTO_RETURN; // Не выполнять возврат каретки при LF.
+        consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING; // Разрешить управляющие последовательности ANSI.
         SetConsoleMode(con.out(), consoleMode);
         GetConsoleMode(con.out(), &consoleMode);
-        // The legacy console does not support VT sequences.
+        // Старая консоль не поддерживает VT-последовательности.
         isLegacyConsole = (consoleMode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) == 0;
     }
     return isLegacyConsole;
@@ -107,71 +107,71 @@ void Win32ConsoleAdapter::initEncoding(bool isLegacyConsole, UINT &cpInput, UINT
 {
     cpInput = GetConsoleCP();
     cpOutput = GetConsoleOutputCP();
-    // We would like to set all console codepages to UTF-8, but the legacy
-    // console with bitmap font is unable to display UTF-8 text properly.
-    // However, when using the OEM codepage (which is usually the one supported
-    // by the default bitmap font) in the legacy console, unsupported characters
-    // may be replaced automatically with a similar one (e.g. '╪' gets replaced
-    // with '╬' when the OEM codepage is 850, which doesn't support '╪').
-    // If the legacy console is used with a non-bitmap font (such as Lucida
-    // Console), then the output codepage does not make a difference.
+    // Желательно установить UTF-8 для всех кодовых страниц консоли, но
+    // старая консоль с растровым шрифтом не умеет правильно показывать
+    // UTF-8. С кодовой страницей OEM, обычно поддерживаемой стандартным
+    // растровым шрифтом, неподдерживаемые символы могут автоматически
+    // заменяться похожими: например ╪ заменяется на ╬ в OEM 850. Для
+    // нерастрового шрифта, например Lucida Console, выходная кодовая
+    // страница значения не имеет.
+    //
     SetConsoleCP(CP_UTF8);
     if (isLegacyConsole)
         SetConsoleOutputCP(GetOEMCP());
     else
         SetConsoleOutputCP(CP_UTF8);
-    // This only affects the C runtime functions. It has to be invoked every
-    // time SetConsoleCP() gets called.
+    // Влияет только на функции среды выполнения C. Нужно вызывать после
+    // каждого SetConsoleCP().
     setlocale(LC_ALL, ".utf8");
 }
 
 bool Win32ConsoleAdapter::isBitmapFont(UINT fontFamily) noexcept
 {
-    // https://docs.microsoft.com/en-us/windows/console/console-font-infoex
-    // "FontFamily: see the description of the tmPitchAndFamily member
-    //  of the TEXTMETRIC structure."
-    // https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw
-    // "A monospace bitmap font has all of these low-order bits clear".
+    // https://docs.microsoft.com/en-us/windows/console/console-font-infoex:
+    // для FontFamily см. описание tmPitchAndFamily структуры TEXTMETRIC.
+    // https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw:
+    // у моноширинного растрового шрифта все младшие биты сброшены.
+    //
     return (fontFamily & (TMPF_FIXED_PITCH | TMPF_VECTOR | TMPF_TRUETYPE | TMPF_DEVICE)) == 0;
 }
 
 void Win32ConsoleAdapter::disableBitmapFont(ConsoleCtl &con) noexcept
-// When in the legacy console, try to set a non-bitmap font in order to reduce
-// the chances of display issues.
+// В старой консоли пытаемся установить нерастровый шрифт, чтобы
+// уменьшить вероятность ошибок отображения.
 {
-    // These functions only exist since Windows Vista, so check whether they
-    // are present at runtime.
+    // Функции появились в Windows Vista, поэтому проверяем наличие во время
+    // выполнения.
     static auto pGetCurrentConsoleFontEx =
         getModuleProc<decltype(&GetCurrentConsoleFontEx)>("KERNEL32", "GetCurrentConsoleFontEx");
     static auto pSetCurrentConsoleFontEx =
         getModuleProc<decltype(&SetCurrentConsoleFontEx)>("KERNEL32", "SetCurrentConsoleFontEx");
 
     if (!pGetCurrentConsoleFontEx || !pSetCurrentConsoleFontEx)
-        // The functions are not present, there's nothing we can do.
+        // Функции отсутствуют; сделать ничего нельзя.
         return;
 
     CONSOLE_FONT_INFOEX fontInfo {};
     fontInfo.cbSize = sizeof(fontInfo);
     if ( !pGetCurrentConsoleFontEx(con.out(), FALSE, &fontInfo) ||
          !isBitmapFont(fontInfo.FontFamily) )
-        // The bitmap font is already not in use, we don't have to do anything.
+        // Растровый шрифт уже не используется; действий не требуется.
         return;
 
-    // Compute the new font height based on the bitmap font size.
+    // Вычисляем новую высоту по размеру растрового шрифта.
     short fontY = 2*min(fontInfo.dwFontSize.X, fontInfo.dwFontSize.Y);
     for (auto *name : {L"Consolas", L"Lucida Console"})
     {
         fontInfo.nFont = 0;
         fontInfo.FontFamily = FF_DONTCARE;
         fontInfo.FontWeight = FW_NORMAL;
-        fontInfo.dwFontSize = {0, fontY}; // Width estimated automatically, it seems.
+        fontInfo.dwFontSize = {0, fontY}; // Похоже, ширина определяется автоматически.
         wcscpy(fontInfo.FaceName, name);
-        // SetCurrentConsoleFontEx succeeds even if the font is not available.
-        // We need to check whether the font has actually been set.
+        // SetCurrentConsoleFontEx успешна даже при отсутствии шрифта. Проверяем,
+        // действительно ли он установлен.
         pSetCurrentConsoleFontEx(con.out(), FALSE, &fontInfo);
         pGetCurrentConsoleFontEx(con.out(), FALSE, &fontInfo);
         if (wcscmp(fontInfo.FaceName, name) == 0)
-            // We succeeded in changing the font.
+            // Шрифт успешно изменён.
             return;
     }
 }
@@ -254,14 +254,14 @@ Win32Input::Win32Input(ConsoleCtl &aCon) noexcept :
 
 bool Win32Input::getEvent(TEvent &ev) noexcept
 {
-    // ReadConsoleInput can sleep the process, so we first check the number
-    // of available input events.
+    // ReadConsoleInput может заблокировать процесс, поэтому сначала
+    // проверяем число доступных событий.
     DWORD events;
     while (GetNumberOfConsoleInputEvents(con.in(), &events) && events)
     {
-        // getEvent(ir, ev) often returns false due to discarded events. But this
-        // function should not return false if there are pending events, as that
-        // defeats the event queue in THardwareInfo.
+        // getEvent(ir, ev) часто возвращает false из-за отбрасываемых событий.
+        // Но при наличии ожидающих событий эта функция не должна возвращать
+        // false: иначе нарушится работа очереди THardwareInfo.
         while (events--)
         {
             INPUT_RECORD ir;
@@ -280,8 +280,8 @@ bool Win32Input::getEvent(const INPUT_RECORD &ir, TEvent &ev) noexcept
     switch (ir.EventType)
     {
     case KEY_EVENT:
-        if ( ir.Event.KeyEvent.bKeyDown || // KeyDown
-             (ir.Event.KeyEvent.wVirtualKeyCode == VK_MENU && // Pasted surrogate character
+        if ( ir.Event.KeyEvent.bKeyDown || // Нажатие клавиши.
+             (ir.Event.KeyEvent.wVirtualKeyCode == VK_MENU && // Суррогатный символ из вставки.
                 ir.Event.KeyEvent.uChar.UnicodeChar) )
             return getWin32Key(ir.Event.KeyEvent, ev, state);
         break;
@@ -322,17 +322,17 @@ TPoint Win32Display::reloadScreenInfo() noexcept
     {
         CONSOLE_SCREEN_BUFFER_INFO sbInfo {};
         GetConsoleScreenBufferInfo(con.out(), &sbInfo);
-        // Set the cursor temporarily to (0, 0) to prevent the console from
-        // crashing due to https://github.com/microsoft/terminal/issues/7511.
+        // Временно перемещаем курсор в (0, 0), предотвращая сбой консоли из-за
+        // https://github.com/microsoft/terminal/issues/7511.
         auto curPos = sbInfo.dwCursorPosition;
         SetConsoleCursorPosition(con.out(), {0, 0});
-        // Make sure the buffer size matches the viewport size so that the
-        // scrollbars are not shown.
-        // This must be done only when the viewport size has changed. Otherwise,
-        // we may keep triggering WINDOW_BUFFER_SIZE_EVENT events all the time,
-        // at least on Wine.
+        // Размер буфера должен совпадать с областью просмотра, чтобы не было
+        // полос прокрутки. Меняем его только при изменении области, иначе, по
+        // крайней мере в Wine, будут постоянно возникать
+        // WINDOW_BUFFER_SIZE_EVENT.
+        //
         SetConsoleScreenBufferSize(con.out(), {(short) size.x, (short) size.y});
-        // Restore the cursor position (it does not matter if it is out of bounds).
+        // Восстанавливаем позицию курсора; выход за границы не важен.
         SetConsoleCursorPosition(con.out(), curPos);
     }
 
@@ -340,7 +340,7 @@ TPoint Win32Display::reloadScreenInfo() noexcept
     if ( GetCurrentConsoleFont(con.out(), FALSE, &fontInfo)
          && memcmp(&fontInfo, &lastFontInfo, sizeof(fontInfo)) != 0 )
     {
-        // Character width depends on the font and the font size being used.
+        // Ширина символа зависит от шрифта и его размера.
         WinWidth::reset(ansiScreenWriter == nullptr);
         lastFontInfo = fontInfo;
     }
@@ -358,9 +358,9 @@ TPoint Win32Display::reloadScreenInfo() noexcept
 
 int Win32Display::getColorCount() noexcept
 {
-    // https://devblogs.microsoft.com/commandline/24-bit-color-in-the-windows-console/
-    // Assume high color support when not in the legacy console.
-    // This is also queried while constructing ansiScreenWriter.
+    // https://devblogs.microsoft.com/commandline/24-bit-color-in-the-windows-console/.
+    // В современной консоли предполагаем поддержку расширенных цветов.
+    // Запрос выполняется и во время создания ansiScreenWriter.
     if (!legacyConsole)
         return 256*256*256;
     return 16;
@@ -445,16 +445,16 @@ void Win32Display::flush() noexcept
         ansiScreenWriter->flush();
     else if (!buf.empty())
     {
-        // When in the legacy console:
-        // * If using a bitmap font, the OEM codepage must be used (see
-        //   'initEncoding()'). WriteConsoleW does not work properly with
-        //   UTF-16 characters which map to control characters in the OEM
-        //   codepage (e.g. '○' translates into 0x09, so it's a tabulator),
-        //   so we use WriteConsoleOutputW instead.
-        // * If not using a bitmap font, there is no need to use the OEM codepage
-        //   and both WriteConsoleW and WriteConsoleOutputW work the same, but
-        //   we don't use a specific logic for this case since it's not necessary.
-        // * Every wchar_t (UTF-16 code unit) takes one screen cell.
+        // В старой консоли с растровым шрифтом нужна кодовая страница OEM; см.
+        // initEncoding(). WriteConsoleW неверно обрабатывает UTF-16-символы,
+        // соответствующие управляющим кодам OEM: например ○ превращается в 0x09,
+        // то есть табуляцию. Поэтому используем WriteConsoleOutputW. Для
+        // нерастрового шрифта OEM не нужна, а WriteConsoleW и
+        // WriteConsoleOutputW эквивалентны; отдельная логика не требуется.
+        // Каждый wchar_t, то есть кодовая единица UTF-16, занимает одну ячейку.
+        //
+        //
+        //
         int wCharCount = MultiByteToWideChar(CP_UTF8, 0, &buf[0], buf.size(), nullptr, 0);
         std::vector<wchar_t> wChars(wCharCount);
         MultiByteToWideChar(CP_UTF8, 0, &buf[0], buf.size(), &wChars[0], wCharCount);
@@ -480,17 +480,17 @@ void Win32Display::flush() noexcept
 
 #endif // _WIN32
 
-/////////////////////////////////////////////////////////////////////////
-// Global functions
+// Методы Global
+//
 
 static bool getWin32KeyText(const KEY_EVENT_RECORD &KeyEvent, TEvent &ev, InputState &state) noexcept
-// Returns true unless the event contains a UTF-16 surrogate (Windows only),
-// in which case we need the next event.
+// Возвращает true, кроме события с суррогатом UTF-16 в Windows: тогда
+// нужно следующее событие.
 {
     uint32_t ch = KeyEvent.uChar.UnicodeChar;
     ev.keyDown.textLength = 0;
 
-    // Do not treat non-printable characters as text.
+    // Не считаем непечатные символы текстом.
     if (' ' <= ch && ch != 0x7F)
     {
 #ifdef _WIN32
@@ -544,13 +544,13 @@ bool getWin32Key(const KEY_EVENT_RECORD &KeyEvent, TEvent &ev, InputState &state
     {
         ev.keyDown.charScan.charCode = CpTranslator::fromUtf8(ev.keyDown.getText());
         if (KeyEvent.wVirtualKeyCode == VK_MENU)
-            // This is enabled when pasting certain characters, and it confuses
-            // applications. Clear it.
+            // Включается при вставке некоторых символов и сбивает приложения.
+            // Сбрасываем.
             ev.keyDown.charScan.scanCode = 0;
         if (ev.keyDown.charScan.charCode == '\0' || ev.keyDown.keyCode <= kbCtrlZ)
-            // If the character cannot be represented in the current codepage,
-            // or if it would accidentally trigger a Ctrl+Key combination,
-            // make the whole keyCode zero to avoid side effects.
+            // Если символ не представим в текущей кодовой странице либо случайно
+            // запускает Ctrl+клавиша, обнуляем весь keyCode, избегая побочных
+            // эффектов.
             ev.keyDown.keyCode = kbNoKey;
     }
 
@@ -558,26 +558,26 @@ bool getWin32Key(const KEY_EVENT_RECORD &KeyEvent, TEvent &ev, InputState &state
          ev.keyDown.keyCode == 0x3600 || ev.keyDown.keyCode == 0x3800 ||
          ev.keyDown.keyCode == 0x3A00 || ev.keyDown.keyCode == 0x5B00 ||
          ev.keyDown.keyCode == 0x5C00 )
-        // Discard standalone Shift, Ctrl, Alt, Caps Lock, Windows keys.
+        // Отбрасываем самостоятельные Shift, Ctrl, Alt, Caps Lock и Windows.
         ev.keyDown.keyCode = kbNoKey;
     else if ( (ev.keyDown.controlKeyState & kbLeftCtrl) &&
               (ev.keyDown.controlKeyState & kbRightAlt) &&
               ev.keyDown.textLength == 0 )
-        // We cannot tell for sure if the right Alt key is AltGr, since
-        // that depends on the keyboard layout, but it is certain that
-        // AltGr automatically adds the left Ctrl flag.
-        // If both of these are set but no text is produced, discard the
-        // whole event since we don't want AltGr to be handled as Ctrl+Alt.
+        // Нельзя уверенно определить, является ли правый Alt клавишей AltGr: это
+        // зависит от раскладки. Но AltGr всегда добавляет флаг левого Ctrl. Если
+        // оба флага установлены, а текста нет, отбрасываем событие, чтобы не
+        // трактовать AltGr как Ctrl+Alt.
+        //
         ev.keyDown.keyCode = kbNoKey;
     else if ( (ev.keyDown.controlKeyState & kbCtrlShift) &&
               (ev.keyDown.controlKeyState & kbAltShift) &&
               ev.keyDown.textLength != 0 )
-        // If Ctrl+Alt produces text, we are dealing with AltGr. In this case,
-        // discard the Ctrl and Alt modifiers.
+        // Если Ctrl+Alt создаёт текст, это AltGr. Отбрасываем модификаторы Ctrl
+        // и Alt.
         ev.keyDown.controlKeyState &= ~(kbCtrlShift | kbAltShift);
     else if (KeyEvent.wVirtualScanCode < 89)
     {
-        // Convert NT style virtual scan codes to PC BIOS codes.
+        // Преобразуем виртуальные скан-коды NT в коды PC BIOS.
         uchar index = KeyEvent.wVirtualScanCode;
         ushort keyCode = 0;
         if ((ev.keyDown.controlKeyState & kbAltShift) && THardwareInfo::AltCvt[index])
@@ -618,7 +618,7 @@ void getWin32Mouse(const MOUSE_EVENT_RECORD &MouseEvent, TEvent &ev, InputState 
         kbScrollState | kbNumState | kbCapsState | kbEnhanced
     );
 
-    // Rotation sense is represented by the sign of dwButtonState's high word
+    // Направление вращения задаётся знаком старшего слова dwButtonState.
     Boolean positive = !(MouseEvent.dwButtonState & 0x80000000);
     if( MouseEvent.dwEventFlags & MOUSE_WHEELED )
         ev.mouse.wheel = positive ? mwUp : mwDown;
@@ -677,14 +677,14 @@ void regenerateMissingScanCodeFromVirtualKeyCode(KEY_EVENT_RECORD &KeyEvent) noe
     if (uint16_t keyCode = virtualKeyCodeToTVisionKeyCode[KeyEvent.wVirtualKeyCode])
     {
         KeyEvent.wVirtualScanCode = keyCode >> 8;
-        // Overwrite the UnicodeChar unless it is expected to be
-        // non-null and it is already not.
+        // Перезаписываем UnicodeChar, кроме случая, когда он должен быть
+        // ненулевым и уже содержит значение.
         if (KeyEvent.uChar.UnicodeChar == L'\0' || (keyCode & 0xFF) == 0)
             KeyEvent.uChar.UnicodeChar = keyCode & 0xFF;
 
-        // If the Ctrl or Alt modifiers are present, the event is not
-        // meant to produce text, so clear the UnicodeChar. Unlike on
-        // Windows, we do not expect AltGr to be reported as Ctrl+Alt.
+        // При наличии Ctrl или Alt событие не создаёт текст, поэтому очищаем
+        // UnicodeChar. В отличие от Windows, здесь не ожидаем представления
+        // AltGr как Ctrl+Alt.
         if ( (KeyEvent.dwControlKeyState & (kbCtrlShift | kbAltShift)) &&
              L' ' <= KeyEvent.uChar.UnicodeChar &&
              L'\x7F' != KeyEvent.uChar.UnicodeChar )
@@ -692,5 +692,5 @@ void regenerateMissingScanCodeFromVirtualKeyCode(KEY_EVENT_RECORD &KeyEvent) noe
     }
 }
 
-} // namespace tvision
+} // пространство имён tvision
 

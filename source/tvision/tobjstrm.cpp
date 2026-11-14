@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tobjstrm.cpp                              */
+/* файл — tobjstrm.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  Member function(s) of following classes:  */
+/* функции:  */
+/* Методы следующих классов: */
 /*                     TParamText                             */
 /*                     TStreamable                            */
 /*                     TStreamableClass                       */
@@ -75,9 +75,9 @@
 #define _HUGE huge
 #endif
 
-// ios::open_mode and ios::seek_dir are deprecated in modern C++ and are
-// incompatible with the implementation-defined equivalents ios::openmode
-// and ios::seekdir. We simply redirect to the appropiate type on each platform.
+// ios::open_mode и ios::seek_dir устарели в современном C++ и
+// несовместимы с платформенными ios::openmode и ios::seekdir.
+// Перенаправляем на соответствующий тип платформы.
 #ifdef __BORLANDC__
     typedef ios::open_mode openmode;
     typedef ios::seek_dir seekdir;
@@ -162,7 +162,7 @@ int TPWrittenObjects::compare( void *o1, void *o2 )
 {
     if( o1 == o2 )
         return 0;
-    else if( ((char _HUGE *)o1)+1 < ((char _HUGE *)o2)+1 ) // force normalization
+    else if( ((char _HUGE *)o1)+1 < ((char _HUGE *)o2)+1 ) // Принудительная нормализация.
         return -1;
     else
         return 1;
@@ -184,9 +184,9 @@ void TPReadObjects::registerObject( const void *adr )
 {
     ccIndex loc = insert( (void *)adr );
     (void) loc;
-    assert( (uint) loc == curId );  // to be sure that TNSCollection
-                                    // continues to work the way
-                                    // it does now...
+    assert( (uint) loc == curId );  // Чтобы TNSCollection продолжала работать как прежде.
+                                    //
+                                    //
     ++curId;
 }
 
@@ -505,9 +505,9 @@ ipstream::ipstream() noexcept
 const TStreamableClass *ipstream::readPrefix()
 {
     char ch = readByte();
-    assert( ch == '[' );    // don't combine this with the previous line!
-    (void) ch;              // We must always do the read, even if we're
-                            // not checking assertions
+    assert( ch == '[' );    // Не объединять с предыдущей строкой!
+    (void) ch;              // Чтение необходимо всегда, даже без проверки утверждений.
+                            //
 
     char name[128];
     readString( name, sizeof name );
@@ -518,9 +518,9 @@ void *ipstream::readData( const TStreamableClass *c, TStreamable *mem )
 {
     if( mem == 0 )
         mem = c->build();
-    // Register the actual address of the object, not the address of the
-    // TStreamable sub-object, so that it is returned by subsequent calls
-    // to find().
+    // Регистрируем фактический адрес объекта, а не подобъекта TStreamable,
+    // чтобы последующие find() возвращали именно его.
+    //
     registerObject( dynamic_cast<void *>(mem) );
     return mem->read( *this );
 }
@@ -528,9 +528,9 @@ void *ipstream::readData( const TStreamableClass *c, TStreamable *mem )
 void ipstream::readSuffix()
 {
     char ch = readByte();
-    assert( ch == ']' );    // don't combine this with the previous line!
-    (void) ch;              // We must always do the write, even if we're
-                            // not checking assertions
+    assert( ch == ']' );    // Не объединять с предыдущей строкой!
+    (void) ch;              // Запись необходима всегда, даже без проверки утверждений.
+                            //
 }
 
 const void *ipstream::find( P_id_type id )
@@ -793,11 +793,11 @@ fpbase::~fpbase()
 void fpbase::open( const char *b, pstream::openmode m)
 {
     if( buf.is_open() )
-        clear(ios::failbit);        // fail - already open
+        clear(ios::failbit);        // Ошибка: уже открыт.
     else if( buf.open(b, ::openmode(m)) )
-        clear(ios::goodbit);        // successful open
+        clear(ios::goodbit);        // Успешное открытие.
     else
-        clear(ios::badbit);     // open failed
+        clear(ios::badbit);     // Ошибка открытия.
 }
 
 void fpbase::close()

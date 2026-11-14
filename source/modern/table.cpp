@@ -14,8 +14,8 @@ TModernView::TModernView(const TRect &r) : TView(r)
 }
 TPalette &TModernView::getPalette() const
 {
-    // Empty group palettes pass indices through. Standard dialogs expose
-    // 32 roles, while ordinary windows expose the 8 window/editor roles.
+    // Пустые палитры групп передают индексы без изменений. Стандартные
+    // диалоги имеют 32 роли; обычные окна — восемь ролей окна и редактора.
     const TView *parent = owner;
     while (parent && (uchar)parent->getPalette()[0] == 0)
         parent = parent->owner;
@@ -80,7 +80,7 @@ std::string fitText(const std::string &text, int width, Align align)
         out.append((size_t)pad, ' ');
     return out;
 }
-} // namespace
+} // пространство имён
 TTable::TTable(const TRect &r, std::shared_ptr<TableModel> m, std::vector<TableColumn> c)
     : TModernView(r), model_(std::move(m)), columns(std::move(c))
 {
@@ -510,4 +510,4 @@ void TTable::handleEvent(TEvent &ev)
     moved(r, c, (ev.keyDown.controlKeyState & kbShift) != 0);
     clearEvent(ev);
 }
-} // namespace tvision
+} // пространство имён tvision

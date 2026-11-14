@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   EDITORS.H                                                             */
 /*                                                                         */
-/*   defines the classes TIndicator, TEditor, TMemo, TFileEditor,          */
-/*   and TEditWindow                                                       */
+/* Определяет классы TIndicator, TEditor, TMemo, TFileEditor, */
+/* и TEditWindow. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -113,11 +113,11 @@ typedef ushort (*TEditorDialog)( int, ... );
 ushort defEditorDialog( int dialog, ... );
 
 /* ---------------------------------------------------------------------- */
-/*      class TIndicator                                                  */
+/* класс TIndicator */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Frame passive                                               */
-/*        2 = Frame active                                                */
+/* Структура палитры */
+/* 1 = Неактивная рамка */
+/* 2 = Активная рамка */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TIndicator ) && !defined( __TIndicator )
@@ -174,11 +174,11 @@ inline opstream& operator << ( opstream& os, TIndicator* cl )
 #endif  // Uses_TIndicator
 
 /* ---------------------------------------------------------------------- */
-/*      class TEditor                                                     */
+/* класс TEditor */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*      1 = Normal text                                                   */
-/*      2 = Selected text                                                 */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TEditor ) && !defined( __TEditor )
@@ -344,11 +344,11 @@ inline opstream& operator << ( opstream& os, TEditor* cl )
 #endif  // Uses_TEditor
 
 /* ---------------------------------------------------------------------- */
-/*      class TMemo                                                       */
+/* класс TMemo */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*      1 = Normal text                                                   */
-/*      2 = Selected text                                                 */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TMemo ) && !defined( __TMemo )
@@ -405,11 +405,11 @@ inline opstream& operator << ( opstream& os, TMemo* cl )
 #endif  // Uses_TMemo
 
 /* ---------------------------------------------------------------------- */
-/*      class TFileEditor                                                 */
+/* класс TFileEditor */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*      1 = Normal text                                                   */
-/*      2 = Selected text                                                 */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TFileEditor ) && !defined( __TFileEditor )
@@ -481,16 +481,16 @@ inline opstream& operator << ( opstream& os, TFileEditor* cl )
 #endif  // Uses_TFileEditor
 
 /* ---------------------------------------------------------------------- */
-/*      class TEditWindow                                                 */
+/* класс TEditWindow */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Frame passive                                               */
-/*        2 = Frame active                                                */
-/*        3 = Frame icon                                                  */
-/*        4 = ScrollBar page area                                         */
-/*        5 = ScrollBar controls                                          */
-/*        6 = Editor normal text                                          */
-/*        7 = Editor selected text                                        */
+/* Структура палитры */
+/* 1 = Неактивная рамка */
+/* 2 = Активная рамка */
+/* 3 = Значок рамки */
+/* 4 = Область страницы полосы прокрутки */
+/* 5 = Элементы полосы прокрутки */
+/* 6 = Обычный текст редактора */
+/* 7 = Выделенный текст редактора */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TEditWindow ) && !defined( __TEditWindow )

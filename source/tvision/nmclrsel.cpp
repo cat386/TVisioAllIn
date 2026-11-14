@@ -1,9 +1,9 @@
 /*------------------------------------------------------------*/
-/* filename -       nmclrsel.cpp                              */
+/* файл — nmclrsel.cpp */
 /*                                                            */
-/* defines the streamable names for classes                   */
+/* Определяет имена сериализуемых классов: */
 /*   TColorSelector, TMonoSelector, TColorDisplay,            */
-/*   TColorGroupList, TColorItemList, TColorDialog            */
+/* TColorGroupList, TColorItemList, TColorDialog. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       misc.cpp                                  */
+/* файл — misc.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*          message -- sends a message to an object           */
+/* функции:  */
+/* message отправляет сообщение объекту. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -43,10 +43,10 @@ Boolean lowMemory() noexcept
 
 size_t strnzcpy( char *dst, TStringView src, size_t dstSize ) noexcept
 {
-    // Same as 'strlcpy'. 'dstSize' is the size of the 'dst' buffer,
-    // which is always made null-terminated (unless 'dstSize' is zero).
-    // Returns the length of 'dst' (not counting the null terminator).
-    // 'dst' and 'src' must not overlap.
+    // Аналог strlcpy. dstSize — размер dst, который всегда завершается
+    // нулём, кроме dstSize = 0. Возвращает длину dst без нулевого символа.
+    // dst и src не должны перекрываться.
+    //
     if (dstSize != 0)
     {
         size_t copyLen = src.size();
@@ -61,10 +61,10 @@ size_t strnzcpy( char *dst, TStringView src, size_t dstSize ) noexcept
 
 size_t strnzcat( char *dst, TStringView src, size_t dstSize ) noexcept
 {
-    // Similar to 'strlcat', except that 'dst' is always left null-terminated
-    // (unless 'dstSize' is zero).
-    // Returns the length of 'dst' (not counting the null terminator).
-    // 'dst' and 'src' must not overlap.
+    // Аналог strlcat, но dst всегда завершается нулём, кроме dstSize = 0.
+    // Возвращает длину dst без нулевого символа. dst и src не должны
+    // перекрываться.
+    //
     if (dstSize != 0)
     {
         size_t dstLen = strlen(dst);

@@ -60,7 +60,7 @@ Turbo Vision does not excel at any of those, but it certainly overcomes many of 
 
 3. Can you imagine writing a text-based interface that works both on Unix/Linux and Windows (and thus is cross-platform) out-of-the-box, with no `#ifdef`s? Turbo Vision makes this possible. First: Turbo Vision keeps on using `char` arrays instead of relying on the implementation-defined and platform-dependent `wchar_t` or `TCHAR`. Second: thanks to UTF-8 support in `setlocale` in [recent versions of Microsoft's RTL](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/setlocale-wsetlocale#utf-8-support), code like the following will work as intended:
     ```c++
-    std::ifstream f("コンピュータ.txt"); // On Windows, the RTL converts this to the system encoding on-the-fly.
+    std::ifstream f("コンピュータ.txt"); // В Windows среда выполнения на лету преобразует строку в системную кодировку.
     ```
 
 <div id="how-to"></div>
@@ -94,8 +94,8 @@ If you just want to test the demo applications:
 Turbo Vision can be built as an static library with CMake and GCC/Clang.
 
 ```sh
-cmake . -B ./build -DCMAKE_BUILD_TYPE=Release && # Could also be 'Debug', 'MinSizeRel' or 'RelWithDebInfo'.
-cmake --build ./build # or `cd ./build; make`
+cmake . -B ./build -DCMAKE_BUILD_TYPE=Release && # Также допустимы Debug, MinSizeRel и RelWithDebInfo.
+cmake --build ./build # Либо `cd ./build; make`.
 ```
 
 CMake versions older than 3.13 may not support the `-B` option. You can try the following instead:
@@ -151,8 +151,8 @@ The backward-compatibility headers in `include/tvision/compat/borland` emulate t
 The build process with MSVC is slightly more complex, as there are more options to choose from. Note that you will need different build directories for different target architectures. For instance, to generate optimized binaries:
 
 ```sh
-cmake . -B ./build && # Add '-A x64' (64-bit) or '-A Win32' (32-bit) to override the default platform.
-cmake --build ./build --config Release # Could also be 'Debug', 'MinSizeRel' or 'RelWithDebInfo'.
+cmake . -B ./build && # Для явного выбора платформы добавьте '-A x64' для 64 бит либо '-A Win32' для 32 бит.
+cmake --build ./build --config Release # Также допустимы Debug, MinSizeRel и RelWithDebInfo.
 ```
 
 In the example above, `tvision.lib` and the example applications will be placed at `./build/Release`.
@@ -217,14 +217,14 @@ If you choose the CMake build system for your application, there are two main wa
     * For mono-config generators (`Unix Makefiles`, `Ninja`...), you only have to build and install once:
 
         ```sh
-        cmake . -B ./build # '-DCMAKE_INSTALL_PREFIX=...' to override the install prefix.
+        cmake . -B ./build # '-DCMAKE_INSTALL_PREFIX=...' переопределяет каталог установки.
         cmake --build ./build
         cmake --install ./build
         ```
     * For multi-config generators (`Visual Studio`, `Ninja Multi-Config`...) you should build and install all configurations:
 
         ```sh
-        cmake . -B ./build # '-DCMAKE_INSTALL_PREFIX=...' to override the install prefix.
+        cmake . -B ./build # '-DCMAKE_INSTALL_PREFIX=...' переопределяет каталог установки.
         cmake --build ./build --config Release
         cmake --build ./build --config Debug --target tvision
         cmake --build ./build --config RelWithDebInfo --target tvision
@@ -244,7 +244,7 @@ If you choose the CMake build system for your application, there are two main wa
 
 
     ```cmake
-    add_subdirectory(tvision) # Assuming Turbo Vision is in the 'tvision' directory.
+    add_subdirectory(tvision) # Предполагается, что Turbo Vision находится в каталоге tvision.
     target_link_libraries(my_application tvision)
     ```
 
@@ -387,9 +387,9 @@ The following are new features not available in Borland's release of Turbo Visio
     auto kbShiftAltUp = TKey(kbUp, kbShift | kbAltShift);
     assert(kbCtrlA == TKey('A', kbCtrlShift));
     assert(TKey(kbCtrlTab, kbShift) == TKey(kbTab, kbShift | kbCtrlShift));
-    // Create menu hotkeys.
+    // Создаём горячие клавиши меню.
     new TMenuItem("~R~estart", cmRestart, TKey(kbDel, kbCtrlShift | kbAltShift), hcNoContext, "Ctrl-Alt-Del")
-    // Examine KeyDown events:
+    // Проверяем события нажатия клавиш:
     if (event.keyDown == TKey(kbEnter, kbShift))
         doStuff();
     ```
@@ -445,10 +445,10 @@ Note that when built with Borland C++, Turbo Vision does not support Unicode. Ho
 The traditional way to get text from a key press event is as follows:
 
 ```c++
-// 'ev' is a TEvent, and 'ev.what' equals 'evKeyDown'.
+// ev имеет тип TEvent, а ev.what равен evKeyDown.
 switch (ev.keyDown.keyCode) {
-    // Key shortcuts are usually checked first.
-    // ...
+    // Сначала обычно проверяют горячие клавиши. ...
+    //
     default: {
         char c = ev.keyDown.charScan.charCode;
         // ...
@@ -484,12 +484,12 @@ KeyDownEvent {
     union {
         .keyCode = 0xA4,
         .charScan = CharScanType {
-            .charCode = 164 ('ñ'), // In CP437
+            .charCode = 164 ('ñ'), // В CP437.
             .scanCode = 0
         }
     },
     .controlKeyState = 0x200 (kbInsState),
-    .text = {'\xC3', '\xB1'}, // In UTF-8
+    .text = {'\xC3', '\xB1'}, // В UTF-8.
     .textLength = 2
 }
 ```
@@ -497,14 +497,14 @@ However, if they type `€` the following will happen:
 ```c++
 KeyDownEvent {
     union {
-        .keyCode = 0x0 (kbNoKey), // '€' not part of CP437
+        .keyCode = 0x0 (kbNoKey), // '€' отсутствует в CP437.
         .charScan = CharScanType {
             .charCode = 0,
             .scanCode = 0
         }
     },
     .controlKeyState = 0x200 (kbInsState),
-    .text = {'\xE2', '\x82', '\xAC'}, // In UTF-8
+    .text = {'\xE2', '\x82', '\xAC'}, // В UTF-8.
     .textLength = 3
 }
 ```
@@ -564,9 +564,9 @@ void TDrawBuffer::putChar(ushort indent, char c);
 
 ```c++
 ushort TDrawBuffer::moveStr( ushort indent, TStringView str, TColorAttr attr,
-                             ushort maxStrWidth = USHRT_MAX, ushort strIndent = 0 ); // New
+                             ushort maxStrWidth = USHRT_MAX, ushort strIndent = 0 ); // Новое.
 ushort TDrawBuffer::moveCStr( ushort indent, TStringView str, TColorAttr attr, 
-                              ushort maxStrWidth = USHRT_MAX, ushort strIndent = 0 ); // New
+                              ushort maxStrWidth = USHRT_MAX, ushort strIndent = 0 ); // Новое.
 ```
 `str` is handled according to the rules exposed previously, and there are two new parameters:
 * `maxStrWidth` specifies the maximum amount of text that should be copied from `str`, measured in columns (not in bytes).
@@ -587,7 +587,7 @@ int cstrlen(TStringView s);
 Returns the displayed length of `s` according to the aforementioned rules, discarding `~` characters.
 
 ```c++
-int strwidth(TStringView s); // New
+int strwidth(TStringView s); // Новое.
 ```
 Returns the displayed length of `s`.
 
@@ -606,8 +606,8 @@ bool TText::drawOne(TSpan<TScreenCell> cells, size_t &i, TStringView text, size_
 For drawing `TScreenCell` buffers into a view, the following methods are available:
 
 ```c++
-void TView::writeBuf(short x, short y, short w, short h, const TScreenCell *b); // New
-void TView::writeLine(short x, short y, short w, short h, const TScreenCell *b); // New
+void TView::writeBuf(short x, short y, short w, short h, const TScreenCell *b); // Новое.
+void TView::writeLine(short x, short y, short w, short h, const TScreenCell *b); // Новое.
 ```
 
 ### Example: Unicode text in menus and status bars
@@ -783,15 +783,15 @@ The exact number of bytes read is stored in the output parameter `length`, which
 Here is an example on how to use it:
 
 ```c++
-// 'ev' is a TEvent, and 'ev.what' equals 'evKeyDown'.
-// If we received text from the clipboard...
+// ev имеет тип TEvent, ev.what равен evKeyDown. Если получен текст из
+// буфера обмена...
 if (ev.keyDown.controlKeyState & kbPaste) {
     char buf[512];
     size_t length;
-    // Fill 'buf' with the text in 'ev' and in
-    // upcoming events from the input queue.
+    // Заполняем buf текстом ev и следующих событий очереди ввода.
+    //
     while (textEvent(ev, buf, length)) {
-        // Process 'length' bytes of text in 'buf'...
+        // Обрабатываем length байтов текста в buf...
     }
 }
 ```
@@ -873,11 +873,11 @@ The reason why these types exist is to allow distinguishing color formats using 
 
     Examples of `TColorBIOS` usage:
     ```c++
-    TColorBIOS bios = 0x4;          // 0x4: red.
-    bios.setIntensity(true);        // 0xC: light red.
-    bios.setBlue(bios.getRed());    // 0xD: light magenta.
-    bios = bios ^ 3;                // 0xE: yellow.
-    uint8_t c = bios;               // Implicit conversion to integer types.
+    TColorBIOS bios = 0x4;          // 0x4: красный.
+    bios.setIntensity(true);        // 0xC: светло-красный.
+    bios.setBlue(bios.getRed());    // 0xD: светло-пурпурный.
+    bios = bios ^ 3;                // 0xE: жёлтый.
+    uint8_t c = bios;               // Неявное преобразование в целочисленные типы.
     ```
 
     In terminal emulators, BIOS colors are mapped to the basic 16 ANSI colors.
@@ -896,8 +896,8 @@ The reason why these types exist is to allow distinguishing color formats using 
     TColorRGB rgb = 0x9370DB;           // 0xRRGGBB.
     rgb = {0x93, 0x70, 0xDB};           // {R, G, B}.
     rgb = rgb ^ 0xFFFFFF;               // Negated.
-    rgb.setGreen(rgb.getRed() & 0x88);  // Access to individual components.
-    uint32_t c = rgb;                   // Implicit conversion to integer types.
+    rgb.setGreen(rgb.getRed() & 0x88);  // Доступ к отдельным компонентам.
+    uint32_t c = rgb;                   // Неявное преобразование в целочисленные типы.
     ```
 
 * `TColorXTerm` represents an index into the `xterm-256color` color palette. It can be casted into and from `uint8_t`.
@@ -953,29 +953,29 @@ A `TColorAttr` is composed of:
 The most straight-forward way to create a `TColorAttr` is by means of the `TColorAttr(TColor fg, TColor bg, ushort style = 0)` and `TColorAttr(int bios)` constructors:
 
 ```c++
-// Foreground: RGB 0x892312
-// Background: RGB 0x7F00BB
-// Style: Normal.
+// Текст: RGB 0x892312. Фон: RGB 0x7F00BB. Стиль: обычный.
+//
+//
 TColorAttr a1 = {TColorRGB(0x89, 0x23, 0x12), TColorRGB(0x7F, 0x00, 0xBB)};
 
-// Foreground: BIOS 0x7.
-// Background: RGB 0x7F00BB.
-// Style: Bold, Italic.
+// Текст: BIOS 0x7. Фон: RGB 0x7F00BB. Стиль: жирный, курсив.
+//
+//
 TColorAttr a2 = {'\x7', 0x7F00BB, slBold | slItalic};
 
-// Foreground: Terminal default.
-// Background: BIOS 0xF.
-// Style: Normal.
+// Текст: цвет терминала по умолчанию. Фон: BIOS 0xF. Стиль: обычный.
+//
+//
 TColorAttr a3 = {TColorDefault(), TColorBIOS(0xF)};
 
-// Foreground: Terminal default.
-// Background: Terminal default.
-// Style: Normal.
+// Текст и фон: цвета терминала по умолчанию. Стиль: обычный.
+//
+//
 TColorAttr a4 = {};
 
-// Foreground: BIOS 0x0
-// Background: BIOS 0x7
-// Style: Normal
+// Текст: BIOS 0x0. Фон: BIOS 0x7. Стиль: обычный.
+//
+//
 TColorAttr a5 = 0x70;
 ```
 
@@ -1026,12 +1026,12 @@ TAttrPair TView::getColor(ushort indices);
 
     ```c++
     /* ---------------------------------------------------------------------- */
-    /*      class TScrollBar                                                  */
+    /* класс TScrollBar */
     /*                                                                        */
-    /*      Palette layout                                                    */
-    /*        1 = Page areas                                                  */
-    /*        2 = Arrows                                                      */
-    /*        3 = Indicator                                                   */
+    /* Структура палитры */
+    /* 1 = Области страниц */
+    /* 2 = Стрелки */
+    /* 3 = Индикатор */
     /* ---------------------------------------------------------------------- */
     ```
 
@@ -1058,14 +1058,14 @@ So, in general, there are three ways to use extended colors in views:
 1. By returning extended color attributes from an overridden `mapColor` method:
 
 ```c++
-// The 'TMyScrollBar' class inherits from 'TScrollBar' and overrides 'TView::mapColor'.
+// TMyScrollBar наследуется от TScrollBar и переопределяет TView::mapColor.
 TColorAttr TMyScrollBar::mapColor(uchar index)
 {
-    // In this example the values are hardcoded,
-    // but they could be stored elsewhere if desired.
+    // В примере значения заданы явно, но при желании могут храниться
+    // отдельно.
     switch (index)
     {
-        case 1:     return {0x492983, 0x826124}; // Page areas.
+        case 1:     return {0x492983, 0x826124}; // Области страниц.
         case 2:     return {0x438939, 0x091297}; // Arrows.
         case 3:     return {0x123783, 0x329812}; // Indicator.
         default:    return errorAttr;
@@ -1076,7 +1076,7 @@ TColorAttr TMyScrollBar::mapColor(uchar index)
 2. By providing extended color attributes directly to `TDrawBuffer` methods, if the palette system is not being used. For example:
 
     ```c++
-    // The 'TMyView' class inherits from 'TView' and overrides 'TView::draw'.
+    // TMyView наследуется от TView и переопределяет TView::draw.
     void TMyView::draw()
     {
         TDrawBuffer b;
@@ -1094,12 +1094,12 @@ TColorAttr TMyScrollBar::mapColor(uchar index)
     static const TColorAttr cpMyApp[] =
     {
         {0x762892, 0x828712},               // TBackground.
-        {0x874832, 0x249838, slBold},       // TMenuView normal text.
-        {{}, {}, slItalic | slUnderline},   // TMenuView disabled text.
+        {0x874832, 0x249838, slBold},       // Обычный текст TMenuView.
+        {{}, {}, slItalic | slUnderline},   // Недоступный текст TMenuView.
         /* ... */
     };
 
-    // The 'TMyApp' class inherits from 'TApplication' and overrides 'TView::getPalette'.
+    // TMyApp наследуется от TApplication и переопределяет TView::getPalette.
     TPalette &TMyApp::getPalette() const
     {
         static TPalette palette(cpMyApp);
@@ -1114,8 +1114,8 @@ TColorAttr TMyScrollBar::mapColor(uchar index)
     {
         TPalette &pal = TProgram::application->getPalete();
         pal[1] = {0x762892, 0x828712};              // TBackground.
-        pal[2] = {0x874832, 0x249838, slBold};      // TMenuView normal text.
-        pal[3] = {{}, {}, slItalic | slUnderline};  // TMenuView disabled text.
+        pal[2] = {0x874832, 0x249838, slBold};      // Обычный текст TMenuView.
+        pal[3] = {{}, {}, slItalic | slUnderline};  // Недоступный текст TMenuView.
         /* ... */
     }
     ```

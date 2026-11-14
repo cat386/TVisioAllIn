@@ -1,8 +1,8 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Datacoll.cpp: Support source file for TVFORMS demo  */
+/* Datacoll.cpp — вспомогательный исходный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -102,7 +102,7 @@ int TDataCollection::compare( void *key1, void *key2 )
 }
 
 void TDataCollection::error( int code )
-// Save error status instead of giving a runtime error
+// Сохраняем состояние ошибки вместо ошибки времени выполнения.
 {
     status = code;
 }

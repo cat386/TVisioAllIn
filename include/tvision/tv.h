@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   TV.H                                                                  */
 /*                                                                         */
-/*   includes other header files based on which Uses_XXXX symbols are      */
+/* Подключает другие заголовки в зависимости от заданных символов Uses_XXXX. */
 /*   defined.                                                              */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
@@ -40,9 +40,9 @@
 #endif
 #if defined( _MSC_VER )
 #pragma warning(push)
-#pragma warning(disable: 4250) // Inheritance via dominance
-#pragma warning(disable: 4616) // Invalid #pragma warning number
-#pragma warning(disable: 26819) // Implicit fallthrough
+#pragma warning(disable: 4250) // Наследование с доминированием.
+#pragma warning(disable: 4616) // Недопустимый номер предупреждения в #pragma.
+#pragma warning(disable: 26819) // Неявный переход к следующему case.
 #endif
 #if defined( __GNUC__ )
 #pragma GCC diagnostic push

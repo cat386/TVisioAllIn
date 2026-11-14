@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   RESOURCE.H                                                            */
 /*                                                                         */
-/*   defines the classes TStringCollection, TResourceCollection,           */
-/*   TResourceFile, TStrListMaker, and TStringList                         */
+/* Определяет классы TStringCollection, TResourceCollection, */
+/* TResourceFile, TStrListMaker и TStringList. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*

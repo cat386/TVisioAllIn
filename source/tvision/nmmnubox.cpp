@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmmnubox.cpp                              */
+/* файл — nmmnubox.cpp */
 /*                                                            */
-/* defines the streamable name for class TMenuBox             */
+/* Определяет имя сериализуемого класса TMenuBox. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

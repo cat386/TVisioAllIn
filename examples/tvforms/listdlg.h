@@ -1,9 +1,9 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Listdlg.h: Header file for Listdlg.cpp              */
-/*              (Support header file for TVFORMS Demo)   */
+/* Listdlg.h — заголовочный файл для Listdlg.cpp */
+/* Вспомогательный заголовочный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       hardwrvr.cpp                              */
+/* файл — hardwrvr.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  Member variables for THardwareInfo class  */
+/* функции:  */
+/* Переменные-члены класса THardwareInfo. */
 /*                                                            */
 /*------------------------------------------------------------*/
 /*
@@ -114,7 +114,7 @@ static void *getModuleProc(const char *modName, const char *procName)
     return mod != 0 ? GetProcAddress(mod, procName) : 0;
 };
 
-// These methods are not available on DPMI32 and cannot be linked statically.
+// Методы недоступны в DPMI32 и не допускают статической компоновки.
 
 static BOOL (WINAPI * pSetConsoleActiveScreenBuffer)(HANDLE);
 static BOOL (WINAPI * pOpenClipboard)(HWND);
@@ -123,7 +123,7 @@ static HANDLE (WINAPI * pSetClipboardData)(UINT, HANDLE);
 static HANDLE (WINAPI * pGetClipboardData)(UINT);
 static BOOL (WINAPI * pEmptyClipboard)();
 
-// Constructor for 16-bit version is in HARDWARE.ASM
+// Конструктор 16-битной версии находится в HARDWARE.ASM.
 
 THardwareInfo::THardwareInfo()
 {
@@ -152,22 +152,22 @@ THardwareInfo::THardwareInfo()
             0,
             CONSOLE_TEXTMODE_BUFFER,
             0);
-        // Force the screen buffer size to match the window size.
-        // The Console API guarantees this, but some implementations
-        // are not compliant (e.g. Wine).
+        // Приводим размер экранного буфера к размеру окна. API консоли
+        // гарантирует это, но некоторые реализации, например Wine, нарушают
+        // условие.
         sbInfo.dwSize.X = sbInfo.srWindow.Right - sbInfo.srWindow.Left + 1;
         sbInfo.dwSize.Y = sbInfo.srWindow.Bottom - sbInfo.srWindow.Top + 1;
         SetConsoleScreenBufferSize(consoleHandle[cnOutput], sbInfo.dwSize);
         }
 
-    consoleMode |= ENABLE_WINDOW_INPUT; // Report changes in buffer size
-    consoleMode &= ~ENABLE_PROCESSED_INPUT; // Report CTRL+C and SHIFT+Arrow events.
-    consoleMode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT); // Report Ctrl+S.
+    consoleMode |= ENABLE_WINDOW_INPUT; // Сообщать об изменении размера буфера.
+    consoleMode &= ~ENABLE_PROCESSED_INPUT; // Сообщать о Ctrl+C и Shift+стрелка.
+    consoleMode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT); // Сообщать о Ctrl+S.
     SetConsoleMode( consoleHandle[cnInput], consoleMode );
-    // The following flags were introduced in later Windows versions, so use a
-    // separate call to SetConsoleMode, just in case it fails.
-    consoleMode |= ENABLE_EXTENDED_FLAGS;   /* Disable the Quick Edit mode, */
-    consoleMode &= ~ENABLE_QUICK_EDIT_MODE; /* which inhibits the mouse.    */
+    // Эти флаги появились в поздних версиях Windows. На случай ошибки
+    // используем отдельный SetConsoleMode.
+    consoleMode |= ENABLE_EXTENDED_FLAGS;   /* Отключаем режим Quick Edit, */
+    consoleMode &= ~ENABLE_QUICK_EDIT_MODE; /* который блокирует мышь. */
     SetConsoleMode( consoleHandle[cnInput], consoleMode );
 
     pSetConsoleActiveScreenBuffer =
@@ -209,12 +209,12 @@ ushort THardwareInfo::getScreenMode()
 {
     ushort mode;
 
-    if( platform != plDPMI32 )      // B/W, mono not supported if running on
-        mode = TDisplay::smCO80;    //   NT.  Would have to use the registry.
+    if( platform != plDPMI32 )      // Чёрно-белый и монохромный режимы не поддерживаются при работе в
+        mode = TDisplay::smCO80;    // NT. Для этого пришлось бы обращаться к реестру.
     else
         {
         _AH = 0x0F;
-        INT10;                      // Emit CD, 10.  Supported by DPMI server.
+        INT10;                      // Выдаём CD, 10. Поддерживается сервером DPMI.
         mode = _AL;
         }
 
@@ -288,7 +288,7 @@ void THardwareInfo::screenWrite( ushort x, ushort y, CHAR_INFO *buf, DWORD len )
     WriteConsoleOutput( consoleHandle[cnOutput], buf, size, from, &to);
 }
 
-// Event functions.
+// Методы Event
 
 BOOL THardwareInfo::getMouseEvent( MouseEventType& event )
 {
@@ -307,7 +307,7 @@ BOOL THardwareInfo::getMouseEvent( MouseEventType& event )
         event.eventFlags = irBuffer.Event.MouseEvent.dwEventFlags;
         event.controlKeyState = irBuffer.Event.MouseEvent.dwControlKeyState;
 
-        // Rotation sense is represented by the sign of dwButtonState's high word
+        // Направление вращения задаётся знаком старшего слова dwButtonState.
         int positive = !(irBuffer.Event.MouseEvent.dwButtonState & 0x80000000);
         if( irBuffer.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED )
             event.wheel = positive ? mwUp : mwDown;
@@ -334,7 +334,7 @@ BOOL THardwareInfo::getKeyEvent( TEvent& event )
                 return False;
             }
 
-        // Pending mouse events will be read on the next polling loop.
+        // Ожидающие события мыши будут прочитаны на следующем цикле опроса.
         if( pendingEvent && irBuffer.EventType != MOUSE_EVENT )
             {
             pendingEvent = 0;
@@ -350,26 +350,26 @@ BOOL THardwareInfo::getKeyEvent( TEvent& event )
                     event.keyDown.keyCode == 0x3600 || event.keyDown.keyCode == 0x3800 ||
                     event.keyDown.keyCode == 0x3A00 || event.keyDown.keyCode == 0x5B00 ||
                     event.keyDown.keyCode == 0x5C00 )
-                    // Discard standalone Shift, Ctrl, Alt, Caps Lock, Windows keys.
+                    // Отбрасываем самостоятельные Shift, Ctrl, Alt, Caps Lock и Windows.
                     event.keyDown.keyCode = kbNoKey;
                 else if( (event.keyDown.controlKeyState & kbLeftCtrl) &&
                          (event.keyDown.controlKeyState & kbRightAlt) &&
                          event.keyDown.charScan.charCode == '\0' )
-                    // We cannot tell for sure if the right Alt key is AltGr, since
-                    // that depends on the keyboard layout, but it is certain that
-                    // AltGr automatically adds the left Ctrl flag.
-                    // If both of these are set but no text is produced, discard the
-                    // whole event since we don't want AltGr to be handled as Ctrl+Alt.
+                    // Нельзя уверенно определить, является ли правый Alt клавишей AltGr: это
+                    // зависит от раскладки. Но AltGr всегда добавляет флаг левого Ctrl. Если
+                    // оба флага установлены, а текста нет, отбрасываем событие, чтобы не
+                    // трактовать AltGr как Ctrl+Alt.
+                    //
                     event.keyDown.keyCode = kbNoKey;
                 else if( (event.keyDown.controlKeyState & kbCtrlShift) &&
                          (event.keyDown.controlKeyState & kbAltShift) &&
                          event.keyDown.charScan.charCode != '\0' )
-                    // If Ctrl+Alt produces text, we are dealing with AltGr. In this case,
-                    // discard the Ctrl and Alt modifiers.
+                    // Если Ctrl+Alt создаёт текст, это AltGr. Отбрасываем модификаторы Ctrl
+                    // и Alt.
                     event.keyDown.controlKeyState &= ~(kbCtrlShift | kbAltShift);
                 else if( irBuffer.Event.KeyEvent.wVirtualScanCode < 89 )
                     {
-                    // Convert NT style virtual scan codes to PC BIOS codes.
+                    // Преобразуем виртуальные скан-коды NT в коды PC BIOS.
                     uchar index = irBuffer.Event.KeyEvent.wVirtualScanCode;
                     if ((event.keyDown.controlKeyState & kbAltShift) && AltCvt[index] != 0)
                         event.keyDown.keyCode = AltCvt[index];
@@ -382,8 +382,8 @@ BOOL THardwareInfo::getKeyEvent( TEvent& event )
                         event.keyDown.keyCode = NormalCvt[index];
                     }
 
-                /* Set/Reset insert flag.
-                 */
+                /* Устанавливаем или сбрасываем флаг вставки.
+ */
                 if( event.keyDown.keyCode == kbIns )
                     insertState = !insertState;
 
@@ -414,8 +414,8 @@ void THardwareInfo::waitForEvents( int timeoutMs )
 
 void THardwareInfo::interruptEventWait()
 {
-    // Not implemented. This would only be necessary if writing a multi-threaded
-    // application using Borland C++.
+    // Не реализовано. Потребовалось бы только для многопоточного приложения
+    // на Borland C++.
 }
 
 BOOL THardwareInfo::setClipboardText( TStringView text )
@@ -471,8 +471,8 @@ uint32_t THardwareInfo::getTickCountMs()
 
 uint32_t THardwareInfo::getTickCount() noexcept
 {
-    // To change units from ms to clock ticks.
-    //   X ms * 1s/1000ms * 18.2ticks/s = X/55 ticks, roughly.
+    // Перевод миллисекунд в такты часов: X мс × 1 с/1000 мс × 18,2 такта/с ≈
+    // X/55 тактов.
     return getTickCountMs() / 55;
 }
 
@@ -484,7 +484,7 @@ BOOL __stdcall THardwareInfo::ctrlBreakHandler( DWORD dwCtrlType ) noexcept
         return TRUE;
         }
     else
-        return FALSE; // Don't handle 'CLOSE', 'LOGOFF' or 'SHUTDOWN' events.
+        return FALSE; // Не обрабатываем события CLOSE, LOGOFF и SHUTDOWN.
 }
 
 #endif  // __FLAT__

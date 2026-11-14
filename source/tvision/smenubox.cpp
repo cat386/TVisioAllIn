@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       smenubox.cpp                              */
+/* файл — smenubox.cpp */
 /*                                                            */
-/* Registeration object for the class TMenuBox                */
+/* Объект регистрации класса TMenuBox. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tvwrite.cpp                               */
+/* файл — tvwrite.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TView write member functions              */
+/* функции:  */
+/* Методы записи TView. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -61,21 +61,21 @@ struct TVWrite {
     static TColorAttr applyShadow(TColorAttr attr) noexcept
     {
 #ifdef __BORLANDC__
-        // Because we can't know if the cell has already been shadowed,
-        // we compare against the shadow attributes. This may yield some false positives.
+        // Неизвестно, затенена ли ячейка, поэтому сравниваем атрибуты с
+        // атрибутами тени. Возможны ложные совпадения.
         TColorAttr shadowAttrInv = (shadowAttr << 4) | (shadowAttr >> 4);
         if (attr == shadowAttr || attr == shadowAttrInv)
             return attr;
         else
             return attr & 0xF0 ? shadowAttr : shadowAttrInv;
 #else
-        // Here TColorAttr is a struct, so we use a dedicated style flag
-        // to determine whether the shadow has been applied.
+        // Здесь TColorAttr — структура, поэтому наличие тени определяется
+        // специальным флагом стиля.
         auto style = attr.getStyle();
         if (!(style & slWindowShadow))
         {
             if (attr.getBackground().toBIOS(false) == 0)
-                // Reverse the shadow attribute on black areas.
+                // Инвертируем атрибут тени на чёрных областях.
                 attr = shadowAttr.reversed();
             else
                 attr = shadowAttr;
@@ -250,9 +250,9 @@ void TVWrite::L50( TGroup *owner ) noexcept
 }
 
 #ifdef __BORLANDC__
-// On Windows and DOS, Turbo Vision stores a byte of text and a byte of
-// attributes for every cell. On Windows, all TGroup buffers follow this schema
-// except the topmost one, which interfaces with the Win32 Console API.
+// В Windows и DOS Turbo Vision хранит байт текста и байт атрибутов на
+// ячейку. В Windows так устроены все буферы TGroup, кроме самого
+// верхнего, взаимодействующего с Win32 Console API.
 
 void TVWrite::copyShort( TScreenCell *dst, const TScreenCell *src )
 {
@@ -273,14 +273,14 @@ void TVWrite::copyShort2CharInfo( CHAR_INFO *dst, const TScreenCell *src )
 {
     int i;
     if (edx == 0)
-        // Expand character/attribute pair
+        // Разворачиваем пару «символ/атрибут».
         for (i = 0; i < Count - X; ++i)
         {
             dst[i].Char.AsciiChar = src[i].character;
             dst[i].Attributes = src[i].attribute;
         }
     else
-        // Mix in shadow attribute
+        // Примешиваем атрибут тени.
         for (i = 0; i < Count - X; ++i)
         {
             dst[i].Char.AsciiChar = src[i].character;
@@ -307,13 +307,13 @@ void TVWrite::copyShort2Cell( TScreenCell *dst, const ushort *src ) noexcept
 {
     int i;
     if (edx == 0)
-        // Expand character/attribute pair
+        // Разворачиваем пару «символ/атрибут».
         for (i = 0; i < Count - X; ++i)
         {
             dst[i] = TScreenCell {src[i]};
         }
     else
-        // Mix in shadow attribute
+        // Примешиваем атрибут тени.
         for (i = 0; i < Count - X; ++i)
         {
             TScreenCell c {src[i]};

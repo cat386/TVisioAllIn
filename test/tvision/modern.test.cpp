@@ -52,7 +52,7 @@ class ModernThemeRoot : public TestGroup
         else
         {
             options &= ~ofBuffered;
-            buffer = screen_.data(); // Like TProgram's externally owned screen buffer.
+            buffer = screen_.data(); // Как экранный буфер TProgram, принадлежащий внешнему владельцу.
         }
     }
     TPalette &getPalette() const override
@@ -82,7 +82,7 @@ class ModernThemeProbe : public TView
         writeLine(0, 0, size.x, 1, line);
     }
 };
-} // namespace
+} // пространство имён
 TEST(ModernThemes, RefreshRepaintsNestedCachedGroupsForEveryTheme)
 {
     for (bool buffered : {true, false})
@@ -99,7 +99,7 @@ TEST(ModernThemes, RefreshRepaintsNestedCachedGroupsForEveryTheme)
         auto draws = probe->draws;
         root->palette.setTheme(Theme::Classic);
         root->redraw();
-        EXPECT_EQ(root->attribute(0, 0), before); // Ordinary redraw reuses the cached image.
+        EXPECT_EQ(root->attribute(0, 0), before); // Обычный redraw повторно использует кэшированное изображение.
         EXPECT_EQ(probe->draws, draws);
         for (auto theme : {Theme::Classic, Theme::Twilight, Theme::Gruvbox})
         {
@@ -168,7 +168,7 @@ template <class F> bool jsonFails(F f)
         return true;
     }
 }
-} // namespace
+} // пространство имён
 TEST(ModernData, ColumnsAndExactNumericOrder)
 {
     EXPECT_EQ(columnLetters(0), "A");

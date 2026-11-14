@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       ttprvlns.cpp                              */
+/* файл — ttprvlns.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TTerminal prevLines member function       */
+/* функции:  */
+/* Метод TTerminal::prevLines. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -16,8 +16,8 @@
 #include <tvision/tv.h>
 
 static Boolean findLfBackwards( const char *buffer, ushort &pos, ushort count )
-// Pre: count >= 1.
-// Post: 'pos' points to the last checked character.
+// Предусловие: count >= 1. Постусловие: pos указывает на последний
+// проверенный символ.
 {
     ++pos;
     do

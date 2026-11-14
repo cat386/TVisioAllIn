@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sfinfpne.cpp                              */
+/* файл — sfinfpne.cpp */
 /*                                                            */
-/* Registeration object for the class TFileInfoPane           */
+/* Объект регистрации класса TFileInfoPane. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

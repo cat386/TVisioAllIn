@@ -6,8 +6,8 @@
 
 namespace tvision
 {
-// A stream may split a fixed-size record at any byte boundary.
-// The callback must return -1 and set errno when no bytes are available.
+// Поток может разделить запись фиксированного размера на любой границе байтов.
+// Если данные недоступны, обратный вызов должен вернуть -1 и установить errno.
 template <size_t Size>
 class RecordReader
 {

@@ -1,8 +1,8 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Forms.cpp: Support source file for TVFORMS demo     */
+/* Forms.cpp — вспомогательный исходный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -38,7 +38,7 @@ __link( RView )
 #include <string.h>
 #endif  // __STRING_H
 
-// Compares two buffers and returns True if contents are equal
+// Сравнивает два буфера; возвращает True при равенстве содержимого.
 
 Boolean compBlocks( void *buf1, void *buf2, ushort bufSize )
 {
@@ -96,7 +96,7 @@ Boolean TForm::changed()
 
     if (newForm)
         {
-        // Dummy up empty record for comparison
+        // Создаём пустую запись для сравнения.
         prevData = new char[compSize];
         memset(prevData, 0, compSize);
         }
@@ -119,7 +119,7 @@ Boolean TForm::changed()
 
 void TForm::handleEvent( TEvent& event)
 {
-    // Respond to CANCEL button and ESC
+    // Обрабатываем кнопку CANCEL и клавишу Esc.
     if ( ( (event.what == evKeyDown) && (event.keyDown.keyCode == kbEsc) ) ||
        ( (event.what == evCommand) && (event.message.command == cmCancel) ) )
         {
@@ -128,7 +128,7 @@ void TForm::handleEvent( TEvent& event)
         return;
         }
 
-    // Respond to SAVE button
+    // Обрабатываем кнопку SAVE.
     if ( (event.what == evCommand) && (event.message.command == cmFormSave) )
         {
         clearEvent(event);
@@ -142,24 +142,24 @@ void TForm::handleEvent( TEvent& event)
             }
         else
             {
-            destroy(this);                        // not changed
+            destroy(this);                        // Без изменений.
             return;
             }
         }
 
     TDialog::handleEvent(event);
 
-    // Respond to TopForm messages
+    // Обрабатываем сообщения TopForm.
     if (event.what == evBroadcast)
         {
         if (event.message.command == cmEditingForm)
             {
-            // Already editing broadcast form?
+            // Переданная широковещательно форма уже редактируется?
             if ( (prevData != NULL) && (event.message.infoPtr == prevData) )
                 clearEvent(event);
             }
         else
-            // Belong to sending ListDialog?
+            // Принадлежит отправившему сообщение ListDialog?
             if (listDialog == event.message.infoPtr)
             {
                 if (event.message.command == cmTopForm)
@@ -179,7 +179,7 @@ Boolean TForm::valid(ushort command)
 {
     ushort action;
 
-    action = cmYes;                    // assume calling inherited
+    action = cmYes;                    // Предполагается вызов унаследованного метода.
     if (command == cmClose)
         {
         if (changed())
@@ -190,18 +190,18 @@ Boolean TForm::valid(ushort command)
             switch (action)
                 {
                 case cmYes:
-                // Try to save changes. Cancel if save fails
+                // Пытаемся сохранить изменения; при ошибке отменяем операцию.
                     if (!((TListDialog *)listDialog)->saveForm(this))
                         action = cmCancel;
                     break;
                 case cmNo:
-                    break;                // abandon changes
+                    break;                // Отказываемся от изменений.
                 default :
-                    action = cmCancel;            // cancel close request
+                    action = cmCancel;            // Отменяем запрос закрытия.
                 }
             }
         else
-            action = cmNo;                        // no changes
+            action = cmNo;                        // Изменений нет.
         }
     if (action == cmYes)
         return TDialog::valid(command);

@@ -6,8 +6,8 @@
 namespace tvision
 {
 
-// Optimization: the 'reverseBytes' methods are written in such a way that the
-// compiler will likely replace them with a BSWAP instruction or equivalent.
+// Оптимизация: методы reverseBytes написаны так, чтобы компилятор,
+// скорее всего, заменил их инструкцией BSWAP или её аналогом.
 
 inline void reverseBytes(uint16_t &val)
 {
@@ -27,6 +27,6 @@ inline void reverseBytes(uint64_t &val)
     val = (val << 32) | (val >> 32);
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_ENDIAN_H

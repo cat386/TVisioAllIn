@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tvcursor.cpp                              */
+/* файл — tvcursor.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TView resetCursor member function         */
+/* функции:  */
+/* Метод TView::resetCursor. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -30,7 +30,7 @@ static int decideCaretSize(TView *p)
 }
 
 static Boolean caretIsCoveredBySiblings(TView *p, int x, int y)
-// Pre: 'p->owner != nullptr'
+// Предусловие: p->owner != nullptr.
 {
     TView *u = p->owner->last->next;
     for (; u != p; u = u->next)

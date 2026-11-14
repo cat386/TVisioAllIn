@@ -7,7 +7,7 @@
 #include <alloca.h>
 #endif
 
-// Also include extensions, just in case.
+// На всякий случай также подключаем расширения.
 
 #if __has_include(<malloc_np.h>)
 #include <malloc_np.h>

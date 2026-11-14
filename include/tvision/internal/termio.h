@@ -97,19 +97,19 @@ inline void GetChBuf::unget() noexcept
 
 struct CSIData
 {
-    // Represents the data stored in a CSI escape sequence. For example,
-    // given the input "\x1B[123::456;789u", the CSIData would be:
-    // - .length: 5
-    // - .terminator: 'u'
-    // - .getValue(0, <a default value>): 123
-    // - .getSeparator(0): ':'
-    // - .getValue(1, <a default value>): <a default value>
-    // - .getSeparator(1): ':'
-    // - .getValue(2, <a default value>): 456
-    // - .getSeparator(2): ';'
-    // - .getValue(3, <a default value>): 789
+    // Представляет данные управляющей последовательности CSI. Например, для
+    // ввода "\x1B[123::456;789u": .length = 5; .terminator = 'u';
+    // .getValue(0, <значение по умолчанию>) = 123; .getSeparator(0) = ':';
+    // .getValue(1, <значение по умолчанию>) возвращает значение по
+    // умолчанию; .getSeparator(1) = ':'; .getValue(2, <значение по
+    // умолчанию>) = 456; .getSeparator(2) = ';'; .getValue(3, <значение по
+    // умолчанию>) = 789.
+    //
+    //
+    //
+    //
 
-    // CSIs can be longer, but this is the largest we need for now.
+    // Последовательности CSI бывают длиннее, но сейчас достаточно этого предела.
     enum { maxLength = 6 };
 
     uint length {0};
@@ -166,6 +166,6 @@ namespace TermIO
     void consumeUnprocessedInput(ConsoleCtl &, InputGetter &, InputState &) noexcept;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_TERMIO_H

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sstrcoll.cpp                              */
+/* файл — sstrcoll.cpp */
 /*                                                            */
-/* Registeration object for the class TStringCollection       */
+/* Объект регистрации класса TStringCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

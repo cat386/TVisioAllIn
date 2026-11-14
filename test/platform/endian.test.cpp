@@ -59,4 +59,4 @@ TEST(Endianness, TermColorShouldBehaveAsExpected)
     EXPECT_EQ(termNoColor.type, TermColor::NoColor);
 }
 
-} // namespace tvision
+} // пространство имён tvision

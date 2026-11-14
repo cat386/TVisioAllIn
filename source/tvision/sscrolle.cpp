@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sscrolle.cpp                              */
+/* файл — sscrolle.cpp */
 /*                                                            */
-/* Registeration object for the class TScroller               */
+/* Объект регистрации класса TScroller. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

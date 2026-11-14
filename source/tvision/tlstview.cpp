@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tlstview.cpp                              */
+/* файл — tlstview.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TListViewer member functions              */
+/* функции:  */
+/* Методы TListViewer */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -93,7 +93,7 @@ void TListViewer::draw()
         {
         normalColor = getColor(2);
         selectedColor = getColor(4);
-        focusedColor = 0; // Unused, but silence warning.
+        focusedColor = 0; // Не используется, но подавляем предупреждение.
         }
 
     if( hScrollBar != 0 )

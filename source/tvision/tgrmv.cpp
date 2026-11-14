@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename - tgrmv.cpp                                       */
+/* файл — tgrmv.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                     TGroup removeView member function      */
+/* функции:  */
+/* Метод TGroup::removeView. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       seditors.cpp                              */
+/* файл — seditors.cpp */
 /*                                                            */
-/* Registeration objects for the following classes:           */
+/* Объекты регистрации следующих классов: */
 /*                      TIndicator                            */
 /*                      TEditor                               */
 /*                      TView                                 */

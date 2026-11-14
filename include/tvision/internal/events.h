@@ -83,8 +83,8 @@ class WakeUpEventSource : public EventSource
 
 public:
 
-    // Pre: if 'callback' or 'callbackArgs' are not null, their lifetime must
-    // exceed that of 'this'. 'callback' must be noexcept.
+    // Предусловие: если callback или callbackArgs ненулевые, они должны
+    // существовать дольше this. callback не должен выбрасывать исключения.
     WakeUpEventSource( SysManualEvent::Handle aHandle,
                        bool (*aCallback) (void *, TEvent &),
                        void *aCallbackArgs ) noexcept;
@@ -92,8 +92,8 @@ public:
 
     WakeUpEventSource &operator=(const WakeUpEventSource &) = delete;
 
-    void signal() noexcept; // Multiple producers.
-    bool getEvent(TEvent &event) noexcept override; // Single consumer.
+    void signal() noexcept; // Несколько производителей.
+    bool getEvent(TEvent &event) noexcept override; // Один потребитель.
 };
 
 inline WakeUpEventSource::WakeUpEventSource( SysManualEvent::Handle aHandle,
@@ -161,6 +161,6 @@ public:
     void interruptEventWait() noexcept;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_EVENTS_H

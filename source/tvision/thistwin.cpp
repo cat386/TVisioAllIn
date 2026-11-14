@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       thistwin.cpp                              */
+/* файл — thistwin.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  THistoryWindow member functions           */
+/* функции:  */
+/* Методы THistoryWindow */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

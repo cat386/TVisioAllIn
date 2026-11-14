@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmfildlg.cpp                              */
+/* файл — nmfildlg.cpp */
 /*                                                            */
-/* defines the streamable name for class TFileDialog          */
+/* Определяет имя сериализуемого класса TFileDialog. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

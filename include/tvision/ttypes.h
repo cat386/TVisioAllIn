@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   TTYPES.H                                                              */
 /*                                                                         */
-/*   provides miscellaneous types used throughout Turbo Vision             */
+/* Предоставляет вспомогательные типы, используемые во всей Turbo Vision. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -116,7 +116,7 @@ extern const uchar specialChars[];
 #define _genInt(i) __int__(i)
 #endif
 
-// Reserve future keywords
+// Резервируем будущие ключевые слова.
 #if __cplusplus < 201103L
 #define constexpr inline
 #define noexcept

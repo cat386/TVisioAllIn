@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       stddlg.cpp                                */
+/* файл — stddlg.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  Member functions of following classes     */
+/* функции:  */
+/* Методы следующих классов. */
 /*                      TFileInputLine                        */
 /*                      TSortedListBox                        */
 /*                      TSearchRec                            */
@@ -223,7 +223,7 @@ void TFileInfoPane::draw()
     Boolean PM;
     TDrawBuffer b;
     TColorAttr color;
-    struct ftime *time; // mingw has same name as a function name
+    struct ftime *time; // В MinGW это имя совпадает с именем функции.
     char path[MAXPATH];
 
     size_t n = strnzcpy( path, ((TFileDialog *)owner)->directory, MAXPATH );

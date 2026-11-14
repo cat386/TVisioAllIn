@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       slistbox.cpp                              */
+/* файл — slistbox.cpp */
 /*                                                            */
-/* Registeration object for the class TListBox                */
+/* Объект регистрации класса TListBox. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

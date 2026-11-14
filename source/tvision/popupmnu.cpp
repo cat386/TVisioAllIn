@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       popupmnu.cpp                              */
+/* файл — popupmnu.cpp */
 /*                                                            */
-/* function(s)                                                */
+/* функции:  */
 /*          popupMenu                                         */
 /*------------------------------------------------------------*/
 
@@ -15,25 +15,25 @@
 /*                                                                        */
 /*  popupMenu                                                             */
 /*                                                                        */
-/*  Spawns and executes a TMenuPopup on the desktop.                      */
+/* Создаёт и выполняет TMenuPopup на рабочем столе. */
 /*                                                                        */
-/*  arguments:                                                            */
+/* Аргументы: */
 /*                                                                        */
-/*      where   - Reference position, in absolute coordinates.            */
-/*                The top left corner of the popup will be placed         */
-/*                at (where.x, where.y+1).                                */
+/* where — опорная позиция в абсолютных координатах. */
+/* Левый верхний угол всплывающего меню располагается */
+/* в (where.x, where.y + 1). */
 /*                                                                        */
-/*      aMenu   - Chain of menu items. This function takes ownership      */
-/*                over the items and the reference becomes dangling       */
-/*                after the invocation.                                   */
+/* aMenu — цепочка пунктов меню. Функция забирает владение */
+/* элементами; переданная ссылка становится недействительной */
+/* после вызова. */
 /*                                                                        */
-/*      receiver- If not null, an evCommand event is generated with       */
-/*                the selected command in the menu and put into it        */
-/*                with putEvent.                                          */
+/* receiver — если не null, событие evCommand с */
+/* выбранной командой меню помещается в этот объект */
+/* через putEvent. */
 /*                                                                        */
-/*  returns:                                                              */
+/* Возвращает: */
 /*                                                                        */
-/*      The selected command, if any.                                     */
+/* Выбранная команда, если она есть. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 
@@ -51,11 +51,11 @@ ushort popupMenu(TPoint where, TMenuItem &aMenu, TGroup *receiver)
             TMenu *menu = new TMenu(aMenu);
             TMenuPopup *menuPopup = new TMenuPopup(bounds, menu);
             autoPlacePopup(menuPopup, p);
-            // Execute and dispose the menu.
+            // Выполняем и освобождаем меню.
             res = app->execView(menuPopup);
             TObject::destroy(menuPopup);
         }
-        // Generate an event.
+        // Создаём событие.
         if (res && receiver)
         {
             TEvent event = {};
@@ -68,19 +68,19 @@ ushort popupMenu(TPoint where, TMenuItem &aMenu, TGroup *receiver)
 }
 
 static void autoPlacePopup(TMenuPopup *m, TPoint p)
-// Pre: TMenuPopup was constructed with bounds=TRect(p, p).
+// Предусловие: TMenuPopup создан с bounds = TRect(p, p).
 {
     TGroup *app = TProgram::application;
-    // Initially, the menu is placed above 'p'. So we need to move it.
+    // Изначально меню находится выше p, поэтому его нужно переместить.
     TRect r = m->getBounds();
-    // But we must ensure that the popup does not go beyond the desktop's
-    // bottom right corner, for usability.
+    // Для удобства меню не должно выходить за правый нижний угол рабочего
+    // стола.
     {
         TPoint d = app->size - p;
         r.move(min(m->size.x, d.x),
                min(m->size.y + 1, d.y));
     }
-    // If the popup then contains 'p', try to move it to a better place.
+    // Если после этого меню содержит p, пытаемся расположить его удобнее.
     if (r.contains(p) && r.b.y - r.a.y < p.y)
         r.move(0, -(r.b.y - p.y));
     m->setBounds(r);

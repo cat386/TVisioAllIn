@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmvalida.cpp                              */
+/* файл — nmvalida.cpp */
 /*                                                            */
-/* defines the streamable name for TValidator classes         */
+/* Определяет имена сериализации классов TValidator. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

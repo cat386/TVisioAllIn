@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tmenupop.cpp                              */
+/* файл — tmenupop.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TMenuPopup member functions               */
+/* функции:  */
+/* Методы TMenuPopup */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -34,7 +34,7 @@ TMenuPopup::~TMenuPopup()
 
 ushort TMenuPopup::execute()
 {
-    // Do not highlight the default entry, because it would look ugly.
+    // Не выделяем пункт по умолчанию: это выглядело бы некрасиво.
     menu->deflt = 0;
     return TMenuBox::execute();
 }

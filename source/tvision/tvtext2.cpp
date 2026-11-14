@@ -1,5 +1,5 @@
 /*------------------------------------------------------------*/
-/* filename -       tvtext2.cpp                               */
+/* файл — tvtext2.cpp */
 /*                                                            */
 /*------------------------------------------------------------*/
 /*
@@ -36,7 +36,7 @@
 static const char altCodes1[] =
     "QWERTYUIOP\0\0\0\0ASDFGHJKL\0\0\0\0\0ZXCVBNM";
 static const char altCodes2[] = "1234567890-=";
-static const char altSpaceChar = '\xF0'; // '≡' in CP437.
+static const char altSpaceChar = '\xF0'; // '≡' в CP437.
 
 static const char ctrlCodes[] = "\0ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -53,24 +53,24 @@ char getAltChar(ushort keyCode) noexcept
 
 TStringView getAltCharStr(const KeyDownEvent &keyDown) noexcept
 {
-    // If the Alt+Key KeyDownEvent contains text, return it.
+    // Если событие Alt+клавиша содержит текст, возвращаем его.
     if( (keyDown.controlKeyState & kbAltShift) != 0 &&
         !keyDown.getText().empty()
       )
         return keyDown.getText();
 
-    // Otherwise, try mapping the scan code to a character.
+    // Иначе пытаемся сопоставить скан-код символу.
     if( keyDown.charScan.charCode == 0 )
         {
         ushort scanCode = keyDown.charScan.scanCode;
 
         const char *ch = 0;
         if( keyDown.keyCode == kbAltSpace )
-            ch = &altSpaceChar; // special case to handle alt-Space
+            ch = &altSpaceChar; // Особый случай Alt+Space.
         else if( scanCode >= 0x10 && scanCode <= 0x32 )
-            ch = &altCodes1[scanCode - 0x10]; // alt-letter
+            ch = &altCodes1[scanCode - 0x10]; // Alt+буква.
         else if( scanCode >= 0x78 && scanCode <= 0x83 )
-            ch = &altCodes2[scanCode - 0x78]; // alt-number
+            ch = &altCodes2[scanCode - 0x78]; // Alt+цифра.
 
         if( ch != 0 && *ch != '\0')
             return TStringView(ch, 1);
@@ -87,7 +87,7 @@ ushort getAltCode(char c) noexcept
     c = toupper((uchar) c);
 
     if( c == altSpaceChar )
-        return kbAltSpace; // special case to handle alt-Space
+        return kbAltSpace; // Особый случай Alt+Space.
 
     size_t i;
     for( i = 0; i < sizeof( altCodes1 ); i++)
@@ -114,16 +114,16 @@ char getCtrlChar(ushort keyCode) noexcept
 
 TStringView getCtrlCharStr(const KeyDownEvent &keyDown) noexcept
 {
-    // If the Ctrl+Key KeyDownEvent contains text, return it.
-    // Note that the Alt modifier must not be present, since that would be
-    // considered an Alt+Key press.
+    // Если событие Ctrl+клавиша содержит текст, возвращаем его. Модификатор
+    // Alt должен отсутствовать, иначе это считается Alt+клавиша.
+    //
     if( (keyDown.controlKeyState & kbAltShift) == 0 &&
         (keyDown.controlKeyState & kbCtrlShift) != 0 &&
         !keyDown.getText().empty()
       )
         return keyDown.getText();
 
-    // Otherwise, map control characters into the corresponding ASCII character.
+    // Иначе сопоставляем управляющий символ соответствующему ASCII-символу.
     uchar charCode = keyDown.charScan.charCode;
     if( 0 < charCode && charCode <= ('Z' - 'A' + 1) )
         return TStringView(&ctrlCodes[charCode], 1);
@@ -200,11 +200,11 @@ const char _NEAR TDeskTop::defaultBkgrnd = '\xB0';
 const char * const _NEAR TSystemError::errorString[] =
 {
     "Disk in drive %c is write protected",          // 0
-    "Unknown unit %c",                              // 1 - NEW
+    "Unknown unit %c",                              // 1 — новый.
     "Disk is not ready in drive %c",                // 2
-    "Critical error (unknown command) on drive %c", // 3 - MODIFIED
+    "Critical error (unknown command) on drive %c", // 3 — изменённый.
     "Data integrity error on drive %c",             // 4
-    "Critical error (bad request) on drive %c",     // 5 - NEW/MODIFIED
+    "Critical error (bad request) on drive %c",     // 5 — новый или изменённый.
     "Seek error on drive %c",                       // 6
     "Unknown media type in drive %c",               // 7
     "Sector not found on drive %c",                 // 8

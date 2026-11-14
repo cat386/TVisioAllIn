@@ -1,11 +1,11 @@
 /*------------------------------------------------------------------------*/
-/* filename - drivers.cpp                                                 */
+/* файл — drivers.cpp */
 /*                                                                        */
-/* function(s)                                                            */
-/*        moveBuf  --   moves a buffer of char/attribute pairs            */
-/*        moveChar --   sets a buffer with a char/attribute pair          */
-/*        moveCStr --   moves a char array into a buffer & adds an        */
-/*                      attribute to each char                            */
+/* функции:  */
+/* moveBuf переносит буфер пар «символ/атрибут». */
+/* moveChar заполняет буфер парой «символ/атрибут». */
+/* moveCStr переносит массив символов в буфер и добавляет */
+/* атрибут к каждому символу. */
 /*------------------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -32,17 +32,17 @@
 /*                                                                        */
 /*  TDrawBuffer::moveBuf                                                  */
 /*                                                                        */
-/*  arguments:                                                            */
+/* Аргументы: */
 /*                                                                        */
-/*      indent  - position within the buffer where the data is to go      */
-/*                (in columns)                                            */
+/* indent — позиция в буфере для размещения данных, */
+/* в столбцах. */
 /*                                                                        */
-/*      source  - pointer to an array of characters                       */
+/* source — указатель на массив символов. */
 /*                                                                        */
-/*      attr    - attribute to be used for all characters (0 to retain    */
-/*                the attribute from 'source')                            */
+/* attr — атрибут всех символов; 0 сохраняет */
+/* атрибут из source. */
 /*                                                                        */
-/*      count   - number of characters to move                            */
+/* count — число переносимых символов. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 
@@ -58,24 +58,24 @@ void TDrawBuffer::moveBuf( ushort indent, const void _FAR *source,
 /*                                                                        */
 /*  TDrawBuffer::moveChar                                                 */
 /*                                                                        */
-/*  arguments:                                                            */
+/* Аргументы: */
 /*                                                                        */
-/*      indent  - position within the buffer where the data is to go      */
-/*                (in columns)                                            */
+/* indent — позиция в буфере для размещения данных, */
+/* в столбцах. */
 /*                                                                        */
-/*      c       - character to be put into the buffer (0 to retain the    */
-/*                already present characters)                             */
+/* c — символ для записи в буфер; 0 сохраняет */
+/* уже имеющиеся символы. */
 /*                                                                        */
-/*      attr    - attribute to be put into the buffer (0 to retain the    */
-/*                already present attributes)                             */
+/* attr — атрибут для записи в буфер; 0 сохраняет */
+/* уже имеющиеся атрибуты. */
 /*                                                                        */
-/*      count   - number of character/attribute pairs to put into the     */
-/*                buffer                                                  */
+/* count — число пар «символ/атрибут» для записи в */
+/* буфер. */
 /*                                                                        */
-/*  Comments:                                                             */
+/* Примечания: */
 /*                                                                        */
-/*      If both 'c' and 'attr' are 0, the attributes are retained         */
-/*      but the characters are not.                                       */
+/* Если c и attr равны 0, атрибуты сохраняются, */
+/* но символы — нет. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 
@@ -85,9 +85,9 @@ void TDrawBuffer::moveChar( ushort indent, char c, TColorAttr attr, ushort count
         return;
     if (indent + count >= capacity)
         count = capacity - indent;
-    // The following conditions are now true:
-    // * indent + count <= capacity
-    // * count > 0
+    // Теперь выполняются условия: indent + count <= capacity; count > 0.
+    //
+    //
 
 #if !defined( __FLAT__ )
     _ES = FP_SEG( &data[indent] );
@@ -143,26 +143,26 @@ __4:
 /*                                                                        */
 /*  TDrawBuffer::moveCStr                                                 */
 /*                                                                        */
-/*  arguments:                                                            */
+/* Аргументы: */
 /*                                                                        */
-/*      indent  - position within the buffer where the data is to go      */
-/*                (in columns)                                            */
+/* indent — позиция в буфере для размещения данных, */
+/* в столбцах. */
 /*                                                                        */
-/*      str     - string of characters to be moved into the buffer        */
+/* str — строка символов для переноса в буфер. */
 /*                                                                        */
-/*      attrs   - pair of text attributes to be put into the buffer       */
-/*                with each character in the string.  Initially the       */
-/*                low byte is used, and a '~' in the string toggles       */
-/*                between the low byte and the high byte.                 */
+/* attrs — пара текстовых атрибутов, записываемых в буфер */
+/* с каждым символом строки. Сначала используется */
+/* младший байт; символ '~' переключает */
+/* младший и старший байты. */
 /*                                                                        */
-/*      maxStrWidth - maximum amount of data to be moved (in columns)     */
+/* maxStrWidth — максимальная ширина переносимых данных в столбцах. */
 /*                                                                        */
-/*      strIndent - position in str where to start moving from            */
-/*                  (in columns)                                          */
+/* strIndent — позиция начала переноса в str. */
+/* в столбцах. */
 /*                                                                        */
-/*  returns:                                                              */
+/* Возвращает: */
 /*                                                                        */
-/*      Width of the moved text (in columns)                              */
+/* Ширину перенесённого текста в столбцах. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 
@@ -173,14 +173,14 @@ ushort TDrawBuffer::moveCStr( ushort indent, TStringView str, TAttrPair attrs,
         return 0;
     if (indent + maxStrWidth < indent || indent + maxStrWidth >= capacity)
         maxStrWidth = capacity - indent;
-    // The following conditions are now true:
-    // * indent + maxStrWidth <= capacity
-    // * maxStrWidth > 0
-    // * str.size() > 0
+    // Теперь выполняются условия: indent + maxStrWidth <= capacity;
+    // maxStrWidth > 0; str.size() > 0.
+    //
+    //
 
 #if !defined( __FLAT__ )
-    // Compute the end pointer here since doing it later would overwrite
-    // registers already in use.
+    // Вычисляем конечный указатель здесь: более позднее вычисление
+    // перезапишет занятые регистры.
     TScreenCell _FAR * dataEnd = &data[indent + maxStrWidth];
 
 I   CLD
@@ -197,7 +197,7 @@ I   PUSH    DS
     _BX = attrs;
     _AH = _BL;
 
-    // Skip 'strIndent' columns in 'str'.
+    // Пропускаем strIndent столбцов в str.
 
     _DX = strIndent;
 
@@ -222,7 +222,7 @@ I   JMP     __7
 
 __4:
 
-    // Copy string.
+    // Копируем строку.
 
     _DX = FP_OFF( dataEnd );
 
@@ -272,7 +272,7 @@ I   POP     DS
                     break;
                 if (strIndent < w && i < dest.size())
                     {
-                    // 'strIndent' is in the middle of a double-width character.
+                    // strIndent попадает внутрь символа двойной ширины.
                     TScreenCell cell = {' ', curAttr};
                     dest[i++] = cell;
                     }
@@ -286,24 +286,24 @@ I   POP     DS
 /*                                                                        */
 /*  TDrawBuffer::moveStr                                                  */
 /*                                                                        */
-/*  arguments:                                                            */
+/* Аргументы: */
 /*                                                                        */
-/*      indent  - position within the buffer where the data is to go      */
-/*                (in columns)                                            */
+/* indent — позиция в буфере для размещения данных, */
+/* в столбцах. */
 /*                                                                        */
-/*      str     - string of characters to be moved into the buffer        */
+/* str — строка символов для переноса в буфер. */
 /*                                                                        */
-/*      attr    - text attribute to be put into the buffer with each      */
-/*                character in the string.                                */
+/* attr — текстовый атрибут, записываемый в буфер с каждым */
+/* символом строки. */
 /*                                                                        */
-/*      maxStrWidth - maximum amount of data to be moved (in columns)     */
+/* maxStrWidth — максимальная ширина переносимых данных в столбцах. */
 /*                                                                        */
-/*      strIndent - position in str where to start moving from            */
-/*                  (in columns)                                          */
+/* strIndent — позиция начала переноса в str. */
+/* в столбцах. */
 /*                                                                        */
-/*  returns:                                                              */
+/* Возвращает: */
 /*                                                                        */
-/*      Width of the moved text (in columns)                              */
+/* Ширину перенесённого текста в столбцах. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 
@@ -314,9 +314,9 @@ ushort TDrawBuffer::moveStr( ushort indent, TStringView str, TColorAttr attr,
         return 0;
     if (indent + maxStrWidth < indent || indent + maxStrWidth >= capacity)
         maxStrWidth = capacity - indent;
-    // The following conditions are now true:
-    // * indent + maxStrWidth <= capacity
-    // * maxStrWidth > 0
+    // Теперь выполняются условия: indent + maxStrWidth <= capacity;
+    // maxStrWidth > 0.
+    //
 
 #if !defined( __FLAT__ )
     if (strIndent >= str.size())
@@ -372,16 +372,16 @@ I   POP     DS
 #if defined( __FLAT__ )
 TDrawBuffer::TDrawBuffer() noexcept
 {
-    // Unlike on DOS, the screen's dimensions are arbitrary, so we have to take
-    // this into account and allocate the buffer dynamically. We must take the
-    // largest of the screen's dimensions, since TDrawBuffer can also be used to
-    // draw vertical views (e.g. TScrollBar).
-    // In addition, we give some room for views that might exceed the screen size.
+    // В отличие от DOS, размер экрана произволен, поэтому буфер выделяется
+    // динамически. Берём большую из размерностей: TDrawBuffer применяется и
+    // к вертикальным представлениям, например TScrollBar. Также оставляем
+    // запас для представлений, выходящих за размер экрана.
+    //
     capacity = 8 + max(max(TScreen::screenWidth, TScreen::screenHeight), 80);
     data = new TScreenCell[capacity];
 #if !defined( __BORLANDC__ )
-    // We cannot leave the buffer uninitialized because, if it ends up being
-    // displayed on screen, it may mess up the screen severely.
+    // Нельзя оставлять буфер неинициализированным: при случайном выводе он
+    // может серьёзно испортить экран.
     memset(data, 0, capacity * sizeof(TScreenCell));
 #endif // __BORLANDC__
 }

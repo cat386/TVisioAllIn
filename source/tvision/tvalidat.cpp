@@ -1,12 +1,12 @@
 /*------------------------------------------------------------*/
-/* filename -       tvalidatcpp                               */
+/* файл — tvalidatcpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TValidator member functions               */
-/*                  TFilterValidator member functions         */
-/*                  TRangeValidator member functions          */
-/*                  TLookupValidator member functions         */
-/*                  TStringLookupValidator member functions   */
+/* функции:  */
+/* Методы TValidator */
+/* Методы TFilterValidator */
+/* Методы TRangeValidator */
+/* Методы TLookupValidator */
+/* Методы TStringLookupValidator */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -181,9 +181,9 @@ Boolean isSpecial(char ch, const char* special)
 }
 
 /*
-  This helper function will be used for a persistant TInputLine mask.
-  It will be moved to TINPUTLI.CPP when needed.
-*/
+ * Вспомогательная функция для постоянной маски TInputLine. При
+ * необходимости будет перенесена в TINPUTLI.CPP.
+ */
 uchar numChar(char ch, const char* s)
 {
     int count;
@@ -206,9 +206,9 @@ Boolean isIncomplete(TPicResult result)
 }
 
 
-// TPXPictureValidator members
+// Члены TPXPictureValidator.
 
-// Consume input
+// Потребляем ввод.
 void TPXPictureValidator::consume(char ch, char* input)
 {
       input[jndex] = ch;
@@ -216,7 +216,7 @@ void TPXPictureValidator::consume(char ch, char* input)
       jndex++;
 }
 
-// Skip a character or a picture group
+// Пропускаем символ или группу шаблона.
 
 void TPXPictureValidator::toGroupEnd(int& i, int termCh)
 {
@@ -240,7 +240,7 @@ void TPXPictureValidator::toGroupEnd(int& i, int termCh)
       } while (! ((brkLevel == 0) && (brcLevel == 0)));
 }
 
-// Find the a comma separator
+// Ищем разделяющую запятую.
 Boolean TPXPictureValidator::skipToComma(int termCh)
 {
       do {
@@ -252,7 +252,7 @@ Boolean TPXPictureValidator::skipToComma(int termCh)
       return Boolean(index < termCh);
 }
 
-// Calclate the end of a group 
+// Вычисляем конец группы.
 int TPXPictureValidator::calcTerm(int termCh)
 {
       int k = index;
@@ -260,7 +260,7 @@ int TPXPictureValidator::calcTerm(int termCh)
       return k;
 }
 
-// The next group is repeated X times }
+// Следующая группа повторяется X раз. }
 TPicResult TPXPictureValidator::iteration(char* input, int inTerm)
 {
       int itr, k, l;
@@ -270,9 +270,9 @@ TPicResult TPXPictureValidator::iteration(char* input, int inTerm)
       itr = 0;
       rslt = prError;
 
-      index++;  // Skip '*'
+      index++;  // Пропускаем '*'.
 
-      // Retrieve number
+      // Получаем число.
 
       while (isNumber(pic[index]))
       {
@@ -283,7 +283,7 @@ TPicResult TPXPictureValidator::iteration(char* input, int inTerm)
       k = index;
       termCh = calcTerm(inTerm);
 
-      // If Itr is 0 allow any number, otherwise enforce the number
+      // При Itr = 0 допускается любое число повторений; иначе требуется заданное.
       if (itr != 0)
       {
         for (l = 1; l <= itr; l++)
@@ -292,7 +292,7 @@ TPicResult TPXPictureValidator::iteration(char* input, int inTerm)
           rslt = process(input,termCh);
           if ( ! isComplete(rslt))
       {
-            // Empty means incomplete since all are required
+            // Пустое значение означает незавершённость, поскольку все части обязательны.
             if (rslt == prEmpty)
             rslt = prIncomplete;
 
@@ -318,7 +318,7 @@ TPicResult TPXPictureValidator::iteration(char* input, int inTerm)
       return rslt;
 }
 
-// Process a picture group
+// Обрабатываем группу шаблона.
 TPicResult TPXPictureValidator::group(char* input, int inTerm)
 {
 
@@ -343,7 +343,7 @@ TPicResult TPXPictureValidator::checkComplete(TPicResult rslt, int termCh)
 
     if (isIncomplete(rslt))
     {
-        // Skip optional pieces
+        // Пропускаем необязательные части.
         while (status)
           switch (pic[j])
           {
@@ -475,8 +475,8 @@ TPicResult TPXPictureValidator::process(char* input, int termCh)
    do {
       rslt = scan(input, termCh);
 
-      // Only accept completes if they make it farther in the input
-      //   stream from the last incomplete
+      // Принимаем полное совпадение, только если оно проходит дальше
+      // последнего неполного во входном потоке.
 
       if ( (rslt == prComplete) && incomp && (jndex < incompJ))
       {

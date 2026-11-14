@@ -14,34 +14,34 @@ namespace tvision
 class ConsoleCtl;
 class TermInfo;
 
-// TerminalDisplay manages the terminal on Unix systems without depending on
-// external libraries (it replaces the former Ncurses-based display).
+// TerminalDisplay управляет терминалом в Unix без внешних библиотек и
+// заменяет прежнюю реализацию на Ncurses. Сохраняет и восстанавливает
+// termios; включает и выключает альтернативный экран через smcup/rmcup и
+// передачу кодов клавиатуры через smkx/rmkx; меняет видимость курсора
+// через civis/cnorm/cvvis; сообщает число поддерживаемых цветов.
+// Возможности терминала читает из terminfo класс TermInfo. Содержимое
+// экрана выводится последовательностями ANSI через AnsiScreenWriter.
 //
-// It is responsible for:
-// * Saving and restoring the terminal settings (termios).
-// * Entering and leaving the alternate screen ('smcup'/'rmcup').
-// * Enabling and disabling the keypad transmit mode ('smkx'/'rmkx').
-// * Changing the visibility of the cursor ('civis'/'cnorm'/'cvvis').
-// * Reporting the number of colors supported by the terminal.
 //
-// The terminal capabilities are read from the terminfo database by 'TermInfo'.
-// Screen contents are printed using ANSI escape sequences by 'AnsiScreenWriter'.
+//
+//
+//
 
 class TerminalDisplay final : public DisplayAdapter
 {
 public:
 
-    // The lifetime of 'con' exceeds that of the returned object.
+    // con существует дольше возвращаемого объекта.
     static TerminalDisplay &create(ConsoleCtl &con) noexcept;
     ~TerminalDisplay();
 
     const TermInfo &termInfo;
 
-    // Puts the terminal in raw mode (no line buffering, no echo, no signal
-    // generation, no CR/NL translation), like Ncurses' 'raw()', 'noecho()'
-    // and 'nonl()'.
+    // Переводит терминал в необработанный режим: без построчной буферизации,
+    // эха, генерации сигналов и преобразования CR/NL. Аналог raw(), noecho()
+    // и nonl() в Ncurses.
     void setRawInputMode() noexcept;
-    // Enables or disables the keypad transmit mode, like Ncurses' 'keypad()'.
+    // Включает или отключает передачу кодов клавиатуры, как keypad() в Ncurses.
     void setKeypadMode(bool enable) noexcept;
 
 private:
@@ -50,7 +50,7 @@ private:
     int ttyFd {-1};
     struct termios shellMode;
     bool shellModeSaved {false};
-    // Cursor visibility: -1 (unknown), 0 (invisible), 1 (normal), 2 (very visible).
+    // Видимость курсора: -1 — неизвестна; 0 — скрыт; 1 — обычный; 2 — хорошо заметный.
     int cursorState {-1};
     bool keypadEnabled {false};
     TPoint size {};
@@ -77,7 +77,7 @@ private:
     void flush() noexcept override;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX
 

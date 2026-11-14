@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tstrlist.cpp                              */
+/* файл — tstrlist.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TStrListMaker member functions            */
+/* функции:  */
+/* Методы TStrListMaker */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

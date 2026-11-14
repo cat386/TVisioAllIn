@@ -49,7 +49,7 @@ class DisplayBuffer
     TimePoint pendingFlush {};
 
 #ifdef _WIN32
-    enum { defaultFps = 120 }; // Just 60 feels notably slower on Windows, I don't know why.
+    enum { defaultFps = 120 }; // Значение 60 в Windows почему-то работает заметно медленнее.
 #else
     enum { defaultFps = 60 };
 #endif
@@ -101,6 +101,6 @@ inline bool DisplayBuffer::inBounds(int x, int y) const noexcept
            0 <= y && y < size.y;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_DISPBUFF_H

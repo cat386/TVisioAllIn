@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tradiobu.cpp                              */
+/* файл — tradiobu.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TRadioButton member functions             */
+/* функции:  */
+/* Методы TRadioButton */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -14,7 +14,7 @@ namespace tvision
 {
 
 DisplayBuffer::DisplayBuffer(int aMaxFps) noexcept :
-    // This could be checked at runtime, but for now this is as much as I know.
+    // Это можно проверять во время выполнения, но пока автору известно лишь это.
 #ifdef _WIN32
     wideOverlapping(false)
 #else
@@ -39,7 +39,7 @@ void DisplayBuffer::resizeBuffer() noexcept
     for (auto *buf : {&buffer, &flushBuffer})
     {
         buf->resize(0);
-        buf->resize(size.x*size.y); // Zero-initialized.
+        buf->resize(size.x*size.y); // Инициализировано нулями.
     }
 
     rowDamage.resize(0);
@@ -80,16 +80,16 @@ void DisplayBuffer::screenWrite(int x, int y, TScreenCell *buf, int len) noexcep
     {
         len = min(len, size.x - x);
         TScreenCell *dst = &buffer[y*size.x + x];
-        // Since 'buffer' is also used as 'TScreen::screenBuffer' and is
-        // directly written into by 'TView::writeView', we can avoid a copy
-        // operation in most cases because the data is already there.
+        // buffer также служит TScreen::screenBuffer и непосредственно изменяется
+        // TView::writeView. В большинстве случаев копирование не требуется:
+        // данные уже на месте.
         if (buf == dst)
-            ; // No need to copy anything.
-        // But since 'TScreen::screenBuffer' is public, it is also possible
-        // (theoretically) that the source and destination regions overlap each
-        // other. Turbo Vision does not do this, but handle this case anyway.
+            ; // Копировать ничего не нужно. Но TScreen::screenBuffer открыт, поэтому
+        // теоретически исходная и целевая области могут перекрываться. Turbo
+        // Vision так не делает, однако обрабатываем и этот случай.
+        //
         else if (max(buf, dst) <= min(&buf[len], &dst[len]))
-            memmove(dst, buf, len*sizeof(TScreenCell)); // Copy between overlapping regions.
+            memmove(dst, buf, len*sizeof(TScreenCell)); // Копируем между перекрывающимися областями.
         else
             memcpy(dst, buf, len*sizeof(TScreenCell));
 
@@ -110,7 +110,7 @@ void DisplayBuffer::setDirty(int x, int y, int len) noexcept
 
 bool DisplayBuffer::timeToFlush() noexcept
 {
-    // Avoid flushing faster than the maximum FPS.
+    // Не обновляем экран чаще максимального FPS.
     if (maxFps > 0)
     {
         auto now = Clock::now();
@@ -223,8 +223,8 @@ void DisplayBuffer::flushScreen(DisplayAdapter &display) noexcept
     }
 }
 
-//////////////////////////////////////////////////////////////////////////
-// FlushScreenAlgorithm
+// Алгоритм обновления экрана FlushScreenAlgorithm.
+//
 
 namespace
 {
@@ -305,8 +305,8 @@ inline void FlushScreenAlgorithm::run() noexcept
         if (damage.begin <= damage.end)
         {
             x = damage.begin;
-            // Check for a wide character before the first draw position
-            // if overlapping is not allowed.
+            // Если перекрытие запрещено, проверяем широкий символ перед первой
+            // позицией вывода.
             bool wideSpillBefore = !wideCanOverlap() && 0 < x && isWide(cellAt(x-1));
             for (; x <= damage.end; ++x)
             {
@@ -325,8 +325,8 @@ inline void FlushScreenAlgorithm::run() noexcept
             if (x < size.x) {
                 getCell();
                 if (isTrail(*cell))
-                    // The beginning of a wide character has been overwritten
-                    // and attribute spill may happen in the remaining trails.
+                    // Начало широкого символа перезаписано; атрибуты могут распространиться
+                    // на оставшиеся ячейки продолжения.
                     handleTrail();
             }
         }
@@ -375,7 +375,7 @@ void FlushScreenAlgorithm::ensureCharacterIsPrintable(TScreenCell &cell) const n
     if (c == '\0')
         cell.character.initWithChar(' ');
     else if (text.size() == 1 && (c < ' ' || 0x7F <= c))
-        // Translate from codepage as fallback.
+        // В качестве запасного варианта преобразуем из кодовой страницы.
         cell.character.initWithMultiByteChar(CpTranslator::toPackedUtf8(c));
 }
 
@@ -386,7 +386,7 @@ void FlushScreenAlgorithm::handleWideCharSpill() noexcept
     if (x + width < size.x)
         writeCell();
     else {
-        // Replace with spaces if it would otherwise be printed on the next line.
+        // Заменяем пробелами, если иначе символ будет выведен на следующей строке.
         writeSpace();
         while (--width && ++x < size.x) {
             getCell();
@@ -398,17 +398,17 @@ void FlushScreenAlgorithm::handleWideCharSpill() noexcept
         }
         return;
     }
-    // Ensure character does not spill on next cells.
+    // Не допускаем выхода символа в следующие ячейки.
     int wbegin = x;
     while (width-- && ++x < size.x) {
         getCell();
         commitDirty();
         if (!isTrail(*cell)) {
             if (wideCanOverlap()) {
-                // Write over the wide character.
+                // Перезаписываем широкий символ.
                 writeCell();
             } else {
-                // Replace the whole wide character with spaces.
+                // Заменяем пробелами весь широкий символ.
                 int wend = x;
                 x = wbegin;
                 do {
@@ -421,8 +421,8 @@ void FlushScreenAlgorithm::handleWideCharSpill() noexcept
             return;
         }
     }
-    // If the next character has a different attribute, print it anyway
-    // to avoid attribute spill.
+    // Если у следующего символа другой атрибут, всё равно выводим его,
+    // предотвращая распространение атрибута.
     if (x + 1 < size.x) {
         ++x;
         getCell();
@@ -440,7 +440,7 @@ void FlushScreenAlgorithm::handleTrail() noexcept
     if (x > 0) {
         --x;
         getCell();
-        // Check the character behind the placeholder.
+        // Проверяем символ за заполнителем.
         if (cell->character.isWide()) {
             handleWideCharSpill();
             return;
@@ -448,7 +448,7 @@ void FlushScreenAlgorithm::handleTrail() noexcept
         ++x;
         getCell();
     }
-    // Print successive placeholders as spaces.
+    // Последовательные заполнители выводим пробелами.
     do {
         commitDirty();
         writeSpace();
@@ -458,18 +458,18 @@ void FlushScreenAlgorithm::handleTrail() noexcept
         else
             return;
     } while (isTrail(*cell));
-    // We now got a normal character.
+    // Теперь получен обычный символ.
     if (x > damage.end && Attr != cell->attribute) {
-        // Redraw a character that would otherwise not be printed,
-        // to prevent attribute spill.
+        // Перерисовываем символ, который иначе не выводился бы, чтобы
+        // предотвратить распространение атрибута.
         processCell();
     } else {
-        // Decrease for next iteration
+        // Уменьшаем для следующей итерации.
         --x;
     }
 
 }
 
-} // namespace
+} // пространство имён
 
-} // namespace tvision
+} // пространство имён tvision

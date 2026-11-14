@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       swindow.cpp                               */
+/* файл — swindow.cpp */
 /*                                                            */
-/* Registeration object for the class TWindow                 */
+/* Объект регистрации класса TWindow. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

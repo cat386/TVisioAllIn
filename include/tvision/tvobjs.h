@@ -2,12 +2,12 @@
 /*                                                                         */
 /*   TVOBJS.H                                                              */
 /*                                                                         */
-/*   defines the classes TObject, TNSCollection, and TNSSortedCollection.  */
+/* Определяет классы TObject, TNSCollection и TNSSortedCollection. */
 /*                                                                         */
-/*   The NS variants of collections are Not Streamable.  These are         */
-/*   needed for internal use in the stream manager.  There are             */
-/*   streamable variants of each of these classes for use by the           */
-/*   rest of the library.                                                  */
+/* Варианты коллекций NS не поддерживают потоковую сериализацию. Они */
+/* нужны для внутренней работы диспетчера потоков. Для остальных */
+/* частей библиотеки предусмотрены сериализуемые варианты */
+/* каждого из этих классов. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*

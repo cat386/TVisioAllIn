@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename - histlist.cpp                                    */
+/* файл — histlist.cpp */
 /*                                                            */
-/* function(s)                                                */
+/* функции:  */
 /*          startId                                           */
 /*          historyCount                                      */
 /*          historyAdd                                        */
@@ -92,7 +92,7 @@ inline HistRec *prev( HistRec *ptr ) noexcept
     return backup( ptr, ptr->len );
 }
 
-ushort historySize = 1024;  // initial size of history block
+ushort historySize = 1024;  // Начальный размер блока истории.
 
 static uchar curId;
 static HistRec *curRec;

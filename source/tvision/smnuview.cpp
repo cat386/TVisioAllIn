@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       smnuview.cpp                              */
+/* файл — smnuview.cpp */
 /*                                                            */
-/* Registeration object for the class TMenuView               */
+/* Объект регистрации класса TMenuView. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

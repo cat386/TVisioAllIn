@@ -1,8 +1,8 @@
 /*-----------------------------------------------------------*/
-/* filename -        outline.cpp                             */
+/* файл — outline.cpp */
 /*                                                           */
-/* function(s)                                               */
-/*                    TOutline member functions              */
+/* функции:  */
+/* Методы TOutline */
 /*-----------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -30,7 +30,7 @@ TOutlineViewer::TOutlineViewer(const TRect& bounds, TScrollBar* aHScrollBar,
   foc = 0;
 }
 
-// Called internally to ensure the focus is within range and displayed
+// Внутренний вызов, проверяющий допустимость и видимость фокуса.
 
 void TOutlineViewer::adjustFocus(int newFocus) noexcept
 {
@@ -49,7 +49,7 @@ void TOutlineViewer::adjustFocus(int newFocus) noexcept
 static thread_local TDrawBuffer *pdBuf;
 static thread_local int auxPos;
 
-// Called to draw the outline
+// Вызывается для отрисовки дерева.
 
 Boolean drawTree( TOutlineViewer *beingDrawn, TNode* cur, int level,
                   int position, long lines, ushort flags )
@@ -101,7 +101,7 @@ void TOutlineViewer::draw()
   writeLine(0, auxPos + 1, size.x, size.y - (auxPos - delta.y), dBuf);
 }
 
-// ExpandAll expands the current node and all child nodes
+// ExpandAll раскрывает текущий узел и всех его потомков.
 
 void TOutlineViewer::expandAll(TNode* node)
 {
@@ -116,51 +116,51 @@ void TOutlineViewer::expandAll(TNode* node)
   }
 }
 
-/*Draws a graph string suitable for returning from getGraph.  Level
-  indicates the outline level.    Lines is the set of bits decribing
-  the which levels have a "continuation" mark (usually a vertical
-  lines).  If bit 3 is set, level 3 is continued beyond this level.
-  Flags gives extra information about how to draw the end of the
-  graph (see the ovXXX constants).    LevWidth is how many characters
-  to indent for each level.     endWidth is the length the end characters.
-
-  The graphics is divided into two parts: the level marks, and the end
-  or node graphic.    The level marks consist of the Level Mark character
-  separated by Level Filler.  What marks are present is determined by
-  Lines.  The end graphic is constructed by placing on of the End First
-  charcters followed by endWidth-4 End Filler characters, followed by the
-  End Child character, followed by the Retract/Expand character.  If
-  endWidth equals 2, End First and Retract/Expand are used.     If endWidth
-  equals 1, only the Retract/Expand character is used.    Which characters
-  are selected is determined by Flags.
-
-  The layout for the characters in the Chars is:
-
-   1: Level Filler
-     Typically a space.     Used between level markers.
-   2: Level Mark
-     Typically a vertical bar.    Used to mark the levels currenly active.
-   3: End First (not last child)
-     Typically a sideways T.  Used as the first character of the end part
-     of a node graphic if the node is not the last child of the parent.
-   4: End First (last child)
-     Typically a L shape.  Used as the first character of the end part
-     of a node graphic if the node is the last child of the parent.
-   5: End Filler
-     Typically a horizontal line.  Used as filler for the end part of a
-     node graphic.
-   6: End Child position
-     Typically not used.  If endWidth > LevWidth this character will
-     be placed on top of the markers for next level.  If used it is
-     typically a T.
-   7: Retracted character
-     Typically a '+'.  Displayed as the last character of the end
-     node if the level has children and they are not expanded.
-   8: Expanded character
-     Typically as straight line. Displayed as the last character of
-     the end node if the level has children and they are expanded.
-
-*/
+/*
+ * Создаёт графическую строку для getGraph. Level — уровень узла. Lines —
+ * битовая маска уровней с маркером продолжения, обычно вертикальной
+ * линией: бит 3 означает продолжение третьего уровня ниже текущего узла.
+ * Flags задаёт оформление конца строки; см. ovXXX. LevWidth — отступ
+ * уровня, endWidth — длина конечной части. Графика состоит из маркеров
+ * уровней и конечной части узла. Маркеры Level Mark разделяются Level
+ * Filler и определяются Lines. Конец состоит из End First, затем
+ * endWidth-4 символов End Filler, затем End Child и символа
+ * сворачивания/раскрытия. При endWidth = 2 используются End First и
+ * символ сворачивания/раскрытия, при 1 — только последний. Выбор
+ * символов определяется Flags. Массив Chars: 1 — Level Filler, обычно
+ * пробел между маркерами; 2 — Level Mark, обычно вертикальная черта
+ * активного уровня; 3 — End First для не последнего потомка, обычно
+ * Т-образная фигура; 4 — End First последнего потомка, обычно угол; 5 —
+ * End Filler, обычно горизонтальная линия; 6 — End Child, обычно не
+ * используется, но при endWidth > LevWidth накладывается на маркеры
+ * следующего уровня и обычно имеет Т-образный вид; 7 — символ свёрнутого
+ * узла, обычно '+', если есть скрытые потомки; 8 — символ раскрытого
+ * узла, обычно прямая линия, если потомки видны.
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 char* TOutlineViewer::createGraph(int level, long lines, ushort flags,
  int levWidth, int endWidth,  const char* chars) noexcept
@@ -212,29 +212,29 @@ static Boolean visitNoArg( TOutlineViewer* outLine, TNode* cur, int level,
 }
 
 /*
-  FirstThat iterates over the nodes of the outline until the given
-  local function returns true. The declaration for the local function
-  must look like (save for the names, of course):
-
-    function MyIter(Cur: Pointer; Level, Position: Integer;
-      Lines: LongInt; Flags: Word); far;
-
-  The parameters are as follows:
-
-    Cur:       A pointer to the node being checked.
-    Level:     The level of the node (how many node above it it has)
-               Level is 0 based.  This can be used to a call to
-               either getGraph or createGraph.
-    Position:  The display order position of the node in the list.
-               This can be used in a call to Focused or Selected.
-               If in range, Position - Delta.Y is location the node
-               is displayed on the view.
-    Lines:     Bits indicating the active levels.    This can be used in a
-               call to getGraph or createGraph. It dicatates which
-               horizontal lines need to be drawn.
-    Flags:     Various flags for drawing (see ovXXXX flags).  Can be used
-               in a call to getGraph or createGraph.
-*/
+ * FirstThat обходит узлы до возврата true локальной функцией. Её
+ * объявление имеет вид: function MyIter(Cur: Pointer; Level, Position:
+ * Integer; Lines: LongInt; Flags: Word); far; Cur — указатель
+ * проверяемого узла. Level — его глубина от нуля, пригодная для
+ * getGraph/createGraph. Position — позиция узла в порядке отображения,
+ * пригодная для Focused/Selected; если узел виден, Position - Delta.Y
+ * задаёт его строку в представлении. Lines — биты активных уровней для
+ * getGraph/createGraph, определяющие нужные линии. Flags — флаги
+ * оформления ovXXXX для getGraph/createGraph.
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 TNode* TOutlineViewer::firstThat(TOutlineVisitor test, void* arg) noexcept
 {
   return iterate(test, arg, True);
@@ -245,7 +245,7 @@ TNode* TOutlineViewer::firstThat(TOutlineVisitorNoArg test) noexcept
   return iterate(visitNoArg, &test, True);
 }
 
-// Called whenever Node is receives focus
+// Вызывается при получении узлом фокуса.
 
 void TOutlineViewer::focused(int i)
 {
@@ -254,9 +254,9 @@ void TOutlineViewer::focused(int i)
 
 
 /*
-  Internal function used by both FirstThat and ForEach to do the
-  actual iteration over the data. See FirstThat for more details }
-*/
+ * Внутренняя функция фактического обхода данных для FirstThat и ForEach;
+ * подробности в FirstThat. }
+ */
 
 
 static TNode* traverseTree( TOutlineViewer* outLine,
@@ -334,7 +334,7 @@ TNode* TOutlineViewer::iterate( TOutlineVisitor action, void *arg,
 }
 
 
-// Iterates over all the nodes.     See FirstThat for a more details
+// Обходит все узлы; подробности в FirstThat.
 
 TNode* TOutlineViewer::forEach(TOutlineVisitor action, void *arg) noexcept
 {
@@ -346,7 +346,7 @@ TNode* TOutlineViewer::forEach(TOutlineVisitorNoArg action) noexcept
   return iterate(visitNoArg, &action, False);
 }
 
-// Returns the outline palette
+// Возвращает палитру дерева.
 
 TPalette& TOutlineViewer::getPalette() const
 {
@@ -355,11 +355,11 @@ TPalette& TOutlineViewer::getPalette() const
 }
 
 /*
-  Called to retrieve the characters to display prior to the
-  text returned by GetText.     Can be overridden to return
-  change the appearance of the outline. My default calls
-  createGraph with the default.
-*/
+ * Возвращает графические символы перед текстом GetText. Можно
+ * переопределить для изменения вида дерева. По умолчанию вызывает
+ * createGraph со стандартными параметрами.
+ *
+ */
 
 char* TOutlineViewer::getGraph(int level, long lines, ushort flags)
 {
@@ -376,7 +376,7 @@ static Boolean isNode( TOutlineViewer* , TNode*, int,
 }
 
 
-// Returns a pointer to the node that is to be shown on line i
+// Возвращает указатель на узел, отображаемый в строке i.
 
 TNode* TOutlineViewer::getNode(int i)
 {
@@ -386,10 +386,10 @@ TNode* TOutlineViewer::getNode(int i)
 }
 
 /*
-  Returns if Node is selected.    By default, returns true if Node is
-  Focused (i.e. single selection).    Can be overriden to handle
-  multiple selections. }
-*/
+ * Проверяет выделение узла. По умолчанию true для узла в фокусе, то есть
+ * одиночного выделения. Можно переопределить для множественного. }
+ *
+ */
 Boolean TOutlineViewer::isSelected(int i)
 {
   return (foc == i) ? True:False;
@@ -414,7 +414,7 @@ static Boolean isFocused( TOutlineViewer* focusCheck, TNode*, int level,
         return False;
 }
 
-// Called to handle an event
+// Вызывается для обработки события.
 
 void TOutlineViewer::handleEvent(TEvent& event)
 {
@@ -541,14 +541,14 @@ void TOutlineViewer::handleEvent(TEvent& event)
 }
 
 /*
-  Called whenever Node is selected by the user either via keyboard
-  control or by the mouse. }
-*/
+ * Вызывается при выборе узла пользователем с клавиатуры или мышью. }
+ *
+ */
 void TOutlineViewer::selected(int)
 {
 }
 
-// Redraws the outline if the outliner sfFocus state changes
+// Перерисовывает дерево при изменении состояния sfFocus.
 
 void TOutlineViewer::setState(ushort aState, Boolean enable)
 {
@@ -576,14 +576,14 @@ static Boolean countNode( TOutlineViewer* beingCounted, TNode* p, int level,
 }
 
 /*
-  Updates the limits of the outline viewer.     Should be called whenever
-  the data of the outline viewer changes.  This includes during
-  the initalization of base classes.  TOutlineViewer assumes that
-  the outline is empty.     If the outline becomes non-empty during the
-  initialization, Update must be called. Also, if during the operation
-  of the TOutlineViewer the data being displayed changes, Update
-  and DrawView must be called. }
-*/
+ * Обновляет границы просмотра дерева при любом изменении данных, в том
+ * числе при инициализации базовых классов. TOutlineViewer предполагает
+ * пустое дерево. Если при инициализации появились узлы, нужно вызвать
+ * Update. При изменении отображаемых данных во время работы требуются
+ * Update и DrawView. }
+ *
+ *
+ */
 void TOutlineViewer::update() noexcept
 {
   updateCount = 0;

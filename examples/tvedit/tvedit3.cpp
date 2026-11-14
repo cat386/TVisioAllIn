@@ -175,7 +175,7 @@ ushort doEditDialog( int dialog, ... )
             }
 
         case edReplacePrompt:
-            //  Avoid placing the dialog on the same line as the cursor
+            // Не размещаем диалог на строке с курсором.
             TRect r( 0, 1, 40, 8 );
             r.move( (TProgram::deskTop->size.x-r.b.x)/2, 0 );
             TPoint t = TProgram::deskTop->makeGlobal( r.b );

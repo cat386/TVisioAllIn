@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sstatusl.cpp                              */
+/* файл — sstatusl.cpp */
 /*                                                            */
-/* Registeration object for the class TStatusLine             */
+/* Объект регистрации класса TStatusLine. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

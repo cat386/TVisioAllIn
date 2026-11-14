@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tcollect.cpp                              */
+/* файл — tcollect.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TNSCollection member functions            */
+/* функции:  */
+/* Методы TNSCollection */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -164,9 +164,9 @@ void TNSCollection::freeAll()
 
 void TNSCollection::freeItem( void *item )
 {
-    // WARNING: The right thing to do is to override this method and cast the
-    // pointer to its actual type. This default implementation won't call any
-    // destructors if used with non-trivially-destructible items.
+    // ВНИМАНИЕ: правильно переопределить метод и привести указатель к
+    // фактическому типу. Реализация по умолчанию не вызывает деструкторы
+    // нетривиально уничтожаемых элементов.
     ::operator delete(item);
 }
 

@@ -1,6 +1,6 @@
 /*----------------------------------------------------------*/
 /*                                                          */
-/*   Ascii.cpp: Member functions of following classes:      */
+/* Ascii.cpp — методы следующих классов: */
 /*                TTable                                    */
 /*                TReport                                   */
 /*                TAsciiChart                               */
@@ -36,8 +36,8 @@ __link( RWindow )
 #include "ascii.h"
 
 
+// Методы TTable
 //
-// TTable functions
 //
 
 const char * const TTable::name = "TTable";
@@ -90,10 +90,10 @@ void TTable::draw()
     showCursor();
 }
 
+// cmCharFocused — смещение, фактически ASCII-код выбранного символа.
+// Поэтому его нужно прибавлять к cmAsciiTableCmdBase, а не объединять
+// побитовым ИЛИ.
 //
-// cmCharFocused is a offset value (basically the ascii code of the
-// current selected character) thus should be added, not or'ed, to
-// cmAsciiTableCmdBase.
 //
 
 void TTable::charFocused()
@@ -160,8 +160,8 @@ void TTable::handleEvent(TEvent& event)
 }
 
 
+// Методы TReport
 //
-// TReport functions
 //
 
 const char * const TReport::name = "TReport";
@@ -233,8 +233,8 @@ void TReport::handleEvent(TEvent& event)
 }
 
 
+// Методы TAsciiChart
 //
-// TAsciiChart functions
 //
 
 const char * const TAsciiChart::name = "TAsciiChart";

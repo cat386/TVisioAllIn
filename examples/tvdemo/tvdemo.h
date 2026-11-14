@@ -1,6 +1,6 @@
 /*---------------------------------------------------------*/
 /*                                                         */
-/*   TVDemo.h : Header file for TVDemo.cpp                 */
+/* TVDemo.h — заголовочный файл для TVDemo.cpp */
 /*                                                         */
 /*---------------------------------------------------------*/
 /*
@@ -33,30 +33,30 @@ public:
     virtual void handleEvent(TEvent& Event);
     virtual void getEvent(TEvent& event);
 //    virtual TPalette& getPalette() const;
-    virtual void idle();              // Updates heap and clock views
+    virtual void idle();              // Обновляет представления памяти и часов.
 
 private:
 
-    THeapView *heap;                  // Heap view
-    TClockView *clock;                // Clock view
+    THeapView *heap;                  // Представление памяти.
+    TClockView *clock;                // Представление часов.
 
-    void aboutDlgBox();               // "About" box
-    void puzzle();                    // Puzzle
-    void calendar();                  // Calendar
-    void asciiTable();                // Ascii table
-    void calculator();                // Calculator
+    void aboutDlgBox();               // Окно «О программе».
+    void puzzle();                    // Головоломка.
+    void calendar();                  // Календарь.
+    void asciiTable();                // Таблица ASCII.
+    void calculator();                // Калькулятор.
     void eventViewer();
     void printEvent(const TEvent &);
-    void chBackground();              // Background pattern
-    void openFile( const char *fileSpec );  // File Viewer
-    void changeDir();                 // Change directory
-    void mouse();                     // Mouse control dialog box
-    void colors();                    // Color control dialog box
-    void outOfMemory();               // For validView() function
-    void loadDesktop(fpstream& s);    // Load and restore the
-    void retrieveDesktop();           //  previously saved desktop
-    void storeDesktop(fpstream& s);   // Store the current desktop
-    void saveDesktop();               //  in a resource file
+    void chBackground();              // Узор фона.
+    void openFile( const char *fileSpec );  // Просмотр файлов.
+    void changeDir();                 // Смена каталога.
+    void mouse();                     // Диалог настройки мыши.
+    void colors();                    // Диалог настройки цветов.
+    void outOfMemory();               // Для функции validView().
+    void loadDesktop(fpstream& s);    // Загружаем и восстанавливаем
+    void retrieveDesktop();           // ранее сохранённый рабочий стол.
+    void storeDesktop(fpstream& s);   // Сохраняем текущий рабочий стол
+    void saveDesktop();               // в файле ресурсов.
 
 };
 

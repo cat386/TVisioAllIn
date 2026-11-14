@@ -1,16 +1,16 @@
+// TEST.H — определение класса TTestApp. Класс TTestApp — объект
+// приложения, производный от абстрактного TApplication. Методы: TTestApp
+// — конструктор; initMenuBar — собственное меню; handleEvent — обработка
+// событий меню; aboutDlg — создание и показ окна «О программе».
 //
-// TEST.H - The class definition for TTestApp.
 //
 //
-// class TTestApp
-//      The application object, derived from the abstract class
-//      TApplication
 //
-// Member functions:
-//      TTestApp - Constructor
-//      initMenuBar - custom menu
-//      handleEvent - now handling menu events
-//      aboutDlg - creates and shows about box
+//
+//
+//
+//
+//
 //
 
 #if !defined( _TEST_H )

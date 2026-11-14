@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmscrbar.cpp                              */
+/* файл — nmscrbar.cpp */
 /*                                                            */
-/* defines the streamable name for class TScrollBar           */
+/* Определяет имя сериализуемого класса TScrollBar. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

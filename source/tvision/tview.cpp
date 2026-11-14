@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tview.cpp                                 */
+/* файл — tview.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TView member functions                    */
+/* функции:  */
+/* Методы TView */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -92,9 +92,9 @@ static inline int range( int val, int min, int max )
 
 static int balancedRange( int val, int min, int max, int &balance) noexcept
 {
-    // Fit val into the range, but keep track of the remainders,
-    // and apply them back when possible. This allows views to recover
-    // their original sizes.
+    // Ограничиваем val диапазоном, запоминая остатки и возвращая их при
+    // возможности. Это позволяет представлениям восстанавливать исходные
+    // размеры.
     if( min > max )
         max = min;
     if( val < min )
@@ -855,11 +855,11 @@ static Boolean getEventText( TEvent &event, TSpan<char> dest, size_t &length )
 }
 
 Boolean TView::textEvent( TEvent& event, TSpan<char> dest, size_t &length )
-// Fill the 'dest' buffer with text from consecutive events.
-// If 'event' is an evKeyDown, its text is also included in 'dest'.
-// 'length' is set to the number of bytes written into 'dest'.
-// Returns whether any bytes were written into 'dest'.
-// On exit, 'event.what' is evNothing.
+// Заполняет dest текстом последовательных событий. Для evKeyDown
+// включает и текст event. length получает число записанных байтов.
+// Возвращает признак записи хотя бы одного байта. На выходе event.what
+// равно evNothing.
+//
 {
     length = 0;
 

@@ -11,16 +11,16 @@
 namespace tvision
 {
 
-// TermInfo is a self-contained reader for the terminfo database, which
-// describes the capabilities of terminal types. It replaces the use of the
-// Ncurses/Tinfo libraries.
+// TermInfo — автономный читатель базы terminfo, описывающей возможности
+// типов терминалов. Заменяет библиотеки Ncurses/Tinfo. Поддерживает
+// старый двоичный формат с 16-битными числами и расширенный с 32-битными
+// числами, используемый, например, xterm-direct, а также
+// пользовательские возможности вроде kDC5 и kUP3. Если тип терминала
+// отсутствует в базе, используется встроенное описание; см.
+// TermInfo::builtin.
 //
-// Both the legacy binary format (16-bit numbers) and the extended format
-// (32-bit numbers, used for entries such as 'xterm-direct') are supported,
-// as are user-defined (extended) capabilities such as 'kDC5' or 'kUP3'.
 //
-// When the terminal type cannot be found in the database, a built-in
-// description is used (see 'TermInfo::builtin').
+//
 
 class TermInfo
 {
@@ -32,51 +32,51 @@ public:
         std::string value;
     };
 
-    // The name of the terminal type, as given to 'load()'.
+    // Имя типа терминала, переданное load().
     std::string termName;
-    // Path of the database file the entry was read from (empty if built-in).
+    // Путь к файлу базы, откуда прочитана запись; пустой для встроенного описания.
     std::string sourcePath;
 
     std::vector<std::pair<std::string, bool>> bools;
     std::vector<std::pair<std::string, int>> nums;
     std::vector<StrCap> strs;
 
-    // Returns the description of the terminal type 'termName'. The result
-    // is cached, so it is cheap to call this repeatedly.
-    // If the terminal type is not in the database, 'getFromDatabase' returns
-    // false and the result is a built-in description.
+    // Возвращает описание типа терминала termName. Результат кэшируется,
+    // поэтому повторные вызовы недороги. Если тип отсутствует в базе,
+    // getFromDatabase возвращает false и используется встроенное описание.
+    //
     static const TermInfo &get(const char *termName) noexcept;
 
-    // Loads the entry for 'termName' from the terminfo database.
-    // Returns false if it cannot be found or parsed.
+    // Загружает запись termName из базы terminfo. Возвращает false, если
+    // запись не найдена или не удалось её разобрать.
     static bool loadFromDatabase(const char *termName, TermInfo &result) noexcept;
-    // Parses a compiled terminfo entry.
+    // Разбирает скомпилированную запись terminfo.
     static bool parse(const char *data, size_t size, TermInfo &result) noexcept;
-    // Fills 'result' with a built-in description resembling 'termName'.
+    // Заполняет result встроенным описанием, похожим на termName.
     static void builtin(const char *termName, TermInfo &result) noexcept;
 
     bool fromDatabase() const noexcept { return !sourcePath.empty(); }
 
-    // Accessors. Absent and cancelled capabilities are treated the same way.
+    // Методы доступа. Отсутствующие и отменённые возможности обрабатываются одинаково.
     bool getBool(const char *name) const noexcept;
-    int getNum(const char *name) const noexcept; // Returns -1 if absent.
-    const char *getStr(const char *name) const noexcept; // Returns nullptr if absent.
+    int getNum(const char *name) const noexcept; // Возвращает -1 при отсутствии.
+    const char *getStr(const char *name) const noexcept; // Возвращает nullptr при отсутствии.
 
-    // Instantiates a parameterized capability string (such as 'cup' or
-    // 'csr'), like the 'tparm()' function of the terminfo library. Up to 9
-    // numeric parameters are supported.
+    // Подставляет параметры в строку возможности, например cup или csr, как
+    // функция tparm() библиотеки terminfo. Поддерживает до девяти числовых
+    // параметров.
     static std::string tparm(const char *str, const int *params, int paramCount) noexcept;
 
-    // Whether 'name' is one of the standard (non user-defined) string
-    // capabilities.
+    // Проверяет, относится ли name к стандартным, а не пользовательским
+    // строковым возможностям.
     static bool isStandardStrCap(const char *name) noexcept;
 
-    // Number of colors supported by the terminal, following Ncurses'
-    // semantics: if the terminal cannot change colors, this is 0.
+    // Число цветов терминала по правилам Ncurses: если терминал не позволяет
+    // менять цвета, возвращается 0.
     int getColorCount() const noexcept;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX
 

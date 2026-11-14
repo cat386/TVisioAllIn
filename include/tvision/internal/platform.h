@@ -71,8 +71,8 @@ class Platform
     DisplayBuffer displayBuf;
     DisplayAdapter dummyDisplay;
     ConsoleAdapter dummyConsole {dummyDisplay, {}};
-    // Invariant: 'console' contains either a non-owning reference to 'dummyConsole'
-    // or an owning reference to a heap-allocated ConsoleAdapter object.
+    // Инвариант: console содержит либо невладеющую ссылку на dummyConsole,
+    // либо владеющую ссылку на объект ConsoleAdapter в куче.
     SignalSafeReentrantMutex<ConsoleAdapter *> console {&dummyConsole};
 
     static Platform *instance;
@@ -94,21 +94,21 @@ class Platform
 
 public:
 
-    // Platform is a singleton. It gets created by THardwareInfo, but it is
-    // never destroyed so that secondary threads may keep invoking methods such
-    // as 'interruptEventWait'.
+    // Platform — одиночный экземпляр. Он создаётся THardwareInfo и никогда
+    // не уничтожается, чтобы вторичные потоки могли продолжать вызывать
+    // методы вроде interruptEventWait.
     static Platform &getInstance() noexcept;
 
-    // Character processing functions which may depend on the C locale or other
-    // system resources. If they are used before the Platform instance has been
-    // created, they perform the required initializations automatically.
+    // Функции обработки символов могут зависеть от локали C и других
+    // системных ресурсов. При использовании до создания Platform они
+    // автоматически выполняют необходимую инициализацию.
     static struct CharOps
     {
         int (*width)(uint32_t) noexcept;
         uint32_t (*toLower)(uint32_t) noexcept;
     } charOps;
 
-    // Note: explicit 'this' required by GCC 5.
+    // Примечание: GCC 5 требует явного this.
     void setUpConsole() noexcept
         { console.lock([&] (auto *&c) { this->setUpConsole(c); }); }
     void restoreConsole() noexcept
@@ -118,8 +118,8 @@ public:
     void waitForEvents(int ms) noexcept;
     void interruptEventWait() noexcept { waiter.interruptEventWait(); }
 
-    // Adjust the caret size to the range 1 to 100 because that's what the original
-    // THardwareInfo::getCaretSize() does and what TScreen expects.
+    // Ограничиваем размер курсора диапазоном от 1 до 100: так работает
+    // исходный THardwareInfo::getCaretSize(), и этого ожидает TScreen.
     int getCaretSize() noexcept { return min(max(displayBuf.caretSize, 1), 100); }
     bool isCaretVisible() noexcept { return displayBuf.caretSize > 0; }
     void clearScreen() noexcept
@@ -142,6 +142,6 @@ public:
         { return console.lock([&] (auto *c) { return c->requestClipboardText(accept); }); }
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_PLATFORM_H

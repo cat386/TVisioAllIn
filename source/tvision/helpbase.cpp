@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       HelpBase.cpp                              */
+/* файл — HelpBase.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  Member function(s) of following classes   */
+/* функции:  */
+/* Методы следующих классов. */
 /*                      THelpTopic                            */
 /*                      THelpIndex                            */
 /*                      THelpFile                             */
@@ -419,7 +419,7 @@ static TStringView getLineAtOffset( char *text, int textSize, int offset ) noexc
     if (lineEnd == 0)
         lineEnd = &text[textSize];
     else
-        ++lineEnd; // Point past '\n'.
+        ++lineEnd; // Указываем за '\n'.
     return TStringView(lineStart, lineEnd - lineStart);
 }
 
@@ -444,13 +444,13 @@ TStringView THelpTopic::wrapText( char *text, int textSize, int& offset, Boolean
         if( 0 < wrappedSize && wrappedSize < line.size() )
             {
             size_t newSize = wrappedSize;
-            // Omit the last word if it was cut off by wrapping.
+            // Пропускаем последнее слово, если оно обрезано переносом.
             while( newSize > 0 && !isBlank(line[newSize]) )
                 --newSize;
-            // Unless it fills the whole line.
+            // Кроме случая, когда оно занимает всю строку.
             if( newSize == 0 )
                 newSize = wrappedSize;
-            // If a space follows, keep it so 'offset' points past it.
+            // Если дальше идёт пробел, сохраняем его, чтобы offset указывал за него.
             if( (int) newSize < textSize && isBlank(line[newSize]) )
                 ++newSize;
             line = line.substr(0, newSize);
@@ -652,10 +652,10 @@ void THelpFile::putTopic( THelpTopic *topic )
 }
 
 void THelpFile::ensureStreamSize( iopstream &stream, int desiredSize )
-// When the stream is backed by a regular file, 'seekp' can be used to extend
-// the file size. However, this behaviour is not guaranteed by the Standard and
-// it certainly won't work with devices such as a std::stringbuf. Therefore,
-// it's safer to extend the stream by manually writing null bytes.
+// В потоке обычного файла seekp может увеличить размер файла. Но
+// стандарт этого не гарантирует; со std::stringbuf такое точно не
+// работает. Надёжнее расширять поток явной записью нулевых байтов.
+//
 {
     stream.seekg(0, ios::end);
     streampos currentSize = stream.tellg();

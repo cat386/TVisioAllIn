@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
 /*                                                            */
-/*   Calc.cpp:  TCalcDisplay member functions and TCalculator */
-/*              constructor                                   */
+/* Calc.cpp — методы TCalcDisplay и конструктор TCalculator. */
+/* конструктор */
 /*                                                            */
 /*------------------------------------------------------------*/
 /*
@@ -40,8 +40,8 @@ __link( RButton )
 #define cpCalcPalette   "\x13"
 
 
+// Методы TCalcDisplay
 //
-// TCalcDisplay functions
 //
 
 const char * const TCalcDisplay::name = "TCalcDisplay";
@@ -173,7 +173,7 @@ void TCalcDisplay::setDisplay(double r)
         sign = ' ';
         }
 
-    len = strlen(str) - 1;          // Minus one so we can use as an index.
+    len = strlen(str) - 1;          // Вычитаем единицу для использования в качестве индекса.
 
     if(len > DISPLAYLEN)
         error();
@@ -208,7 +208,7 @@ void TCalcDisplay::calcKey(unsigned char key)
         case '5':   case '6':   case '7':   case '8':   case '9':
             checkFirst();
             if (strlen(number) < 15) 
-                {                       // 15 is max visible display length
+                {                       // Максимальная длина видимого значения — 15 символов.
                 if (strcmp(number, "0") == 0)
                     number[0] = '\0';
                 stub[0] = key;
@@ -236,8 +236,8 @@ void TCalcDisplay::calcKey(unsigned char key)
                 number[len-1] = '\0';
             break;
 
-        case '_':                   // underscore (keyboard version of +/-)
-        case 241:                   // +/- extended character.
+        case '_':                   // Подчёркивание — клавиатурный вариант +/−.
+        case 241:                   // Символ +/− расширенной кодировки.
             if (sign==' ')
               sign='-';
             else
@@ -295,7 +295,7 @@ void TCalcDisplay::calcKey(unsigned char key)
 
 
 static const char *keyChar[20] =
-    {    "C", "\x1B",    "%", "\xF1",   // 0x1B is escape, 0xF1 is +/- char.
+    {    "C", "\x1B",    "%", "\xF1",   // 0x1B — Escape, 0xF1 — символ +/−.
          "7",    "8",    "9",    "/",
          "4",    "5",    "6",    "*",
          "1",    "2",    "3",    "-",
@@ -303,8 +303,8 @@ static const char *keyChar[20] =
     };
 
 
+// Методы TCalculator
 //
-// TCalculator functions
 //
 
 const char * const TCalculator::name = "TCalculator";

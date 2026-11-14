@@ -38,8 +38,8 @@ TEST(Far2l, ShouldReadFar2lInput)
         {"AQAMAAAAIgAAAAAAAABL\x07", {Ignored}}, // Alt + VK_CLEAR
         {"AAAGAAAAAAAAAAAAAQAAAE0=\x07", {Accepted, mouseEv({0, 6}, meMouseMoved, 0, 0, 0)}},
         {"CQANAAQAAAAAAAAAAAAAAE0=\x07", {Accepted, mouseEv({9, 13}, 0, 0, mbMiddleButton, 0)}},
-        {"CQANAAAAAAAAAAAAAAAAAE0=\x07", {Accepted, mouseEv({9, 13}, 0, 0, 0, 0)}}, // Button release.
-        {"AAAAAAAAAAAAAAAAAAAAAE0=\x07", {Accepted, mouseEv({0, 0}, 0, 0, 0, 0)}}, // Button release.
+        {"CQANAAAAAAAAAAAAAAAAAE0=\x07", {Accepted, mouseEv({9, 13}, 0, 0, 0, 0)}}, // Отпускание кнопки.
+        {"AAAAAAAAAAAAAAAAAAAAAE0=\x07", {Accepted, mouseEv({0, 0}, 0, 0, 0, 0)}}, // Отпускание кнопки.
     };
 
     for (auto &testCase : testCases)
@@ -53,4 +53,4 @@ TEST(Far2l, ShouldReadFar2lInput)
     }
 }
 
-} // namespace tvision
+} // пространство имён tvision

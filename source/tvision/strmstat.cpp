@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       strmstat.cpp                              */
+/* файл — strmstat.cpp */
 /*                                                            */
-/* defines the static members of class pstream                */
+/* Определяет статические члены класса pstream. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

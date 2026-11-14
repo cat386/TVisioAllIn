@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------*/
-/* filename -       textview.cpp                               */
+/* файл — textview.cpp */
 /*                                                             */
-/* function(s)                                                 */
-/*                  TTerminal and TTextDevice member functions */
+/* функции:  */
+/* Методы TTerminal и TTextDevice. */
 /*-------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -43,11 +43,11 @@ int TTextDevice::overflow( int c )
 }
 
 #if !defined( __BORLANDC__ )
-// The 'xsputn' method in modern STL is the equivalent of 'do_sputn' in
-// Borland's RTL. We must invoke 'do_sputn' here in order to replicate
-// the original behaviour. Otherwise, the default 'xsputn' will fall back on
-// 'overflow' and the inserted characters will be processed one by one,
-// which in the case of TTerminal may lead to performance issues.
+// xsputn современной STL соответствует do_sputn в RTL Borland. Здесь
+// нужно вызвать do_sputn для исходного поведения. Иначе стандартный
+// xsputn использует overflow и обрабатывает символы по одному, что
+// ухудшает производительность TTerminal.
+//
 std::streamsize TTextDevice::xsputn(const char *s, std::streamsize count)
 {
     return (std::streamsize) do_sputn(s, (int) count);
@@ -94,8 +94,8 @@ Boolean TTerminal::canInsert( ushort amount )
 {
     long T = (queFront < queBack) ?
         ( queFront +  amount ) :
-        ( long(queFront) - bufSize + amount);   // cast needed so we get
-                                                // signed comparison
+        ( long(queFront) - bufSize + amount);   // Приведение нужно для знакового сравнения.
+                                                //
     return Boolean( queBack > T );
 }
 
@@ -177,7 +177,7 @@ void TTerminal::draw()
 
         b.moveChar( x, ' ', color, max( size.x - x, 0 ) );
         writeBuf( 0, y, size.x, 1, b );
-        // Draw the cursor when this is the last line.
+        // В последней строке рисуем курсор.
         if( endLine == queFront )
             setCursor( x, y );
         endLine = begLine;
@@ -229,7 +229,7 @@ int TTerminal::do_sputn( const char *s, int count )
         queFront += count;
         }
 
-    // drawLock: avoid redundant calls to drawView()
+    // drawLock предотвращает лишние вызовы drawView().
     drawLock++;
     setLimit( limit.x, screenLines );
     scrollTo( 0, screenLines + 1 );

@@ -32,7 +32,7 @@ public:
 
     TColorAttr mapColor(uchar i) noexcept
     {
-        return TColorAttr(i); // Use palette index as attribute.
+        return TColorAttr(i); // Используем индекс палитры как атрибут.
     }
 
     std::vector<std::vector<TStringView>> getBufferText()
@@ -61,7 +61,7 @@ public:
         );
         for (int y = 0; y < size.y; ++y)
             for (int x = 0; x < size.x; ++x)
-                // Extract palette index from attribute.
+                // Извлекаем индекс палитры из атрибута.
                 attributes[y][x] = (uchar) buffer[y*size.x + x].attribute;
         return attributes;
     }
@@ -177,8 +177,8 @@ TEST(TEditor, ShouldDetectAndConvertLineEndingsWhenInsertingText)
     {
         auto initialText = testCase.input.initialText;
         auto *editor = new TEditor(TRect(), nullptr, nullptr, nullptr, 256);
-        // The initial text must be placed at the end of the buffer, since the
-        // gap will be located between the cursor and the rest of the text.
+        // Исходный текст помещается в конец буфера, поскольку разрыв находится
+        // между курсором и оставшимся текстом.
         memcpy(
             &editor->buffer[editor->bufSize - initialText.size()],
             initialText.data(),
@@ -190,8 +190,8 @@ TEST(TEditor, ShouldDetectAndConvertLineEndingsWhenInsertingText)
         auto textToInsert = testCase.input.textToInsert;
         editor->insertText(textToInsert.data(), textToInsert.size(), false);
 
-        // Since the cursor should now be at the end, we can read the inserted
-        // text from the beginning of the buffer.
+        // Теперь курсор должен находиться в конце, поэтому вставленный текст
+        // можно читать с начала буфера.
         TEditorBufferTestOutput actual {
             TStringView(editor->buffer, editor->bufLen),
             editor->lineEndingType,
@@ -223,8 +223,8 @@ TEST(TEditor, ShouldInsertNewLinesProperly)
         editor->lineEndingType = testCase.input;
         editor->newLine();
 
-        // Since the cursor should now be at the end, we can read the inserted
-        // text from the beginning of the buffer.
+        // Теперь курсор должен находиться в конце, поэтому вставленный текст
+        // можно читать с начала буфера.
         TStringView actual = TStringView(editor->buffer, editor->bufLen);
         expectResultMatches(actual, testCase);
 
@@ -237,7 +237,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
     TestCharOps::init();
     static const TestCase<TEditorDisplayTestInput, TEditorDisplayTestOutput> testCases[] =
     {
-        // Remove part of a multi-byte character, then undo the removal.
+        // Удаляем часть многобайтового символа, затем отменяем удаление.
         {   {   TPoint { 3, 1 },
                 "€",
                 {   messageEv(evCommand, cmTextEnd),
@@ -256,7 +256,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // It should display multi-byte characters properly when switching to single-byte mode.
+        // При переключении в однобайтовый режим многобайтовые символы должны отображаться правильно.
         {   {   TPoint { 4, 1 },
                 "€",
                 {   messageEv(evCommand, cmEncoding),
@@ -270,7 +270,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Tabulators should be properly drawn when there is horizontal scroll.
+        // Табуляции должны правильно отображаться при горизонтальной прокрутке.
         {   {   TPoint { 3, 1 },
                 "\ta",
                 {   messageEv(evCommand, cmTextEnd),
@@ -283,7 +283,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 6, 0 },
             },
         },
-        // A partially visible tabulator should be drawn properly when selected.
+        // Частично видимая выделенная табуляция должна отображаться правильно.
         {   {   TPoint { 3, 1 },
                 "\ta",
                 {   messageEv(evCommand, cmTextEnd),
@@ -298,7 +298,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 6, 0 },
             },
         },
-        // A selected line break should be drawn properly.
+        // Выделенный перевод строки должен отображаться правильно.
         {   {   TPoint { 3, 2 },
                 "ab\ncd",
                 {   keyDownEv(kbRight),
@@ -314,7 +314,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // A double-width character should be drawn properly.
+        // Символ двойной ширины должен отображаться правильно.
         {   {   TPoint { 3, 1 },
                 SMILING_FACE_WITH_SMILING_EYES_UTF8 "a",
                 {},
@@ -326,7 +326,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // A partially visible and selected double-width character should be drawn properly.
+        // Частично видимый выделенный широкий символ должен отображаться правильно.
         {   {   TPoint { 2, 1 },
                 SMILING_FACE_WITH_SMILING_EYES_UTF8 "a",
                 {   messageEv(evCommand, cmTextEnd),
@@ -341,7 +341,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 1, 0 },
             },
         },
-        // Combining characters should be drawn properly.
+        // Комбинируемые символы должны отображаться правильно.
         {   {   TPoint { 2, 1 },
                 "a" COMBINING_ZIGZAG_UTF8 "b" COMBINING_ZIGZAG_UTF8 "c" COMBINING_ZIGZAG_UTF8 "d" COMBINING_ZIGZAG_UTF8,
                 {},
@@ -353,7 +353,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 1, 0 },
             },
         },
-        // Ctrl+Right should skip trailing whitespace instead of stopping on it.
+        // Ctrl+Right должен пропускать завершающие пробелы, а не останавливаться на них.
         {   {   TPoint { 7, 1 },
                 "foo bar",
                 {   messageEv(evCommand, cmWordRight),
@@ -366,7 +366,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Ctrl+Left should do the same in reverse.
+        // Ctrl+Left должен делать то же в обратном направлении.
         {   {   TPoint { 7, 1 },
                 "foo bar",
                 {   messageEv(evCommand, cmTextEnd),
@@ -381,7 +381,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Ctrl+Right should reach the punctuation before the next word.
+        // Ctrl+Right должен доходить до знаков препинания перед следующим словом.
         {   {   TPoint { 10, 1 },
                 "foo(); bar",
                 {   messageEv(evCommand, cmWordRight),
@@ -394,7 +394,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // A second Ctrl+Right should then skip the punctuation and the whitespace after it together.
+        // Второй Ctrl+Right должен одновременно пропускать знаки препинания и следующие пробелы.
         {   {   TPoint { 10, 1 },
                 "foo(); bar",
                 {   messageEv(evCommand, cmWordRight),
@@ -408,7 +408,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Ctrl+Left should reach the same two points in reverse.
+        // Ctrl+Left должен достигать тех же двух точек в обратном направлении.
         {   {   TPoint { 10, 1 },
                 "foo(); bar",
                 {   messageEv(evCommand, cmTextEnd),
@@ -438,7 +438,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Ctrl+Right should skip consecutive blank lines in a single jump.
+        // Ctrl+Right должен перескакивать последовательные пустые строки за один шаг.
         {   {   TPoint { 3, 4 },
                 "foo\n\n\nbar",
                 {   messageEv(evCommand, cmWordRight),
@@ -451,7 +451,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Ctrl+Left should do the same in reverse.
+        // Ctrl+Left должен делать то же в обратном направлении.
         {   {   TPoint { 3, 4 },
                 "foo\n\n\nbar",
                 {   messageEv(evCommand, cmTextEnd),
@@ -466,7 +466,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Ctrl+Del should delete consecutive punctuation characters and the whitespace after them in one step.
+        // Ctrl+Del должен за один шаг удалять подряд идущие знаки препинания и следующие пробелы.
         {   {   TPoint { 10, 1 },
                 "foo(); bar",
                 {   messageEv(evCommand, cmWordRight),
@@ -480,7 +480,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Ctrl+Backspace should mirror that going left.
+        // Ctrl+Backspace должен симметрично делать это влево.
         {   {   TPoint { 7, 1 },
                 "foo bar",
                 {   messageEv(evCommand, cmTextEnd),
@@ -494,7 +494,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Double-clicking inside a word selects exactly that word.
+        // Двойной щелчок внутри слова выделяет ровно это слово.
         {   {   TPoint { 9, 1 },
                 "foo   bar",
                 {   mouseDownEv({ 1, 0 }, meDoubleClick),
@@ -508,7 +508,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Double-clicking inside a run of whitespace selects just that run.
+        // Двойной щелчок в последовательности пробелов выделяет только эту последовательность.
         {   {   TPoint { 9, 1 },
                 "foo   bar",
                 {   mouseDownEv({ 4, 0 }, meDoubleClick),
@@ -522,7 +522,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Double-clicking on punctuation selects just the consecutive punctuation characters.
+        // Двойной щелчок по знаку препинания выделяет только подряд идущие знаки.
         {   {   TPoint { 9, 1 },
                 "foo();bar",
                 {   mouseDownEv({ 4, 0 }, meDoubleClick),
@@ -536,7 +536,7 @@ TEST(TEditor, ShouldDrawTextAndPlaceCursorCorrectly)
                 TPoint { 0, 0 },
             },
         },
-        // Double-clicking on trailing whitespace must not select across a line break.
+        // Двойной щелчок по завершающим пробелам не должен выделять текст за переводом строки.
         {   {   TPoint { 4, 2 },
                 "foo \n bar",
                 {   mouseDownEv({ 3, 0 }, meDoubleClick),

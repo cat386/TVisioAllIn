@@ -20,8 +20,8 @@ inline TerminalDisplay::TerminalDisplay(ConsoleCtl &aCon, const TermInfo &aTermI
     con(aCon),
     ansiScreenWriter(aCon, TermCap::getDisplayCapabilities(aCon, *this))
 {
-    // Ncurses performs terminal operations on the output file descriptor;
-    // fall back to the input one if it is not a terminal.
+    // Ncurses выполняет операции с терминалом через выходной дескриптор;
+    // если он не терминал, используем входной.
     for (int fd : {con.out(), con.in()})
         if (tcgetattr(fd, &shellMode) == 0)
         {
@@ -32,8 +32,8 @@ inline TerminalDisplay::TerminalDisplay(ConsoleCtl &aCon, const TermInfo &aTermI
 
     if (shellModeSaved)
     {
-        // Same settings as Ncurses' 'newterm()': no echo, no CR/NL
-        // translation on input or output.
+        // Настройки как у newterm() в Ncurses: без эха и преобразования CR/NL
+        // при вводе и выводе.
         struct termios mode = shellMode;
         mode.c_lflag &= ~(ECHO | ECHONL);
         mode.c_iflag &= ~(ICRNL | INLCR | IGNCR);
@@ -41,18 +41,18 @@ inline TerminalDisplay::TerminalDisplay(ConsoleCtl &aCon, const TermInfo &aTermI
         applyTermios(mode);
     }
 
-    // Enter the alternate screen and leave the terminal in a known state,
-    // with the same sequence as Ncurses' 'newterm()' and first 'refresh()':
-    // enable the alternate character set, enter the alternate screen, reset
-    // the scroll region, reset attributes, leave insert mode, enable automatic
-    // margins, reset colors and clear the screen.
+    // Переходим на альтернативный экран и устанавливаем известное состояние
+    // той же последовательностью, что newterm() и первый refresh() в
+    // Ncurses: включаем альтернативный набор символов, альтернативный экран,
+    // сбрасываем область прокрутки и атрибуты, отключаем вставку, включаем
+    // автоматические поля, сбрасываем цвета и очищаем экран.
     putCap("enacs");
     putCap("smcup");
     size = con.getSize();
     if (const char *csr = termInfo.getStr("csr"))
         if (size.y > 0)
         {
-            // Reset the scroll region to the whole screen.
+            // Восстанавливаем область прокрутки на весь экран.
             int params[] = {0, size.y - 1};
             std::string seq = TermInfo::tparm(csr, params, 2);
             putString({seq.data(), seq.size()});
@@ -62,7 +62,7 @@ inline TerminalDisplay::TerminalDisplay(ConsoleCtl &aCon, const TermInfo &aTermI
     putCap("smam");
     if (termInfo.getColorCount() > 0)
     {
-        // Like Ncurses' 'start_color()'.
+        // Аналог start_color() в Ncurses.
         putCap("op");
         putCap("op");
         resetAttributes();
@@ -71,9 +71,9 @@ inline TerminalDisplay::TerminalDisplay(ConsoleCtl &aCon, const TermInfo &aTermI
 }
 
 void TerminalDisplay::moveCursorToLowerLeft() noexcept
-// Like Ncurses' 'endwin()', move the cursor to the lower left corner using
-// the cheapest of: direct cursor addressing ('cup'), the 'lower left'
-// capability ('ll') or 'home' followed by moving down.
+// Как endwin() в Ncurses, перемещаем курсор в левый нижний угол самым
+// коротким способом: прямой адресацией cup, возможностью ll либо home с
+// последующим движением вниз.
 {
     TPoint curSize = con.getSize();
     if (curSize.y <= 0)
@@ -81,7 +81,7 @@ void TerminalDisplay::moveCursorToLowerLeft() noexcept
     int lastRow = curSize.y - 1;
     std::string best;
     bool found = false;
-    // The cost of a sequence is its length, without padding.
+    // Стоимость последовательности равна её длине без заполнения задержками.
     auto consider = [&] (std::string &&seq) {
         seq = stripPadding({seq.data(), seq.size()});
         if (!found || seq.size() < best.size())
@@ -124,17 +124,17 @@ void TerminalDisplay::moveCursorToLowerLeft() noexcept
 
 void TerminalDisplay::resetAttributes() noexcept
 {
-    // Ncurses resorts to leaving the alternate character set mode when the
-    // terminal cannot reset attributes.
+    // Если терминал не умеет сбрасывать атрибуты, Ncurses выходит из
+    // альтернативного набора символов.
     if (!putCap("sgr0"))
         putCap("rmacs");
 }
 
 void TerminalDisplay::clearScreenInitially() noexcept
 {
-    // Same strategy as Ncurses: use the 'clear' capability if available.
-    // Otherwise, clear to the end of the screen from the home position or,
-    // as a last resort, overwrite the screen with spaces.
+    // Стратегия как в Ncurses: используем clear, если доступно; иначе
+    // очищаем экран от начальной позиции до конца, а в крайнем случае
+    // заполняем пробелами.
     if (putCap("clear"))
         return;
     if (termInfo.getStr("home") && termInfo.getStr("ed"))
@@ -165,9 +165,9 @@ TerminalDisplay &TerminalDisplay::create(ConsoleCtl &con) noexcept
 
 TerminalDisplay::~TerminalDisplay()
 {
-    // Same sequence as Ncurses' 'endwin()': restore the cursor, move it to
-    // the bottom left corner, leave the alternate screen and the keypad
-    // transmit mode and restore the terminal settings.
+    // Последовательность как у endwin() в Ncurses: восстанавливаем курсор,
+    // перемещаем в левый нижний угол, покидаем альтернативный экран и режим
+    // передачи клавиш, восстанавливаем параметры терминала.
     if (cursorState != -1 && cursorState != 1)
         putCap("cnorm");
     moveCursorToLowerLeft();
@@ -192,7 +192,7 @@ void TerminalDisplay::setRawInputMode() noexcept
     struct termios mode;
     if (ttyFd >= 0 && tcgetattr(ttyFd, &mode) == 0)
     {
-        // raw(): no line buffering, no signals, no flow control.
+        // raw(): без построчной буферизации, сигналов и управления потоком.
         mode.c_lflag &= ~(ICANON | ISIG | IEXTEN);
         mode.c_iflag &= ~(IXON | BRKINT | PARMRK);
         mode.c_cc[VMIN] = 1;
@@ -201,7 +201,7 @@ void TerminalDisplay::setRawInputMode() noexcept
         mode.c_lflag &= ~(ECHO | ECHONL);
         // nonl().
         mode.c_iflag &= ~(ICRNL);
-        // meta(TRUE): receive 8-bit characters.
+        // meta(TRUE): принимать 8-битные символы.
         mode.c_iflag &= ~(ISTRIP);
         mode.c_cflag = (mode.c_cflag & ~CSIZE) | CS8;
         applyTermios(mode);
@@ -218,8 +218,8 @@ void TerminalDisplay::setKeypadMode(bool enable) noexcept
 }
 
 static bool isPadding(TStringView s, size_t &length) noexcept
-// Pre: 's' begins with "$<".
-// Padding specifications look like "$<5>", "$<2.5*>" or "$<10/>".
+// Предусловие: s начинается с "$<". Задержки задаются как "$<5>",
+// "$<2.5*>" или "$<10/>".
 {
     size_t i = 2;
     bool digits = false;
@@ -250,8 +250,8 @@ static std::string stripPadding(TStringView s) noexcept
 }
 
 void TerminalDisplay::putString(TStringView s) noexcept
-// Writes a terminfo string, removing padding specifications (which are
-// only meaningful for very old terminals), like Ncurses' 'tputs()'.
+// Выводит строку terminfo, удаляя спецификации задержек, нужные лишь
+// очень старым терминалам; аналог tputs() в Ncurses.
 {
     size_t begin = 0, i = 0, padLength;
     while (i < s.size())
@@ -315,20 +315,20 @@ void TerminalDisplay::setCaretPosition(TPoint pos) noexcept
 
 void TerminalDisplay::setCaretSize(int size) noexcept
 {
-/* The caret is the keyboard cursor. If size is 0, the caret is hidden. The
- * other possible values are from 1 to 100, theoretically, and represent the
- * percentage of the character cell the caret fills.
- * https://docs.microsoft.com/en-us/windows/console/console-cursor-info-str
- *
- * Terminals support only three levels: invisible (0), normal (1) and
- * very visible (2). They don't make a difference in all terminals, but
- * we can try mapping them to the values requested by Turbo Vision. */
+/*
+ * Текстовый курсор скрыт при размере 0. Теоретически остальные значения
+ * от 1 до 100 задают долю ячейки, занятую курсором:
+ * https://docs.microsoft.com/en-us/windows/console/console-cursor-info-str.
+ * Терминалы поддерживают три уровня: невидимый 0, обычный 1 и хорошо
+ * заметный 2. Не все терминалы различают их, но можно сопоставить им
+ * размеры, запрошенные Turbo Vision.
+ */
     int state = size > 0 ? size == 100 ? 2 : 1 : 0;
     if (state != cursorState)
     {
         const char *cap = state == 0 ? "civis" : state == 1 ? "cnorm" : "cvvis";
-        // Like Ncurses' 'curs_set()', do nothing if the terminal does not
-        // support the requested visibility.
+        // Как curs_set() в Ncurses, ничего не делаем, если терминал не
+        // поддерживает запрошенную видимость.
         if (putCap(cap))
             cursorState = state;
     }
@@ -339,6 +339,6 @@ void TerminalDisplay::flush() noexcept
     ansiScreenWriter.flush();
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

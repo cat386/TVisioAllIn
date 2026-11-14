@@ -147,9 +147,9 @@ TEST(TMenuView, ShouldNotSelectMenuItemOnKeyPress)
     const MenuItemsAndEventQueue inputs[] =
     {
         {   *new TSubMenu("~F~ile", 0) +
-              *new TMenuItem("Exit", cmMenuItemChosen, kbNoKey), // No shortcut.
+              *new TMenuItem("Exit", cmMenuItemChosen, kbNoKey), // Без горячей клавиши.
             {   keyDownEv(kbAltF, kbLeftAlt),
-                keyDownEv(kbNoKey), // No text.
+                keyDownEv(kbNoKey), // Без текста.
             },
         },
     };

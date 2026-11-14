@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       newstr.cpp                                */
+/* файл — newstr.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  newStr member function                    */
+/* функции:  */
+/* Метод newStr. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -23,17 +23,17 @@
 /*                                                                        */
 /*  newStr                                                                */
 /*                                                                        */
-/*  argument:                                                             */
+/* Аргумент: */
 /*                                                                        */
-/*      s       - input string                                            */
+/* s — входная строка. */
 /*                                                                        */
-/*  returns:                                                              */
+/* Возвращает: */
 /*                                                                        */
-/*      If 's' holds a null pointer, also returns a null pointer.         */
-/*      Otherwise, 's.size() + 1' bytes are allocated, containing a       */
-/*      copy of 's' (with a terminating '\0'), and a pointer to the       */
-/*      first byte is returned.                                           */
-/*      The returned string can be disposed of using 'delete[]'.          */
+/* Если s содержит нулевой указатель, возвращает нулевой указатель. */
+/* Иначе выделяет s.size() + 1 байтов с */
+/* копией s и завершающим '\0', возвращая указатель */
+/* на первый байт. */
+/* Возвращённую строку можно освободить через delete[]. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 

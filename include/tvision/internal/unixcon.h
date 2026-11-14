@@ -29,8 +29,8 @@ class UnixConsoleAdapter final : public ConsoleAdapter
 
 public:
 
-    // The lifetime of 'con' and 'displayBuf' must exceed that of the returned object.
-    // Takes ownership over 'inputState', 'display' and 'input'.
+    // con и displayBuf должны существовать дольше возвращаемого объекта.
+    // Забирает владение inputState, display и input.
     static UnixConsoleAdapter &create( ConsoleCtl &con,
                                        DisplayBuffer &displayBuf,
                                        InputState &inputState,
@@ -43,7 +43,7 @@ public:
     bool requestClipboardText(void (&)(TStringView)) noexcept override;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX
 

@@ -15,8 +15,8 @@ enum { UTF8_ACCEPT = 0, UTF8_REJECT = 12 };
 
 static const uint8_t utf8d[] =
 {
-    // The first part of the table maps bytes to character classes that
-    // to reduce the size of the transition table and create bitmasks.
+    // Первая часть таблицы сопоставляет байты классам символов, уменьшая
+    // таблицу переходов и позволяя строить битовые маски.
      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -26,8 +26,8 @@ static const uint8_t utf8d[] =
      8,8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,  2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
     10,3,3,3,3,3,3,3,3,3,3,3,3,4,3,3, 11,6,6,6,5,8,8,8,8,8,8,8,8,8,8,8,
 
-    // The second part is a transition table that maps a combination
-    // of a state of the automaton and a character class to a state.
+    // Вторая часть — таблица переходов, сопоставляющая состоянию автомата и
+    // классу символа новое состояние.
      0,12,24,36,60,96,84,12,12,12,48,72, 12,12,12,12,12,12,12,12,12,12,12,12,
     12, 0,12,12,12,12,12, 0,12, 0,12,12, 12,24,12,12,12,12,12,24,12,24,12,12,
     12,12,12,12,12,12,12,24,12,12,12,12, 12,24,12,12,12,12,12,12,12,24,12,12,
@@ -57,9 +57,9 @@ uint32_t decode_utf8(uint32_t* state, uint8_t byte) noexcept
 }
 
 static int mbtowc(uint32_t &wc, TStringView text) noexcept
-// Pre: text.size() > 0.
-// Returns n >= 1 if 'text' begins with a UTF-8 multibyte character that's
-// 'n' bytes long, -1 otherwise.
+// Предусловие: text.size() > 0. Возвращает n >= 1, если text начинается
+// с многобайтового UTF-8-символа длиной n байтов; иначе -1.
+//
 {
     uint32_t state = 0;
     uint32_t codep = 0;
@@ -77,9 +77,9 @@ static int mbtowc(uint32_t &wc, TStringView text) noexcept
 }
 
 static int mblen(TStringView text) noexcept
-// Pre: text.size() > 0.
-// Returns n >= 1 if 'text' begins with a UTF-8 multibyte character that's
-// 'n' bytes long, -1 otherwise.
+// Предусловие: text.size() > 0. Возвращает n >= 1, если text начинается
+// с многобайтового UTF-8-символа длиной n байтов; иначе -1.
+//
 {
     uint32_t state = 0;
     for (size_t i = 0; i < text.size(); ++i)
@@ -98,7 +98,7 @@ static int mblen(TStringView text) noexcept
 struct mbstat_r { int length; int width; };
 
 static mbstat_r mbstat(TStringView text) noexcept
-// Pre: 'text.size() > 0'.
+// Предусловие: text.size() > 0.
 {
     using namespace tvision;
     uint32_t wc;
@@ -109,7 +109,7 @@ static mbstat_r mbstat(TStringView text) noexcept
     return {length, width};
 }
 
-} // namespace ttext
+} // пространство имён ttext
 
 size_t TText::width(TStringView text) noexcept
 {
@@ -174,8 +174,8 @@ size_t TText::prev(TStringView text, size_t index) noexcept
 {
     if (index)
     {
-        // Try reading backwards character by character, until a valid
-        // character is found. This tolerates invalid characters.
+        // Читаем назад посимвольно до корректного символа. Некорректные символы
+        // допускаются.
         size_t lead = min<size_t>(index, 4);
         for (size_t i = 1; i <= lead; ++i)
         {
@@ -193,8 +193,8 @@ bool TText::equalsIgnoreCase(TStringView a, TStringView b) noexcept
     using namespace tvision;
     while (!a.empty() && !b.empty())
     {
-        // Convert the first character in each string to UTF-32.
-        // If the conversion fails, assume the character to be in extended ASCII.
+        // Преобразуем первый символ каждой строки в UTF-32. При ошибке считаем
+        // символ принадлежащим расширенной ASCII.
         uint32_t wcA = 0;
         int lenA;
         if ((lenA = ttext::mbtowc(wcA, a)) == -1)
@@ -211,8 +211,8 @@ bool TText::equalsIgnoreCase(TStringView a, TStringView b) noexcept
             lenB = 1;
         }
 
-        // Convert both characters to lowercase. This is the recommended way
-        // of doing case-insensitive comparison.
+        // Приводим оба символа к нижнему регистру — рекомендуемый способ
+        // сравнения без учёта регистра.
         if ( Platform::charOps.toLower(wcA) !=
              Platform::charOps.toLower(wcB) )
             break;
@@ -228,7 +228,7 @@ char TText::toCodePage(TStringView text) noexcept
 {
     using namespace tvision;
     size_t length = TText::next(text);
-    // ASCII characters must not be converted, let them through.
+    // Символы ASCII не преобразуем, пропускаем без изменений.
     if (length == 1 && (uchar) text[0] <= 0x7F)
         return text[0];
     return CpTranslator::fromUtf8(text.substr(0, length));
@@ -287,14 +287,14 @@ namespace ttext
 {
 
 static inline bool isZeroWidthJoiner(TStringView mbc)
-// We want to avoid printing certain characters which are usually represented
-// differently by different terminal applications or which can combine different
-// characters together, changing the width of a whole string.
+// Не выводим некоторые символы, которые терминальные программы
+// отображают по-разному либо которые объединяют соседние символы, меняя
+// ширину всей строки.
 {
-    return mbc == "\xE2\x80\x8D"; // U+200D ZERO WIDTH JOINER.
+    return mbc == "\xE2\x80\x8D"; // U+200D ZERO WIDTH JOINER — соединитель нулевой ширины.
 }
 
-} // namespace ttext
+} // пространство имён ttext
 
 TText::Lw TText::drawOneImpl( TSpan<TScreenCell> cells, size_t i,
                               TStringView text, size_t j ) noexcept
@@ -308,8 +308,8 @@ TText::Lw TText::drawOneImpl( TSpan<TScreenCell> cells, size_t i,
         {
             if (i < cells.size())
             {
-                // We need to convert control characters here since we
-                // might later try to append combining characters to them.
+                // Здесь нужно преобразовать управляющие символы: позднее к ним могут
+                // добавляться комбинируемые.
                 if (text[j] < ' ' || '\x7F' <= text[j])
                     cells[i].character.initWithMultiByteChar(CpTranslator::toPackedUtf8(text[j]));
                 else
@@ -330,7 +330,7 @@ TText::Lw TText::drawOneImpl( TSpan<TScreenCell> cells, size_t i,
             else if (mb.width == 0)
             {
                 TStringView zwc {&text[j], (size_t) mb.length};
-                // Append to the previous cell, if present.
+                // Добавляем к предыдущей ячейке, если она есть.
                 if (i > 0 && !isZeroWidthJoiner(zwc))
                 {
                     size_t k = i;
@@ -377,7 +377,7 @@ TText::Lw TText::drawOneImpl( TSpan<TScreenCell> cells, size_t i,
         }
         else if (textU32[j] != 0 && width == 0)
         {
-            // Append to the previous cell, if present.
+            // Добавляем к предыдущей ячейке, если она есть.
             if (i > 0 && !isZeroWidthJoiner(textU8))
             {
                 size_t k = i;

@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   SYSTEM.H                                                              */
 /*                                                                         */
-/*   defines the classes THWMouse, TMouse, TEventQueue, TDisplay,          */
-/*   TScreen, and TSystemError                                             */
+/* Определяет классы THWMouse, TMouse, TEventQueue, TDisplay, */
+/* TScreen и TSystemError. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -24,7 +24,7 @@
 #if !defined( __EVENT_CODES )
 #define __EVENT_CODES
 
-/* Event codes */
+/* Коды событий. */
 
 const int evMouseDown = 0x0001;
 const int evMouseUp   = 0x0002;
@@ -35,27 +35,27 @@ const int evKeyDown   = 0x0010;
 const int evCommand   = 0x0100;
 const int evBroadcast = 0x0200;
 
-/* Event masks */
+/* Маски событий. */
 
 const int evNothing   = 0x0000;
 const int evMouse     = 0x002f;
 const int evKeyboard  = 0x0010;
 const int evMessage   = 0xFF00;
 
-/* Mouse button state masks */
+/* Маски состояния кнопок мыши. */
 
 const int mbLeftButton  = 0x01;
 const int mbRightButton = 0x02;
 const int mbMiddleButton= 0x04;
 
-/* Mouse wheel state masks */
+/* Маски состояния колеса мыши. */
 
 const int mwUp      = 0x01;
 const int mwDown    = 0x02;
 const int mwLeft    = 0x04;
 const int mwRight   = 0x08;
 
-/* Mouse event flags */
+/* Флаги событий мыши. */
 
 const int meMouseMoved = 0x01;
 const int meDoubleClick = 0x02;
@@ -69,7 +69,7 @@ const int meTripleClick = 0x04;
 struct MouseEventType
 {
     TPoint where;
-    ushort eventFlags;          // Replacement for doubleClick.
+    ushort eventFlags;          // Замена для doubleClick.
     ushort controlKeyState;
     uchar buttons;
     uchar wheel;
@@ -182,8 +182,8 @@ struct CharScanType
     uchar charCode;
     uchar scanCode;
 #else
-    // Due to the reverse byte order, swap the fields in order to preserve
-    // the aliasing with KeyDownEvent::keyCode.
+    // Из-за обратного порядка байтов меняем поля местами, сохраняя их
+    // наложение на KeyDownEvent::keyCode.
     uchar scanCode;
     uchar charCode;
 #endif
@@ -197,7 +197,7 @@ struct KeyDownEvent
         CharScanType charScan;
         };
     ushort controlKeyState;
-    char text[maxCharSize];     // NOT null-terminated.
+    char text[maxCharSize];     // Без завершающего нулевого символа.
     uchar textLength;
 
     TStringView getText() const;
@@ -227,8 +227,8 @@ struct MessageEvent
         uchar infoByte;
         char infoChar;
 #else
-        // Due to the reverse byte order, add padding at the beginning to
-        // preserve the aliasing with infoPtr.
+        // Из-за обратного порядка байтов добавляем выравнивание в начало,
+        // сохраняя наложение на infoPtr.
         struct { intptr_t  : 8*sizeof(infoPtr) - 32, infoLong : 32; };
         struct { uintptr_t : 8*sizeof(infoPtr) - 16, infoWord : 16; };
         struct { intptr_t  : 8*sizeof(infoPtr) - 16, infoInt  : 16; };

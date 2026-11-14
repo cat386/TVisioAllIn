@@ -39,7 +39,7 @@ const int cmAbout         = 101;
 const int cmNewDirFocused = 102;
 
 #ifdef __BORLANDC__
-// This is merely for aesthetic purposes.
+// Это сделано исключительно для оформления.
 #define sep "\\"
 #else
 #define sep "/"
@@ -53,7 +53,7 @@ public:
         TWindowInit( TWindow::initFrame ),
         TWindow( TRect( 15,8,65,19 ), "Please Wait...", 0 ) {
 
-    flags = 0; // no move, close, grow or zoom
+    flags = 0; // Без перемещения, закрытия, изменения размера и разворачивания.
     options |= ofCentered;
     palette = wpGrayWindow;
     char temp[64];
@@ -138,7 +138,7 @@ TNode *getDirList( const char *path, QuickMessage *qm = 0 ) {
       if (searchRec.attrib & FA_DIREC) {
         os.seekp(0);
         os << path << *sep << searchRec.name << ends;
-        // Strings may become equal when searchPath is full.
+        // Когда searchPath заполнен, строки могут стать одинаковыми.
         if (strcmp(path, searchPath) == 0)
           break;
         qm->setCurrentDir(searchPath);
@@ -404,8 +404,8 @@ void TDirApp::aboutBox( void ) {
 
     aboutBox->insert(
       new TStaticText(TRect(9, 2, 30, 7),
-        "\003Outline Viewer Demo\n\n"       // These strings will be
-        "\003Copyright (c) 1994\n\n"       // The \003 centers the line.
+        "\003Outline Viewer Demo\n\n"       // Эти строки будут
+        "\003Copyright (c) 1994\n\n"       // Последовательность \003 центрирует строку.
         "\003Borland International"
         )
       );

@@ -13,8 +13,8 @@ namespace tvision
 class ConsoleCtl;
 class DisplayAdapter;
 
-// TermColor represents a color that is to be printed to screen
-// using certain ANSI escape sequences.
+// TermColor представляет цвет, выводимый на экран определёнными
+// управляющими последовательностями ANSI.
 
 struct TermColor
 {
@@ -29,8 +29,8 @@ struct TermColor
 
     TermColor() = default;
 
-    // GCC has issues optimizing the initialization of this struct.
-    // So do bit-casting manually.
+    // GCC плохо оптимизирует инициализацию этой структуры, поэтому
+    // переинтерпретируем биты вручную.
 
     TermColor& operator=(uint32_t val) noexcept
     {
@@ -71,7 +71,7 @@ struct TermAttr
     ushort style;
 };
 
-// Terminal quirk flags.
+// Флаги особенностей терминала.
 
 const ushort
     qfBoldIsBright  = 0x0001,
@@ -98,8 +98,8 @@ struct TermCap
                                            DisplayAdapter &display ) noexcept;
 };
 
-// AnsiScreenWriter allows printing characters and color attributes directly
-// to screen using ANSI escape codes.
+// AnsiScreenWriter выводит символы и цветовые атрибуты непосредственно
+// на экран с помощью управляющих последовательностей ANSI.
 
 class AnsiScreenWriter
 {
@@ -146,6 +146,6 @@ public:
     void flush() noexcept;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_ANSIWRIT_H

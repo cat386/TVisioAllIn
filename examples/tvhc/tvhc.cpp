@@ -1,92 +1,92 @@
 /*-----------------------------------------------------------------------*/
 /*                                                                       */
-/*            Turbo Vision Help Compiler Source File                     */
+/* Исходный файл компилятора справки Turbo Vision. */
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
 /* $Copyright: 1994 */
 
-/*===== TVHC ============================================================*/
-/*  Turbo Vision help file compiler documentation.                       */
+/* TVHC. */
+/* Документация компилятора файлов справки Turbo Vision. */
 /*=======================================================================*/
 /*                                                                       */
-/*    Refer to DEMOHELP.TXT for an example of a help source file.        */
+/* Пример исходного файла справки приведён в DEMOHELP.TXT. */
 /*                                                                       */
-/*    This program takes a help script and produces a help file (.H16    */
-/*    or .H32) and a help context file (.H).  The format for the help    */
-/*    file is very simple.  Each context is given a symbolic name        */
-/*    (i.e FileOpen) which is then put in the context file (i.e.         */
-/*    hcFileOpen).  The text following the topic line is put into the    */
-/*    help file.  Since the help file can be resized, some of the text   */
-/*    will need to be wrapped to fit into the window.  If a line of      */
-/*    text is flush left with no preceeding white space, the line will   */
-/*    be wrapped.  All adjacent wrappable lines are wrapped as a         */
-/*    paragraph.  If a line begins with a space it will not be           */
-/*    wrapped. For example, the following is a help topic for a          */
-/*    File|Open menu item.                                               */
+/* Программа читает исходный текст справки и создаёт файл справки .H16 */
+/* или .H32 и файл контекстов .H. Формат файла справки */
+/* очень прост: каждому контексту присваивается символьное имя */
+/* (например, FileOpen), которое помещается в файл контекстов */
+/* (например, hcFileOpen). Текст после заголовка раздела записывается */
+/* в файл справки. Размер окна справки изменяемый, поэтому часть текста */
+/* необходимо переносить по ширине окна. Строка, */
+/* начинающаяся у левого края без пробелов, */
+/* переносится автоматически. Соседние такие строки объединяются */
+/* в один абзац. Строка, начинающаяся с пробела, не */
+/* переносится. Например, следующий раздел справки относится к */
+/* пункту меню File|Open. */
 /*                                                                       */
 /*       |.topic FileOpen                                                */
 /*       |  File|Open                                                    */
 /*       |  ---------                                                    */
-/*       |This menu item will bring up a dialog...                       */
+/* |Этот пункт меню открывает диалог... */
 /*                                                                       */
-/*    The "File|Open" will not be wrapped with the "----" line since     */
-/*    they both begin with a space, but the "This menu..." line will     */
-/*    be wrapped.                                                        */
-/*      The syntax for a ".topic" line is:                               */
+/* Строка «File|Open» не объединяется со строкой «----», поскольку */
+/* обе начинаются с пробела. Строка «Этот пункт меню...» */
+/* будет перенесена по ширине. */
+/* Синтаксис строки .topic: */
 /*                                                                       */
 /*        .topic symbol[=number][, symbol[=number][...]]                 */
 /*                                                                       */
-/*    Note a topic can have multiple symbols that define it so that one  */
-/*    topic can be used by multiple contexts.  The number is optional    */
-/*    and will be the value of the hcXXX context in the context file     */
-/*    Once a number is assigned all following topic symbols will be      */
-/*    assigned numbers in sequence.  For example,                        */
+/* Один раздел может иметь несколько символьных имён, чтобы использоваться */
+/* в разных контекстах. Номер необязателен; */
+/* он задаёт значение hcXXX в файле контекстов. */
+/* После явно заданного номера последующие символьные имена разделов */
+/* нумеруются последовательно. Например, */
 /*                                                                       */
 /*       .topic FileOpen=3, OpenFile, FFileOpen                          */
 /*                                                                       */
-/*    will produce the follwing help context number definitions,         */
+/* создаёт следующие определения номеров контекста: */
 /*                                                                       */
 /*        hcFileOpen  = 3;                                               */
 /*        hcOpenFile  = 4;                                               */
 /*        hcFFileOpen = 5;                                               */
 /*                                                                       */
-/*    When building helpfiles for 16-bit programs, a topic should never  */
-/*    be assigned a number higher than 16379.  In 32-bit programs there  */
-/*    is no such limitation, but it is recommended that the numbers used */
-/*    be kept low for efficiency reasons.                                */
+/* При создании справки для 16-битных программ номер раздела не должен */
+/* превышать 16379. В 32-битных программах такого */
+/* ограничения нет, но для эффективности рекомендуется */
+/* использовать небольшие номера. */
 /*                                                                       */
-/*    Cross references can be imbedded in the text of a help topic which */
-/*    allows the user to quickly access related topics.  The format for  */
-/*    a cross reference is as follows,                                   */
+/* В текст раздела можно вставлять перекрёстные ссылки, позволяющие */
+/* быстро переходить к связанным разделам. Формат */
+/* перекрёстной ссылки: */
 /*                                                                       */
 /*        {text[:alias]}                                                 */
 /*                                                                       */
-/*    The text in the brackets is highlighted by the help viewer.  This  */
-/*    text can be selected by the user and will take the user to the     */
-/*    topic by the name of the text.  Sometimes the text will not be     */
-/*    the same as a topic symbol.  In this case you can use the optional */
-/*    alias syntax.  The symbol you wish to use is placed after the text */
-/*    after a ':'. The following is a paragraph of text using cross      */
-/*    references,                                                        */
+/* Текст в фигурных скобках выделяется в окне справки. Выбрав этот */
+/* текст, пользователь переходит к разделу, */
+/* имя которого совпадает с текстом ссылки. Иногда текст ссылки */
+/* отличается от символьного имени раздела; тогда используется */
+/* необязательный псевдоним alias. Нужное символьное имя указывается после текста */
+/* и двоеточия. Ниже приведён абзац с перекрёстными */
+/* ссылками: */
 /*                                                                       */
-/*      |The {file open dialog:FileOpen} allows you specify which        */
-/*      |file you wish to view.  If it also allow you to navigate        */
-/*      |directories.  To change to a given directory use the            */
-/*      |{change directory dialog:ChDir}.                                */
+/* |{Диалог открытия файла:FileOpen} позволяет указать, */
+/* |какой файл вы хотите просмотреть, а также переходить между */
+/* |каталогами. Чтобы перейти к определённому каталогу, используйте */
+/* |{диалог смены каталога:ChDir}. */
 /*                                                                       */
-/*    To escape '{' characters outside cross references, type them       */
-/*    twice. To escape ':' or '}' characters inside cross references,    */
-/*    also type them twice.                                              */
+/* Чтобы вывести символ '{' вне перекрёстной ссылки, введите его */
+/* дважды. Для вывода ':' или '}' внутри перекрёстной ссылки */
+/* тоже удвойте символ. */
 /*                                                                       */
-/*    The user can tab or use the mouse to select more information about */
-/*    the "file open dialog" or the "change directory dialog". The help  */
-/*    compiler handles forward references so a topic need not be defined */
-/*    before it is referenced.  If a topic is referenced but not         */
-/*    defined, the compiler will give a warning but will still create a  */
-/*    useable help file.  If the undefined reference is used, a message  */
-/*    ("No help available...") will appear in the help window.           */
+/* Пользователь может выбрать ссылку клавишей Tab или мышью, чтобы получить */
+/* сведения о диалоге открытия файла или смены каталога. Компилятор */
+/* справки поддерживает ссылки вперёд: раздел не обязательно определять */
+/* до первого упоминания. Если указанный в ссылке раздел */
+/* не определён, компилятор выдаёт предупреждение, но создаёт */
+/* пригодный для использования файл справки. Переход по неопределённой ссылке */
+/* покажет в окне сообщение «No help available...». */
 /*                                                                       */
-/*    Lines starting with ';' are skipped.                               */
+/* Строки, начинающиеся с ';', пропускаются. */
 /*=======================================================================*/
 
 #define Uses_fpstream
@@ -142,7 +142,7 @@
 #endif // __STDIO_H
 
 /*
- * Help compiler global variables.
+ * Глобальные переменные компилятора справки.
  */
 int           ofs;
 int           bufferSize = 0;
@@ -163,7 +163,7 @@ int           lineCount = 0;
 #endif
 
 
-//======================= File Management ===============================//
+// Управление файлами.
 
 TProtectedStream::TProtectedStream( const char *aFileName, openmode aMode ) :
     fstream( aFileName, aMode )
@@ -175,9 +175,9 @@ TProtectedStream::TProtectedStream( const char *aFileName, openmode aMode ) :
 void error(const char *text);
 void warning(const char *text);
 
-//----- copyPath(dest, src, size) ---------------------------------------//
-//  Safely copies a path or terminates on error.                         //
-//-----------------------------------------------------------------------//
+// copyPath(dest, src, size) безопасно копирует путь или завершает
+// программу при ошибке.
+//
 
 void copyPath( char *dest, const char *src, size_t size )
 {
@@ -189,11 +189,11 @@ void copyPath( char *dest, const char *src, size_t size )
         }
 }
 
-//----- replaceExt(fileName, nExt, force) -------------------------------//
-//  Replace the extension of the given file with the given extension.    //
-//  If an extension already exists Force indicates if it should be       //
-//  replaced anyway.                                                     //
-//-----------------------------------------------------------------------//
+// replaceExt(fileName, nExt, force) заменяет расширение файла заданным.
+// Если расширение уже есть, Force определяет, нужно ли всё равно его
+// заменить.
+//
+//
 
 const char *replaceExt( const char *fileName, const char *nExt, Boolean force )
 {
@@ -214,9 +214,9 @@ const char *replaceExt( const char *fileName, const char *nExt, Boolean force )
         return fileName;
 }
 
-//----- fExist(fileName) ------------------------------------------------/
-//  Returns true if the file exists false otherwise.                     /
-//-----------------------------------------------------------------------/
+// fExist(fileName) возвращает true, если файл существует, иначе false.
+//
+//
 
 Boolean fExists(const char *fileName)
 {
@@ -228,18 +228,18 @@ Boolean fExists(const char *fileName)
         return(True);
 }
 
-//----- isComment(line) -------------------------------------------------//
-//  Checks if line contains a comment.                                   //
-//-----------------------------------------------------------------------//
+// isComment(line) проверяет, содержит ли строка комментарий.
+//
+//
 
 int isComment(const char *line)
 {
     return line[0] == ';';
 }
 
-//----- getLine(s) ------------------------------------------------------//
-//  Returns the next line out of the stream.                             //
-//-----------------------------------------------------------------------//
+// getLine(s) возвращает следующую строку потока.
+//
+//
 
 char *getLine( fstream& s )
 {
@@ -253,13 +253,13 @@ char *getLine( fstream& s )
         if (!lineInBuffer)
             {
             s.getline(line, sizeof(line), '\n');
-            // Remove carriage return at the end of line.
+            // Удаляем возврат каретки в конце строки.
                 {
                 int len = strlen(line);
                 if (len && line[len - 1] == '\r')
                     line[len - 1] = '\0';
                 }
-            // Detect truncation.
+            // Проверяем усечение.
             if ((s.rdstate() & (ios::failbit | ios::eofbit)) == ios::failbit)
                 {
                 if (!isComment(line))
@@ -269,7 +269,7 @@ char *getLine( fstream& s )
                     os << "Line longer than " << (sizeof(line)-1) << " characters.";
                     warning(os.str());
                     }
-                // Read the rest of the line.
+                // Читаем оставшуюся часть строки.
                 do  {
                     char buf[MAXSTRSIZE] = {0};
                     s.clear(s.rdstate() & ~ios::failbit);
@@ -278,14 +278,14 @@ char *getLine( fstream& s )
                 }
             }
         lineInBuffer = False;
-        // Skip line if it is a comment.
+        // Пропускаем строку с комментарием.
         } while (isComment(line));
     return line;
 }
 
-//----- unGetLine(s) ----------------------------------------------------//
-//  Return given line into the stream.                                   //
-//-----------------------------------------------------------------------//
+// unGetLine(s) возвращает заданную строку в поток.
+//
+//
 
 void unGetLine( const char *s )
 {
@@ -294,11 +294,11 @@ void unGetLine( const char *s )
     --lineCount;
 }
 
-//========================= Error routines ==============================//
+// Подпрограммы обработки ошибок.
 
-//----- prntMsg(text) ---------------------------------------------------//
-//  Used by Error and Warning to print the message.                      //
-//-----------------------------------------------------------------------//
+// prntMsg(text) используется функциями Error и Warning для вывода
+// сообщения.
+//
 
 void prntMsg( const char *pref, const char *text )
 {
@@ -310,9 +310,9 @@ void prntMsg( const char *pref, const char *text )
              << text << "\n";
 }
 
-//----- error(text) -----------------------------------------------------//
-//  Used to indicate an error.  Terminates the program                   //
-//-----------------------------------------------------------------------//
+// error(text) сообщает об ошибке и завершает программу.
+//
+//
 
 void error( const char *text )
 {
@@ -320,16 +320,16 @@ void error( const char *text )
     exit(1);
 }
 
-//----- warning(text) ---------------------------------------------------//
-//  Used to indicate an warning.                                         //
-//-----------------------------------------------------------------------//
+// warning(text) сообщает о предупреждении.
+//
+//
 
 void warning( const char *text )
 {
     prntMsg("Warning", text);
 }
 
-//====================== Topic Reference Management =====================//
+// Управление ссылками на разделы.
 
 void disposeFixUps( TFixUp *&p )
 {
@@ -343,13 +343,13 @@ void disposeFixUps( TFixUp *&p )
         }
 }
 
-//----- TRefTable -------------------------------------------------------//
-//  TRefTable is a collection of TReference pointers used as a symbol    //
-//  table. If the topic has not been seen, a forward reference is        //
-//  inserted and a fix-up list is started.  When the topic is seen all   //
-//  forward references are resolved.  If the topic has been seen already //
-//  the value it has is used.                                            //
-//-----------------------------------------------------------------------//
+// TRefTable — коллекция указателей TReference, используемая как таблица
+// символов. Для ещё не встречавшегося раздела вставляется ссылка вперёд
+// и создаётся список исправлений. При появлении раздела все такие ссылки
+// разрешаются. Для уже известного раздела используется его текущее
+// значение.
+//
+//
 
 TRefTable::TRefTable( ccIndex aLimit, ccIndex aDelta ) :
      TSortedCollection( aLimit, aDelta )
@@ -404,9 +404,9 @@ void* TRefTable::keyOf( void *item )
     return(((TReference *)item)->topic);
 }
 
-//----- initRefTable ---------------------------------------------------//
-//  Make sure the reference table is initialized.                       //
-//----------------------------------------------------------------------//
+// initRefTable обеспечивает инициализацию таблицы ссылок.
+//
+//
 
 void initRefTable()
 {
@@ -414,10 +414,10 @@ void initRefTable()
         refTable = new TRefTable(5,5);
 }
 
-//---- RecordReference -------------------------------------------------//
-//  Record a reference to a topic to the given stream.  This routine    //
-//  handles forward references.                                         //
-//----------------------------------------------------------------------//
+// RecordReference записывает ссылку на раздел в заданный поток;
+// поддерживает ссылки вперёд.
+//
+//
 
 void recordReference( const char *topic, opstream& s )
 {
@@ -452,10 +452,10 @@ void doFixUps( TFixUp *p, uint value, iopstream& s )
     s.seekp(pos);
 }
 
-//----- resolveReference -----------------------------------------------//
-//  Resolve a reference to a topic to the given stream.  This function  //
-//  handles forward references.                                         //
-//----------------------------------------------------------------------//
+// resolveReference разрешает ссылку на раздел в заданном потоке;
+// поддерживает ссылки вперёд.
+//
+//
 
 void resolveReference( const char *topic, uint value, iopstream& s )
 {
@@ -478,7 +478,7 @@ void resolveReference( const char *topic, uint value, iopstream& s )
         }
 }
 
-//======================= Help file parser =============================//
+// Разбор файла справки.
 
 void skipWhite( const char *line, int& i )
 {
@@ -502,9 +502,9 @@ void skipToNonWord( const char *line, int& i )
         ++i;
 }
 
-//----- getWord --------------------------------------------------------//
-//   Extract the next word from the given line at offset i.             //
-//----------------------------------------------------------------------//
+// getWord извлекает следующее слово строки начиная со смещения i.
+//
+//
 
 const char *getWord( const char *line, int &i )
 {
@@ -528,9 +528,9 @@ const char *getWord( const char *line, int &i )
     return getword;
 }
 
-//---- topicDefinition -------------------------------------------------//
-//  Extracts the next topic definition from the given line at i.        //
-//----------------------------------------------------------------------//
+// topicDefinition извлекает следующее определение раздела строки начиная
+// с i.
+//
 
 TTopicDefinition::TTopicDefinition( const char *aTopic, uint aValue )
 {
@@ -560,7 +560,7 @@ TTopicDefinition *topicDefinition( const char *line, int& i )
 {
     int j;
     char topic[MAXSTRSIZE], w[MAXSTRSIZE], *endptr;
-    static unsigned helpCounter = 2; //1 is hcDragging
+    static unsigned helpCounter = 2; // 1 соответствует hcDragging.
 
     strnzcpy(topic, getWord(line, i), sizeof(topic));
     if (strlen(topic) == 0)
@@ -600,9 +600,9 @@ TTopicDefinition *topicDefinition( const char *line, int& i )
         }
 }
 
-//---- topicDefinitionList----------------------------------------------//
-//  Extracts a list of topic definitions from the given line at i.      //
-//----------------------------------------------------------------------//
+// topicDefinitionList извлекает список определений разделов строки
+// начиная с i.
+//
 
 TTopicDefinition *topicDefinitionList( const char *line, int &i )
 {
@@ -629,9 +629,9 @@ TTopicDefinition *topicDefinitionList( const char *line, int &i )
     return(topicList);
 }
 
-//---- topicHeader -----------------------------------------------------//
-//  Parse a Topic header                                                //
-//----------------------------------------------------------------------//
+// topicHeader разбирает заголовок раздела.
+//
+//
 
 TTopicDefinition *topicHeader( const char *line )
 {
@@ -748,32 +748,32 @@ void scanForCrossRefs( char *line, int& offset, TCrossRefNode *&xRefs )
             i = 0;
         else
             {
-            ++begPtr; // *begPtr == character after '{'.
+            ++begPtr; // begPtr указывает на символ после '{'.
             i = begPtr - line; // line[i] == *begPtr.
             char *endPtr;
             if ((endPtr = strfnd(begPtr, 0, endXRef)) == 0)
                 error("Unterminated topic reference.");
-            else // *endPtr == '}'.
+            else // endPtr указывает на '}'.
                 {
                 char *aliasPtr = strfnd(begPtr, &endPtr, aliasCh);
-                if ((aliasPtr == 0) || (aliasPtr > endPtr)) // No alias.
+                if ((aliasPtr == 0) || (aliasPtr > endPtr)) // Псевдонима нет.
                     {
                     TStringView xRef(begPtr, endPtr - begPtr);
-                    uchar len = uchar(xRef.size()); // Highlight length matches reference length.
+                    uchar len = uchar(xRef.size()); // Длина выделения совпадает с длиной ссылки.
                     addXRef(xRef, (offset + ofs + i), len, xRefs);
                     }
-                else // *aliasPtr == ':'.
+                else // aliasPtr указывает на ':'.
                     {
                     TStringView xRef(aliasPtr + 1, endPtr - (aliasPtr + 1));
                     uchar len = uchar(aliasPtr - begPtr);
                     addXRef(xRef, (offset + ofs + i), len, xRefs);
-                    strdel(line, aliasPtr - line, endPtr - aliasPtr); // Remove ':'.
-                    endPtr = aliasPtr; // *endPtr == '}'.
+                    strdel(line, aliasPtr - line, endPtr - aliasPtr); // Удаляем ':'.
+                    endPtr = aliasPtr; // endPtr указывает на '}'.
                     }
                 uchar len = uchar(endPtr - begPtr);
                 replaceSpacesWithFF(line, i, len);
-                strdel(line, i + len, 1); // Remove '}'.
-                strdel(line, i - 1, 1); // Remove '{'.
+                strdel(line, i + len, 1); // Удаляем '}'.
+                strdel(line, i - 1, 1); // Удаляем '{'.
                 i = endPtr - line - 2;
                 }
             }
@@ -800,11 +800,11 @@ Boolean isEndParagraph( State state )
         return(False);
 }
 
-//---- readParagraph ----------------------------------------------------//
-// Read a paragraph of the screen.  Returns the paragraph or 0 if the    //
-// paragraph was not found in the given stream.  Searches for cross      //
-// references and updates the xRefs variable.                            //
-//-----------------------------------------------------------------------//
+// readParagraph читает абзац текста экрана. Возвращает абзац либо 0,
+// если в потоке абзац не найден. Находит перекрёстные ссылки и обновляет
+// переменную xRefs.
+//
+//
 
 TParagraph *readParagraph( fstream& textFile, int& offset, TCrossRefNode *&xRefs )
 {
@@ -910,9 +910,9 @@ void recordTopicDefinitions( TTopicDefinition *p, THelpFile& helpFile )
         }
 }
 
-//---- readTopic -------------------------------------------------------//
-// Read a topic from the source file and write it to the help file      //
-//----------------------------------------------------------------------//
+// readTopic читает раздел из исходного файла и записывает в файл
+// справки.
+//
 
 void readTopic( fstream& textFile, THelpFile& helpFile )
 {
@@ -923,7 +923,7 @@ void readTopic( fstream& textFile, THelpFile& helpFile )
     TCrossRef ref;
     TCrossRefNode  *refNode;
 
-    // Get screen command
+    // Получаем команду экрана.
     skipBlankLines(textFile);
     strnzcpy(line, getLine(textFile), sizeof(line));
 
@@ -931,7 +931,7 @@ void readTopic( fstream& textFile, THelpFile& helpFile )
 
     topic = new THelpTopic;
 
-    // read paragraphs
+    // Читаем абзацы.
     xRefs = 0;
     offset = 0;
     p = readParagraph(textFile, offset, xRefs);
@@ -991,9 +991,9 @@ void _FAR doWriteSymbol(void *p, void *p1)
         }
 }
 
-//---- writeSymbFile ---------------------------------------------------//
-// Write the .H file containing all screen titles as constants.         //
-//----------------------------------------------------------------------//
+// writeSymbFile записывает файл .H с заголовками всех экранов в виде
+// констант.
+//
 
 void writeSymbFile( TProtectedStream *symbFile )
 {
@@ -1006,9 +1006,9 @@ void writeSymbFile( TProtectedStream *symbFile )
 
 }
 
-//---- processtext -----------------------------------------------------//
-// Compile the given stream, and output a help file.                    //
-//----------------------------------------------------------------------//
+// processtext компилирует заданный поток и создаёт файл справки.
+//
+//
 
 void processText( TProtectedStream& textFile,
                   iopstream& helpFile,
@@ -1024,10 +1024,10 @@ void processText( TProtectedStream& textFile,
     delete helpRez;
 }
 
-//---- checkOverwrite --------------------------------------------------//
-// Check whether the output file name exists.  If it does, ask whether  //
-// it's ok to overwrite it.                                             //
-//----------------------------------------------------------------------//
+// checkOverwrite проверяет существование выходного файла. Если файл
+// существует, запрашивает разрешение на перезапись.
+//
+//
 
 void checkOverwrite( const char *fName )
 {
@@ -1040,7 +1040,7 @@ void checkOverwrite( const char *fName )
         }
 }
 
-//========================== Program Block ==========================//
+// Основной блок программы.
 
 int main(int argc, char **argv)
 {
@@ -1048,7 +1048,7 @@ int main(int argc, char **argv)
     char symbName[MAXPATH];
     fpstream* helpStrm;
 
-    // Banner messages
+    // Сообщения заставки.
     char initialText[] = "Help Compiler " TARGET "  Version 2.0  Copyright (c) 1994"
                          " Borland International.\n";
     char helpText[] =
@@ -1065,7 +1065,7 @@ int main(int argc, char **argv)
         exit(1);
         }
 
-    //  Calculate file names
+    // Вычисляем имена файлов.
     copyPath(textName, replaceExt(argv[1], ".txt", False), sizeof(textName));
     if (!fExists(textName))
         {

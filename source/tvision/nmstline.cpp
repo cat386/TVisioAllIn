@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmstline.cpp                              */
+/* файл — nmstline.cpp */
 /*                                                            */
-/* defines the streamable name for class TStatusLine          */
+/* Определяет имя сериализуемого класса TStatusLine. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sdesktop.cpp                              */
+/* файл — sdesktop.cpp */
 /*                                                            */
-/* Registeration object for the class TDeskTop                */
+/* Объект регистрации класса TDeskTop. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

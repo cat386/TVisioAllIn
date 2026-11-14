@@ -19,7 +19,7 @@ public:
     ~StderrRedirector();
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX
 

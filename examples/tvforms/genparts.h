@@ -1,6 +1,6 @@
 /*------------------------------------------------------*/
 /*                                                      */
-/*   Turbo Vision Forms Demo                            */
+/* Демонстрация форм Turbo Vision. */
 /*                                                      */
 /*------------------------------------------------------*/
 /*
@@ -11,8 +11,8 @@
  *
  */
 
-// Use GENFORMS.MAK to generate data files for TVFORMS demo
-// (this file is used in GENFORM.CPP).
+// Используйте GENFORMS.MAK для создания файлов данных демонстрации
+// TVFORMS; этот файл используется в GENFORM.CPP.
 
 #if !defined( __GENPARTS_H )
 #define __GENPARTS_H
@@ -56,9 +56,9 @@ const int
     partNumWidth   =   6,
     descrWidth     =  30,
     qtyWidth       =   6,
-    descrLen       = 512;            // Length of text array
+    descrLen       = 512;            // Длина массива текста.
 
-struct TDescrRec // See TMemoData.
+struct TDescrRec // См. TMemoData.
 {
     ushort textLen;
     char textData[descrLen];
@@ -120,11 +120,11 @@ TForm *makeForm()
     TView *c;
     TView *d;
 
-    // Create a form
+    // Создаём форму.
     TRect r(formX1, formY1, formX1 + formWd, formY1 + formHt);
     f =  new TForm(r, "Parts");
 
-    // Create and insert controls into the form }
+    // Создаём и вставляем элементы управления в форму. }
     f->keyWidth = partNumWidth + 2;
     y = 2;
 
@@ -156,7 +156,7 @@ TForm *makeForm()
     r = TRect(labelCol, y - 1, labelCol + strlen("Description") + 1, y);
     f->insert( new TLabel(r, "~D~escription", c));
 
-    // Buttons 
+    // Кнопки.
     y += descrHt + 1;
     x = formWd - 2 * (buttonWd + 2);
     r = TRect(x, y, x + buttonWd, y + 2);
@@ -167,7 +167,7 @@ TForm *makeForm()
 
     f->insert( new TButton(r, "Cancel", cmCancel, bfNormal));
 
-    f->selectNext(False);      // Select first field 
+    f->selectNext(False);      // Выбираем первое поле.
 
     initDescrLengths();
 

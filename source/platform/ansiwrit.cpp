@@ -38,8 +38,8 @@ TermCap TermCap::getDisplayCapabilities( ConsoleCtl &con,
             (void) con;
 #endif // __linux__
             if (getEnv<TStringView>("TERM") == "xterm")
-                // Let's assume all terminals disguising themselves as 'xterm'
-                // support at least 16 colors.
+                // Считаем, что все терминалы, представляющиеся как xterm, поддерживают
+                // минимум 16 цветов.
                 termcap.colors = Indexed16;
         }
     }
@@ -137,8 +137,8 @@ void AnsiScreenWriter::writeCell( TPoint pos, TStringView text, TColorAttr attr,
 {
     buf.reserve(256);
 
-    // Move caret. When the movement is only horizontal, we can use a
-    // shorter sequence.
+    // Перемещаем курсор. Для чисто горизонтального перемещения можно
+    // использовать более короткую последовательность.
     if (pos.y != caretPos.y)
         bufWriteCSI2(pos.y + 1, pos.x + 1, 'H');
     else if (pos.x != caretPos.x)
@@ -163,8 +163,8 @@ void AnsiScreenWriter::flush() noexcept
     buf.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Attribute conversion
+// Преобразование атрибутов.
+//
 
 static void convertColor(TColor, TermColor &, ushort &, const TermCap &, bool) noexcept;
 static char *writeAttributes(const TermAttr &, const TermAttr &, char *) noexcept;
@@ -191,7 +191,7 @@ static inline char *convertAttributes( const TColorAttr &c, TermAttr &lastAttr,
     return p;
 }
 
-// colorconv_r: return value of the color conversion funcions.
+// colorconv_r — возвращаемое значение функций преобразования цвета.
 
 struct alignas(8) colorconv_r
 {
@@ -202,7 +202,7 @@ struct alignas(8) colorconv_r
     colorconv_r() = default;
     colorconv_r(TermColor aColor, ushort aExtraFlags = 0) noexcept
     {
-        // Optimization: do bit-casting manually, just like with TermColor.
+        // Оптимизация: переинтерпретируем биты вручную, как в TermColor.
         uint64_t val = aColor | (uint64_t(aExtraFlags) << 32);
 #ifdef TV_BIG_ENDIAN
         reverseBytes(val);
@@ -218,7 +218,7 @@ static colorconv_r convertIndexed16(TColor, const TermCap &, bool) noexcept;
 static colorconv_r convertIndexed256(TColor, const TermCap &, bool) noexcept;
 static colorconv_r convertDirect(TColor, const TermCap &, bool) noexcept;
 
-// C++ doesn't allow creating an array of noexcept function pointers directly...
+// C++ не позволяет напрямую создать массив указателей на функции noexcept.
 struct ColorConverter
 {
     colorconv_r (&apply) (TColor, const TermCap &, bool) noexcept;
@@ -250,8 +250,8 @@ static inline void push(char *&p, TStringView text) noexcept
 
 static inline void push(char *&p, bool b, const char *s1, const char *s2) noexcept
 {
-    // Use the ternary on the invocation and not on the argument because
-    // some compilers are unable to optimize out strlen and memcpy otherwise.
+    // Применяем тернарный оператор к вызову, а не к аргументу: иначе
+    // некоторые компиляторы не исключают strlen и memcpy при оптимизации.
     b ? push(p, s1) : push(p, s2);
 }
 
@@ -308,8 +308,8 @@ static inline void splitSGR(char *&p)
 
 static char *writeColor(TermColor color, bool isFg, char *p) noexcept
 {
-    // RGB and XTerm256 colors get a separate SGR sequence because some
-    // terminal emulators may otherwise have trouble processing them.
+    // Для RGB и XTerm256 используются отдельные последовательности SGR,
+    // иначе некоторые эмуляторы терминала обрабатывают их неправильно.
     switch (color.type)
     {
         case TermColor::Default:
@@ -353,12 +353,12 @@ static char *writeColor(TermColor color, bool isFg, char *p) noexcept
     return p;
 }
 
-// Color conversion functions
+// Функции преобразования цветов.
 
 static colorconv_r convertNoColor(TColor color, const TermCap &, bool isFg) noexcept
 {
     colorconv_r cnv {{TermColor::NoColor}};
-    // Mimic the mono palettes with styles.
+    // Воспроизводим монохромные палитры с помощью стилей.
     if (color.isBIOS())
     {
         auto bios = color.asBIOS();
@@ -446,4 +446,4 @@ static colorconv_r convertDirect( TColor color, const TermCap &termcap,
     return convertIndexed256(color, termcap, isFg);
 }
 
-} // namespace tvision
+} // пространство имён tvision

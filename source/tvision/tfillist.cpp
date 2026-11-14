@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tfillist.cpp                              */
+/* файл — tfillist.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TFileList member functions                */
+/* функции:  */
+/* Методы TFileList */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -146,7 +146,7 @@ struct DirSearchRec : public TSearchRec
 void *DirSearchRec::operator new( size_t sz )
 {
     void *temp = ::operator new( sz );
-#ifdef __BORLANDC__ // Would work anyway, but it's unnecessary.
+#ifdef __BORLANDC__ // Работало бы и так, но это не нужно.
     if( TVMemMgr::safetyPoolExhausted() )
         {
         delete temp;
@@ -213,8 +213,8 @@ void TFileList::readDirectory( TStringView aWildCard )
             fnmerge( path, drive, dir, "..", 0 );
             if( findfirst( path, &s, FA_DIREC ) == 0 )
                 {
-                strcpy( s.ff_name, ".." ); // findfirst returns the actual
-                p->readFf_blk(&s);         // directory name.
+                strcpy( s.ff_name, ".." ); // findfirst возвращает фактическое
+                p->readFf_blk(&s);         // имя каталога.
                 }
             else
                 {
@@ -240,17 +240,17 @@ void TFileList::readDirectory( TStringView aWildCard )
 }
 
 /*
-    fexpand:    reimplementation of pascal's FExpand routine.  Takes a
-                relative DOS path and makes an absolute path of the form
-
-                    drive:\[subdir\ ...]filename.ext
-
-                works with '/' or '\' as the subdir separator on input;
-                changes all to '\' on output.
-
-                expands '~/' into the home directory on non-DOS.
-
-*/
+ * fexpand — новая реализация Pascal FExpand. Преобразует относительный
+ * путь DOS в абсолютный вида drive:\[subdir\ ...]filename.ext. На входе
+ * допускает '/' и '\', на выходе заменяет разделители на '\'. Вне DOS
+ * раскрывает '~/' в домашний каталог.
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 #pragma warn -inl
 
@@ -270,28 +270,28 @@ void squeeze( char *path ) noexcept
     while( *src != 0 )
         {
         if( last == '\\' )
-            skip( src, '\\' );  // skip repeated '\'
+            skip( src, '\\' );  // Пропускаем повторные '\'.
         if( (!last || last == '\\') && *src == '.' )
             {
             src++;
-            if( !*src || *src == '\\' ) // have a '.' or '.\'
+            if( !*src || *src == '\\' ) // Обнаружено '.' или '.\'.
                 skip( src, '\\' );
             else if( *src == '.' && (!src[1] || src[1] == '\\'))
-                {               // have a '..' or '..\'
-                src++;          // skip the following '.'
+                {               // Обнаружено '..' или '..\'.
+                src++;          // Пропускаем следующую точку.
                 skip( src, '\\' );
-                dest--;         // back up to the previous '\'
-                while( dest > path && *--dest != '\\' ) // back up to the previous '\'
+                dest--;         // Возвращаемся к предыдущей '\'.
+                while( dest > path && *--dest != '\\' ) // Возвращаемся к предыдущей '\'.
                     ;
-                dest++;         // move to the next position
+                dest++;         // Переходим к следующей позиции.
                 }
             else
-                last = *dest++ = src[-1]; // copy the '.' we just skipped
+                last = *dest++ = src[-1]; // Копируем только что пропущенную точку.
             }
         else
-            last = *dest++ = *src++;   // just copy it...
+            last = *dest++ = *src++;   // Просто копируем.
         }
-    *dest = EOS;                // zero terminator
+    *dest = EOS;                // Завершающий нулевой символ.
 }
 
 static inline int isSep( char c )
@@ -373,7 +373,7 @@ void fexpand( char *rpath, const char *relativeTo ) noexcept
         };
 
     int drv;
-    // Prioritize drive letter in 'rpath'.
+    // Буква диска в rpath имеет приоритет.
     if( (drv = getPathDrive(rpath)) == -1 &&
         (drv = getPathDrive(relativeTo)) == -1 )
         drv = getdisk();
@@ -385,11 +385,11 @@ void fexpand( char *rpath, const char *relativeTo ) noexcept
     if( (flags & DIRECTORY) == 0 || !isSep(fn.dir[0]) )
         {
         char rbase[MAXPATH];
-        if( isHomeExpand(fn.dir) && getHomeDir(fn.drive, rbase) ) // Home expansion. Overwrite drive if necessary.
-            strnzcat( rbase, fn.dir+1, MAXDIR ); // 'dir' begins with "~/" or "~\", so we can reuse the separator.
+        if( isHomeExpand(fn.dir) && getHomeDir(fn.drive, rbase) ) // Раскрываем домашний каталог, при необходимости заменяя диск.
+            strnzcat( rbase, fn.dir+1, MAXDIR ); // dir начинается с "~/" или "~\", поэтому разделитель можно использовать повторно.
         else
             {
-            // If 'rpath' is relative but contains a drive letter, just swap drives.
+            // Если rpath относительный, но содержит букву диска, только меняем диск.
             if( getPathDrive(rpath) != -1 )
                 {
                 if( getcurdir( drv + 1, rbase ) != 0 )
@@ -397,7 +397,7 @@ void fexpand( char *rpath, const char *relativeTo ) noexcept
                 }
             else
                 {
-                // Expand 'relativeTo'.
+                // Раскрываем relativeTo.
                 strnzcpy( rbase, relativeTo, MAXPATH );
                 if( !isAbsolute(rbase) )
                     {
@@ -405,11 +405,11 @@ void fexpand( char *rpath, const char *relativeTo ) noexcept
                     getCurDir( curpath, drv );
                     fexpand( rbase, curpath );
                     }
-                // Skip drive letter in 'rbase'.
+                // Пропускаем букву диска в rbase.
                 if( getPathDrive(rbase) != -1 )
                     memmove( rbase, rbase+2, strlen(rbase+2)+1 );
                 }
-            // Ensure 'rbase' ends with a separator.
+            // rbase должен заканчиваться разделителем.
             addFinalSep( rbase, MAXPATH );
             strnzcat( rbase, fn.dir, MAXDIR );
             }

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       soutline.cpp                              */
+/* файл — soutline.cpp */
 /*                                                            */
-/* Registeration object for the class TOutline                */
+/* Объект регистрации класса TOutline. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tvexposd.cpp                              */
+/* файл — tvexposd.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TView exposed member function             */
+/* функции:  */
+/* Метод TView::exposed. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmdirbox.cpp                              */
+/* файл — nmdirbox.cpp */
 /*                                                            */
-/* defines the streamable name for class TDirListBox          */
+/* Определяет имя сериализуемого класса TDirListBox. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

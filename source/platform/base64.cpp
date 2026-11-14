@@ -3,7 +3,7 @@
 namespace tvision
 {
 
-// Based on the base64 decoder by polfosol and Gaspard Petit:
+// Основано на декодере base64 авторов polfosol и Gaspard Petit:
 // https://github.com/gaspardpetit/base64/blob/21943915e99b45600c30a33f0299f4abc47e63db/src/polfosol/polfosol.h
 
 static constexpr char b64e[] =
@@ -96,4 +96,4 @@ TStringView decodeBase64(TStringView input, char *aOutput) noexcept
     return {aOutput, j};
 }
 
-} // namespace tvision
+} // пространство имён tvision

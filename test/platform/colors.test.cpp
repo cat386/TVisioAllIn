@@ -17,8 +17,8 @@
 
 TEST(Colors, StructsShouldHaveTheExpectedTrivialityAlignmentAndSize)
 {
-    // Use 'alignof(type)' rather than hardcoding the alignment values,
-    // given that they may vary among systems.
+    // Используем alignof(type) вместо фиксированных значений выравнивания,
+    // зависящих от системы.
     check_trivial_copy_size_align(TColor, 4, alignof(uint32_t));
     check_trivial_copy_size_align(TColorBIOS, 1, alignof(uint8_t));
     check_trivial_copy_size_align(TColorRGB, 4, alignof(uint32_t));
@@ -62,7 +62,7 @@ TEST(TColorRGB, IntegerConversionTruncatesHighBits) {
     EXPECT_EQ(rgb.getRed(), 0xBB);
     EXPECT_EQ(rgb.getGreen(), 0xCC);
     EXPECT_EQ(rgb.getBlue(), 0xDD);
-    // Only the lower 24 bits are used.
+    // Используются только младшие 24 бита.
     EXPECT_EQ(static_cast<uint32_t>(rgb), 0xBBCCDDU);
 }
 
@@ -101,7 +101,7 @@ TEST(TColorBIOS, ConstructorWithValues) {
 
 TEST(TColorBIOS, IntegerConversionTruncatesHighBits) {
     constexpr TColorBIOS bios(0xAB);
-    // Only the lower 4 bits are used.
+    // Используются только младшие четыре бита.
     EXPECT_EQ(static_cast<uint8_t>(bios), 0x0BU);
 }
 
@@ -138,11 +138,11 @@ TEST(TColorXTerm, ConstructorWithIndex) {
 TEST(TColorConversion, BIOStoXTerm16) {
     static constexpr TestCase<TColorBIOS, TColorXTerm> testCases[] =
     {
-        {0x0, 0},  // Black
-        {0x1, 4},  // Blue
-        {0x4, 1},  // Red
-        {0x8, 8},  // Bright black (dark gray)
-        {0xF, 15}, // White
+        {0x0, 0},  // Чёрный.
+        {0x1, 4},  // Синий.
+        {0x4, 1},  // Красный.
+        {0x8, 8},  // Яркий чёрный, то есть тёмно-серый.
+        {0xF, 15}, // Белый.
     };
 
     for (auto &testCase : testCases)
@@ -155,11 +155,11 @@ TEST(TColorConversion, BIOStoXTerm16) {
 TEST(TColorConversion, XTerm16toBIOS) {
     static constexpr TestCase<TColorXTerm, TColorBIOS> testCases[] =
     {
-        {0,  0x0}, // Black
-        {1,  0x4}, // Blue
-        {4,  0x1}, // Red
-        {8,  0x8}, // Bright black (dark gray)
-        {15, 0xF}, // White
+        {0,  0x0}, // Чёрный.
+        {1,  0x4}, // Синий.
+        {4,  0x1}, // Красный.
+        {8,  0x8}, // Яркий чёрный, то есть тёмно-серый.
+        {15, 0xF}, // Белый.
     };
 
     for (auto &testCase : testCases)
@@ -172,18 +172,18 @@ TEST(TColorConversion, XTerm16toBIOS) {
 TEST(TColorConversion, XTerm256toRGB) {
     static constexpr TestCase<TColorXTerm, TColorRGB> testCases[] =
     {
-        {16,  0x000000}, // "Grey0" (first entry of the 6×6×6 cube)
-        {17,  0x00005F}, // "NavyBlue" (second cube entry)
+        {16,  0x000000}, // Grey0 — первый элемент куба 6×6×6.
+        {17,  0x00005F}, // NavyBlue — второй элемент куба.
         {21,  0x0000FF}, // "Blue1"
         {46,  0x00FF00}, // "Green1"
         {59,  0x5F5F5F}, // "Grey37"
         {110, 0x87AFD7}, // "LightSkyBlue3"
         {196, 0xFF0000}, // "Red1"
         {208, 0xFF8700}, // "DarkOrange"
-        {231, 0xFFFFFF}, // "Grey100" (last entry of the cube)
-        {232, 0x080808}, // "Grey3" (first entry of the grayscale ramp)
-        {240, 0x585858}, // "Grey35" (mid-point of the grayscale ramp)
-        {255, 0xEEEEEE}, // "Grey93" (last entry of the grayscale ramp)
+        {231, 0xFFFFFF}, // Grey100 — последний элемент куба.
+        {232, 0x080808}, // Grey3 — первый элемент шкалы серого.
+        {240, 0x585858}, // Grey35 — середина шкалы серого.
+        {255, 0xEEEEEE}, // Grey93 — последний элемент шкалы серого.
     };
 
     for (auto &testCase : testCases)
@@ -196,16 +196,16 @@ TEST(TColorConversion, XTerm256toRGB) {
 TEST(TColorConversion, XTerm256toXTerm16) {
     static constexpr TestCase<TColorXTerm, TColorXTerm> testCases[] =
     {
-        {21,  12}, // "Grey93"   (#0000FF)
-        {46,  10}, // "Green1"   (#00FF00)
-        {51,  14}, // "Cyan1"    (#00FFFF)
-        {59,   8}, // "Grey37"   (#5F5F5F)
-        {196,  9}, // "Red1"     (#FF0000)
-        {201, 13}, // "Magenta1" (#FF00FF)
-        {226, 11}, // "Yellow1"  (#FFFF00)
-        {231, 15}, // "Grey100"  (#FFFFFF)
-        {232,  0}, // "Grey3"    (#080808)
-        {244,  8}, // "Grey50"   (#808080)
+        {21,  12}, // Grey93 (#0000FF)
+        {46,  10}, // Green1 (#00FF00)
+        {51,  14}, // Cyan1 (#00FFFF)
+        {59,   8}, // Grey37 (#5F5F5F)
+        {196,  9}, // Red1 (#FF0000)
+        {201, 13}, // Magenta1 (#FF00FF)
+        {226, 11}, // Yellow1 (#FFFF00)
+        {231, 15}, // Grey100 (#FFFFFF)
+        {232,  0}, // Grey3 (#080808)
+        {244,  8}, // Grey50 (#808080)
     };
 
     for (auto &testCase : testCases)
@@ -218,18 +218,18 @@ TEST(TColorConversion, XTerm256toXTerm16) {
 TEST(TColorConversion, RGBtoXTerm256) {
     static constexpr TestCase<TColorRGB, TColorXTerm> testCases[] =
     {
-        {0x000000,  16}, // "Grey0" (first entry of the 6×6×6 cube)
-        {0x00005F,  17}, // "NavyBlue" (second cube entry)
+        {0x000000,  16}, // Grey0 — первый элемент куба 6×6×6.
+        {0x00005F,  17}, // NavyBlue — второй элемент куба.
         {0x0000FF,  21}, // "Blue1"
         {0x00FF00,  46}, // "Green1"
         {0x5F5F5F,  59}, // "Grey37"
         {0x87AFD7, 110}, // "LightSkyBlue3"
         {0xFF0000, 196}, // "Red1"
         {0xFF8700, 208}, // "DarkOrange"
-        {0xFFFFFF, 231}, // "Grey100" (last entry of the cube)
-        {0x080808, 232}, // "Grey3" (first entry of the grayscale ramp)
-        {0x585858, 240}, // "Grey35" (mid-point of the grayscale ramp)
-        {0xEEEEEE, 255}, // "Grey93" (last entry of the grayscale ramp)
+        {0xFFFFFF, 231}, // Grey100 — последний элемент куба.
+        {0x080808, 232}, // Grey3 — первый элемент шкалы серого.
+        {0x585858, 240}, // Grey35 — середина шкалы серого.
+        {0xEEEEEE, 255}, // Grey93 — последний элемент шкалы серого.
     };
 
     for (auto &testCase : testCases)
@@ -242,23 +242,23 @@ TEST(TColorConversion, RGBtoXTerm256) {
 TEST(TColorConversion, RGBtoXTerm16) {
     static constexpr TestCase<TColorRGB, TColorXTerm> testCases[] =
     {
-        {0x800000,  1}, // Red
-        {0x008000,  2}, // Green
-        {0x808000,  3}, // Olive → Dark yellow
-        {0x000080,  4}, // Blue
-        {0x800080,  5}, // Magenta
-        {0x008080,  6}, // Cyan
-        {0x804000,  3}, // Brown → Dark yellow
-        {0xFF0000,  9}, // Bright red
-        {0x00FF00, 10}, // Bright green
-        {0xFFFF00, 11}, // Bright yellow
-        {0x0000FF, 12}, // Bright blue
-        {0xFF00FF, 13}, // Bright magenta
-        {0x00FFFF, 14}, // Bright cyan
-        {0x000000,  0}, // Black
-        {0x404040,  8}, // Bright black (dark gray)
-        {0xC0C0C0,  7}, // Gray
-        {0xFFFFFF, 15}, // White
+        {0x800000,  1}, // Красный.
+        {0x008000,  2}, // Зелёный.
+        {0x808000,  3}, // Оливковый → тёмно-жёлтый.
+        {0x000080,  4}, // Синий.
+        {0x800080,  5}, // Пурпурный.
+        {0x008080,  6}, // Бирюзовый.
+        {0x804000,  3}, // Коричневый → тёмно-жёлтый.
+        {0xFF0000,  9}, // Ярко-красный.
+        {0x00FF00, 10}, // Ярко-зелёный.
+        {0xFFFF00, 11}, // Ярко-жёлтый.
+        {0x0000FF, 12}, // Ярко-синий.
+        {0xFF00FF, 13}, // Ярко-пурпурный.
+        {0x00FFFF, 14}, // Ярко-бирюзовый.
+        {0x000000,  0}, // Чёрный.
+        {0x404040,  8}, // Яркий чёрный, то есть тёмно-серый.
+        {0xC0C0C0,  7}, // Серый.
+        {0xFFFFFF, 15}, // Белый.
     };
 
     for (auto &testCase : testCases)
@@ -328,9 +328,9 @@ TEST(TColor, ConstructorFromTColorXTerm) {
 TEST(TColor, ToBIOSConversion) {
     static constexpr TestCase<TColor, TColorBIOS> testCases[] =
     {
-        {TColorBIOS(0x7), TColorBIOS(0x7)}, // Gray
-        {TColorRGB(0xEBDB34), TColorBIOS(0xE)}, // Yellow
-        {TColorXTerm(201), TColorBIOS(0xD)}, // Magenta
+        {TColorBIOS(0x7), TColorBIOS(0x7)}, // Серый.
+        {TColorRGB(0xEBDB34), TColorBIOS(0xE)}, // Жёлтый.
+        {TColorXTerm(201), TColorBIOS(0xD)}, // Пурпурный.
     };
 
     for (auto &testCase : testCases)
@@ -343,8 +343,8 @@ TEST(TColor, ToBIOSConversion) {
 TEST(TColor, DefaultToBIOSConversion) {
     constexpr TColor def;
 
-    EXPECT_EQ(def.toBIOS(true), TColorBIOS(0x7)); // Foreground: gray.
-    EXPECT_EQ(def.toBIOS(false), TColorBIOS(0x0)); // Blackground: black.
+    EXPECT_EQ(def.toBIOS(true), TColorBIOS(0x7)); // Текст: серый.
+    EXPECT_EQ(def.toBIOS(false), TColorBIOS(0x0)); // Фон: чёрный.
 }
 
 TEST(TColor, EqualityOperator) {
@@ -359,14 +359,14 @@ TEST(TColor, EqualityOperator) {
 TEST(TColor, DifferentTypesNotEqual) {
     constexpr TColor bios('\x0');
     constexpr TColor rgb(0x000000);
-    // Different internal representation even if visually similar.
+    // Разное внутреннее представление, несмотря на внешнее сходство.
     EXPECT_NE(bios, rgb);
 }
 
 // TColorAttr
 
 TEST(TColorAttr, DefaultInitialization) {
-    // Zero-initialized should have default colors and no style.
+    // После обнуления должны быть цвета по умолчанию и отсутствие стиля.
     TColorAttr attr {};
 
     EXPECT_EQ(attr.getForeground().isDefault(), true);
@@ -383,7 +383,7 @@ TEST(TColorAttr, ZeroInitializationEqualsDefaultInitialization) {
 }
 
 TEST(TColorAttr, ConstructorFromBIOSInt) {
-    constexpr TColorAttr attr(0x3D); // foreground = 0xD, background = 0x3
+    constexpr TColorAttr attr(0x3D); // Цвет текста = 0xD, цвет фона = 0x3.
 
     EXPECT_EQ(attr.getForeground().isBIOS(), true);
     EXPECT_EQ(attr.getForeground().asBIOS(), TColorBIOS(0xD));
@@ -465,9 +465,9 @@ TEST(TColorAttr, ToBIOS) {
     constexpr TColorAttr rgbAttr(0xFF0000, 0x000080);
     constexpr TColorAttr attrWithStyle('\x7', '\xF', slBold);
 
-    EXPECT_EQ(biosAttr.toBIOS(), 0xF7); // Same as operator uchar() for pure BIOS attrs.
-    EXPECT_EQ(rgbAttr.toBIOS(), 0x1C); // Quantized: bright red fg, blue bg.
-    EXPECT_EQ(attrWithStyle.toBIOS(), 0xF7); // Style flags are ignored.
+    EXPECT_EQ(biosAttr.toBIOS(), 0xF7); // Как operator uchar() для чистых атрибутов BIOS.
+    EXPECT_EQ(rgbAttr.toBIOS(), 0x1C); // После квантования: ярко-красный текст на синем фоне.
+    EXPECT_EQ(attrWithStyle.toBIOS(), 0xF7); // Флаги стиля игнорируются.
 }
 
 TEST(TColorAttr, LeftShiftOperator) {
@@ -503,7 +503,7 @@ TEST(TAttrPair, ConstructorWithDefaultHigh) {
     constexpr TAttrPair pair(low);
 
     EXPECT_EQ(pair[0], low);
-    EXPECT_EQ(pair[1], TColorBIOS(0x00)); // high defaults to TColorAttr(0) = BIOS color attribute 0x00
+    EXPECT_EQ(pair[1], TColorBIOS(0x00)); // high по умолчанию равен TColorAttr(0), то есть атрибуту BIOS 0x00.
 }
 
 TEST(TAttrPair, UShortConversion) {

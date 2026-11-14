@@ -298,5 +298,5 @@ class TCombo : public TInputLine
     void handleEvent(TEvent &event) override;
     Boolean valid(ushort command) override;
 };
-} // namespace tvision
+} // пространство имён tvision
 #endif

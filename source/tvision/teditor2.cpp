@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename - teditor2.cpp                                    */
+/* файл — teditor2.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*            TEditor member functions                        */
+/* функции:  */
+/* Методы TEditor */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -70,7 +70,7 @@ static inline int isWordChar( char ch )
 
 TEditor::LineEndingType TEditor::detectLineEndingType()
 {
-    // Detect the line ending type based on the first line break.
+    // Определяем тип конца строки по первому переводу строки.
     for( uint p = 0; p < bufLen; ++p )
         if( bufChar(p) == '\r' )
             {
@@ -100,8 +100,8 @@ void TEditor::initBuffer()
 }
 
 TMenuItem& TEditor::initContextMenu( TPoint )
-// The TPoint parameter is the right-click position in global coordinates, near
-// which the context menu will be located.
+// Параметр TPoint задаёт глобальные координаты правого щелчка, рядом с
+// которыми появится контекстное меню.
 {
     return
         *new TMenuItem( "Cu~t~", cmCut, kbShiftDel, hcNoContext, "Shift-Del" ) +
@@ -129,7 +129,7 @@ uint TEditor::lengthWithConvertedLineEndings( const char *p, uint length )
             {
             newLength += lineEndingLength;
             if( p[i] == '\r' && i + 1 < length && p[i + 1] == '\n' )
-                ++i; // Skip LF after CR.
+                ++i; // Пропускаем LF после CR.
             }
         else
             ++newLength;
@@ -150,7 +150,7 @@ void TEditor::copyAndConvertLineEndings( char *dest, const char *src, uint srcLe
             if( lineEnding.size() > 1 )
                 *dest++ = lineEnding[1];
             if( c == '\r' && src < srcEnd - 1 && *(src + 1) == '\n' )
-                ++src; // Skip LF after CR.
+                ++src; // Пропускаем LF после CR.
             }
         else
             *dest++ = c;
@@ -309,7 +309,7 @@ void TEditor::newLine()
            ( (buffer[i] == ' ') || (buffer[i] == '\x9'))
          )
          i++;
-    // Line break will be automatically converted to the right type.
+    // Конец строки автоматически преобразуется к нужному типу.
     insertText( "\n", 1, False );
     if( autoIndent == True )
         insertText( &buffer[p], i - p, False);

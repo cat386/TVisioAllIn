@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   HELPBASE.H                                                            */
 /*                                                                         */
-/*   defines the classes TParagraph, TCrossRef, THelpTopic, THelpIndex,    */
+/* Определяет классы TParagraph, TCrossRef, THelpTopic, THelpIndex, */
 /*      THelpFile                                                          */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/

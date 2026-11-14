@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tmnuview.cpp                              */
+/* файл — tmnuview.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TMenuView member functions                */
+/* функции:  */
+/* Методы TMenuView */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -202,21 +202,21 @@ ushort TMenuView::execute()
                 if( mouseInView(e.mouse.where) || mouseInOwner(e) )
                     {
                     trackMouse(e, mouseActive);
-                    // autoSelect makes it possible to open the selected submenu directly
-                    // on a MouseDown event. This should be avoided, however, when said
-                    // submenu was just closed by clicking on its name, or when this is
-                    // not a menu bar.
+                    // autoSelect позволяет открыть выбранное подменю непосредственно при
+                    // MouseDown. Этого нельзя делать, если подменю только что закрыли
+                    // щелчком по имени либо это не строка меню.
+                    //
                     if( size.y == 1 )
                         autoSelect = (Boolean) (!current || lastTargetItem != current);
-                    // A submenu will close if the MouseDown event takes place on the
-                    // parent menu, except when this submenu has just been opened.
+                    // MouseDown в родительском меню закрывает подменю, кроме только что
+                    // открытого.
                     else if( !firstEvent && mouseInOwner(e) )
                         action = doReturn;
                     }
                 else
                     {
-                    // Menu gets closed by a click outside its bounds.
-                    // Let the event reach the view recovering focus.
+                    // Щелчок вне меню закрывает его. Передаём событие представлению,
+                    // восстанавливающему фокус.
                     if( putClickEventOnExit )
                         putEvent(e);
                     action =  doReturn;
@@ -233,15 +233,15 @@ ushort TMenuView::execute()
                         if ( current != lastTargetItem )
                             action = doSelect;
                         else if ( size.y == 1 )
-                        // If a menu bar entry was closed, exit and stop listening
-                        // for events.
+                        // Если пункт строки меню закрыт, выходим и прекращаем слушать события.
+                        //
                             action = doReturn;
                         else
-                        // MouseUp won't open up a submenu that was just closed by clicking
-                        // on its name.
+                        // MouseUp не открывает подменю, только что закрытое щелчком по имени.
+                        //
                             {
                             action = doNothing;
-                            // But the next one will.
+                            // Но следующее откроет.
                             lastTargetItem = 0;
                             }
                         }
@@ -249,10 +249,10 @@ ushort TMenuView::execute()
                 else if ( mouseActive && !mouseInView(e.mouse.where) )
                     action = doReturn;
                 else if ( size.y != 1 )
-                // When MouseUp happens inside the Box but not on a highlightable entry
-                // (e.g. on a margin, or a separator), either the default or the first
-                // entry will be automatically highlighted. This was added in Turbo Vision 2.0.
-                // But this doesn't make sense in a menu bar, which was the original behaviour.
+                // Если MouseUp внутри меню, но не на выделяемом пункте, например на поле
+                // или разделителе, автоматически выделяется пункт по умолчанию либо
+                // первый. Это добавлено в Turbo Vision 2.0, но не имеет смысла для
+                // строки меню, где прежде тоже действовало.
                     {
                     current = menu->deflt;
                     if (current == 0)
@@ -267,9 +267,9 @@ ushort TMenuView::execute()
                     if( !(mouseInView(e.mouse.where) || mouseInOwner(e)) &&
                         mouseInMenus(e) )
                         action = doReturn;
-                    // A menu bar entry closed by clicking on its name stays highlighted
-                    // until MouseUp. If mouse drag is then performed and a different
-                    // entry is selected, it will open up automatically.
+                    // Закрытый щелчком по имени пункт строки меню остаётся выделенным до
+                    // MouseUp. Если затем перетаскиванием выбрать другой пункт, тот
+                    // откроется автоматически.
                     else if ( size.y == 1 && mouseActive && current != lastTargetItem )
                         autoSelect = True;
                     }
@@ -353,9 +353,9 @@ ushort TMenuView::execute()
                 break;
             }
 
-        // If a submenu was closed by clicking on its name, and the mouse is dragged
-        // to another menu entry, then the submenu will be opened the next time it
-        // is hovered over.
+        // Если подменю закрыто щелчком по имени, а мышь перетащена на другой
+        // пункт, подменю откроется при следующем наведении.
+        //
         if( lastTargetItem != current )
             lastTargetItem = 0;
 
@@ -436,10 +436,10 @@ TMenuItem *TMenuView::findItem( TStringView ch )
 TMenuItem *TMenuView::findAltShortcut( const KeyDownEvent &keyDown )
 {
     TMenuItem *p = 0;
-    // First, try to find a menu item that matches the KeyDownEvent's text.
+    // Сначала ищем пункт, соответствующий тексту KeyDownEvent.
     if( !keyDown.getText().empty() )
         p = findItem( getAltCharStr(keyDown) );
-    // If no match was found, try matching using the KeyDownEvent's key code.
+    // Если не найден, ищем по коду клавиши KeyDownEvent.
     if( p == 0 )
         p = findItem( getAltChar(keyDown.keyCode) );
     return p;

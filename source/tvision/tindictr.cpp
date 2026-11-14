@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename - tindictr.cpp                                    */
+/* файл — tindictr.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*            TIndicator member functions                     */
+/* функции:  */
+/* Методы TIndicator */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

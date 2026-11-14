@@ -2,7 +2,7 @@
 /*                                                          */
 /*   Copyright (c) 1991 by Borland International            */
 /*                                                          */
-/*   Turbo Vision TVEDIT header file                        */
+/* Заголовочный файл TVEDIT для Turbo Vision. */
 /*                                                          */
 /*----------------------------------------------------------*/
 /*

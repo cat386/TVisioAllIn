@@ -19,9 +19,9 @@ namespace tvision
 class TerminalDisplay;
 class TermInfo;
 
-// Key codes, with the same values as in Ncurses. Key codes are returned
-// by 'TerminalInputGetter::get' for the key sequences described by the
-// terminfo database.
+// Коды клавиш совпадают со значениями Ncurses. TerminalInputGetter::get
+// возвращает их для последовательностей, описанных в базе terminfo.
+//
 
 namespace termkeys
 {
@@ -60,13 +60,13 @@ enum : int
     KEY_SRIGHT      = 0622,
     KEY_SUSPEND     = 0627,
     KEY_MOUSE       = 0631,
-    // User-defined key capabilities get the codes KEY_MAX, KEY_MAX + 1...
+    // Пользовательские возможности клавиатуры получают коды KEY_MAX, KEY_MAX + 1 и далее.
     KEY_MAX         = 0777,
 };
 
-} // namespace termkeys
+} // пространство имён termkeys
 
-// KeyTrie maps key sequences to key codes.
+// KeyTrie сопоставляет последовательности клавиш их кодам.
 
 class KeyTrie
 {
@@ -87,44 +87,44 @@ public:
 
     KeyTrie() noexcept;
 
-    // Navigation. Node indices are non-negative; -1 means 'none'.
+    // Навигация. Индексы узлов неотрицательны; -1 означает отсутствие узла.
     int root() const noexcept { return nodes[0].child; }
     int sibling(int node) const noexcept { return nodes[node].sibling; }
     int child(int node) const noexcept { return nodes[node].child; }
     int value(int node) const noexcept { return nodes[node].value; }
     uchar ch(int node) const noexcept { return nodes[node].ch; }
 
-    // Same semantics as Ncurses' '_nc_add_to_try()': if 'seq' is already
-    // present, its value is replaced. A byte '\200' in 'seq' stands for '\0'.
-    // 'value' must be positive.
+    // Поведение как у _nc_add_to_try() в Ncurses: если seq уже существует,
+    // значение заменяется. Байт '\200' в seq обозначает '\0'. value должен
+    // быть положительным.
     void insert(TStringView seq, int value) noexcept;
 
-    // Same semantics as Ncurses' 'key_defined()': returns 0 if 'seq' is not
-    // defined, -1 if it is a prefix of other sequences, or otherwise the
-    // value associated to it.
+    // Поведение как у key_defined() в Ncurses: 0, если seq не определена;
+    // -1, если она является префиксом других последовательностей; иначе
+    // связанное с ней значение.
     int keyDefined(TStringView seq) const noexcept;
 };
 
-// Reads input from the terminal in the same way as Ncurses' 'wgetch()' does
-// in keypad mode: it returns either single bytes or, when it receives one of
-// the key sequences described by the terminfo database, a key code.
+// Читает ввод аналогично wgetch() в Ncurses при включённом режиме
+// клавиатуры: возвращает отдельные байты либо код клавиши при получении
+// последовательности из terminfo. Как в Ncurses, unget возвращает байт
+// или код в начало очереди ввода; возвращённые байты вновь участвуют в
+// распознавании последовательностей.
 //
-// Like in Ncurses, 'unget' puts back a byte or key code at the front of the
-// input queue, and bytes put back are subject to key sequence recognition
-// again.
+//
 
 class TerminalInputGetter final : public InputGetter
 {
     enum { rawBufSize = 1024, fifoSize = 256 };
-    enum { mouseIntervalMs = 166 }; // Like Ncurses' 'mouseinterval()'.
+    enum { mouseIntervalMs = 166 }; // Аналог mouseinterval() из Ncurses.
 
     int fd;
     const KeyTrie &keyTrie;
     int escDelayMs;
-    // Bytes read from the terminal and not yet processed.
+    // Байты, прочитанные из терминала, но ещё не обработанные.
     size_t rawBegin {0}, rawEnd {0};
     uchar rawBuf[rawBufSize];
-    // Input queue (bytes and key codes), like Ncurses' FIFO.
+    // Очередь байтов и кодов клавиш, аналогичная FIFO в Ncurses.
     int fifo[fifoSize];
     size_t fifoHead {0}, fifoCount {0}, fifoPeek {0};
 
@@ -139,7 +139,7 @@ class TerminalInputGetter final : public InputGetter
 
 public:
 
-    // Timeout used by 'get()'.
+    // Таймаут, используемый get().
     int timeoutMs;
 
     TerminalInputGetter(int aFd, const KeyTrie &aKeyTrie, int aEscDelayMs, int aTimeoutMs) noexcept :
@@ -150,15 +150,15 @@ public:
     {
     }
 
-    // Returns the next byte or key code, or -1 if no input is received
-    // within 'ms' milliseconds (0: do not wait; negative: wait indefinitely).
+    // Возвращает следующий байт или код клавиши либо -1, если за ms миллисекунд ввода
+    // нет. 0 означает не ждать, отрицательное значение — ждать неограниченно.
     int get(int ms) noexcept;
 
     int get() noexcept override;
     void unget(int k) noexcept override;
 
-    // Whether there is input that has already been read from the terminal
-    // but has not been consumed yet.
+    // Есть ли уже прочитанные из терминала, но ещё не использованные данные.
+    //
     bool hasPending() const noexcept;
 };
 
@@ -184,27 +184,27 @@ class TerminalInput final : public InputAdapter
 
 public:
 
-    // Lifetimes of 'con', 'display' and 'state' must exceed that of 'this'.
+    // con, display и state должны существовать дольше this.
     TerminalInput(ConsoleCtl &con, TerminalDisplay &display, InputState &state, bool mouse) noexcept;
     ~TerminalInput();
 
     bool getEvent(TEvent &ev) noexcept override;
     bool hasPendingEvents() noexcept override;
 
-    // Builds the table of key sequences described by the terminfo database,
-    // in the same way as Ncurses. Standard key capabilities are mapped to
-    // their Ncurses key codes. User-defined key capabilities (such as 'kDC5')
-    // are mapped to 'KEY_MAX + n', where 'n' is their index among the
-    // user-defined string capabilities, which are listed in 'extNames'.
+    // Строит таблицу последовательностей клавиш из terminfo аналогично
+    // Ncurses. Стандартным возможностям назначаются коды клавиш Ncurses.
+    // Пользовательским, например kDC5, назначаются KEY_MAX + n, где n —
+    // индекс среди пользовательских строковых возможностей из extNames.
+    //
     static void buildKeyTable( const TermInfo &termInfo, KeyTrie &keyTrie,
                                std::vector<const char *> &extNames ) noexcept;
 
-    // Translates a key code into a key event, or returns an empty event if
-    // the key is not supported by Turbo Vision.
+    // Преобразует код клавиши в событие клавиатуры либо возвращает пустое
+    // событие, если клавиша не поддерживается Turbo Vision.
     static KeyDownEvent keyFromCode(int code, const std::vector<const char *> &extNames) noexcept;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX
 

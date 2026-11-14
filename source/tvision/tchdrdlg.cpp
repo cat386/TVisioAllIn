@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tchdrdlg.cpp                              */
+/* файл — tchdrdlg.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*          TChDirDialog member functions                     */
+/* функции:  */
+/* Методы TChDirDialog */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -122,7 +122,7 @@ static void getCurrentDir( char *dir )
 {
     getCurDir( dir );
 #if defined( _TV_UNIX )
-    // Remove drive letter.
+    // Удаляем букву диска.
     memmove(dir, dir + 2, strlen(dir) - 2 + 1);
 #endif
 }

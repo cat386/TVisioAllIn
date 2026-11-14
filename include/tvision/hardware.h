@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   HARDWARE.H                                                            */
 /*                                                                         */
-/*   defines the class THardwareInfo                                       */
+/* Определяет класс THardwareInfo */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -63,14 +63,14 @@ public:
 
     static PlatformType getPlatform() noexcept;
 
-// Caret functions.
+// Методы Caret
 
     static void setCaretSize( ushort size ) noexcept;
     static ushort getCaretSize() noexcept;
     static void setCaretPosition( ushort x, ushort y ) noexcept;
     static BOOL isCaretVisible() noexcept;
 
-// Screen functions.
+// Методы Screen
 
     static ushort getScreenRows() noexcept;
     static ushort getScreenCols() noexcept;
@@ -88,13 +88,13 @@ public:
     static void setUpConsole() noexcept;
     static void restoreConsole() noexcept;
 
-// Mouse functions.
+// Методы Mouse
 
     static DWORD getButtonCount() noexcept;
     static void cursorOn() noexcept;
     static void cursorOff() noexcept;
 
-// Event functions.
+// Методы Event
 
     static BOOL getMouseEvent( MouseEventType& event ) noexcept;
     static BOOL getKeyEvent( TEvent& event ) noexcept;
@@ -104,7 +104,7 @@ public:
     static BOOL setClipboardText( TStringView text ) noexcept;
     static BOOL requestClipboardText( void (&accept)( TStringView ) ) noexcept;
 
-// System functions.
+// Методы System
 
     static BOOL setCtrlBrkHandler( BOOL install ) noexcept;
     static BOOL setCritErrorHandler( BOOL install ) noexcept;
@@ -144,13 +144,13 @@ private:
     static uchar getBiosVideoInfo();
     static void setBiosVideoInfo( uchar info );
     static ushort getBiosEquipmentFlag();
-    static ushort huge getBiosEquipmentFlag(int);   // Non-inline version.
+    static ushort huge getBiosEquipmentFlag(int);   // Версия без inline.
     static void setBiosEquipmentFlag( ushort flag );
     static Boolean getDPMIFlag();
 
 private:
 
-    static ushort huge getBiosSelector();   // For SYSINT.ASM.
+    static ushort huge getBiosSelector();   // Для SYSINT.ASM.
 
     static Boolean dpmiFlag;
     static ushort colorSel;
@@ -169,7 +169,7 @@ inline THardwareInfo::PlatformType THardwareInfo::getPlatform() noexcept
 }
 
 #ifdef __BORLANDC__
-// Caret functions.
+// Методы Caret
 
 inline ushort THardwareInfo::getCaretSize() noexcept
 {
@@ -182,7 +182,7 @@ inline BOOL THardwareInfo::isCaretVisible() noexcept
 }
 
 
-// Screen functions.
+// Методы Screen
 
 inline ushort THardwareInfo::getScreenRows() noexcept
 {
@@ -216,12 +216,12 @@ inline TScreenCell *THardwareInfo::allocateScreenBuffer() noexcept
     GetConsoleScreenBufferInfo( consoleHandle[cnOutput], &sbInfo );
     short x = sbInfo.dwSize.X, y = sbInfo.dwSize.Y;
 
-    if( x < 80 )        // Make sure we allocate at least enough for
-        x = 80;         //   a 80x50 screen.
+    if( x < 80 )        // Выделяем достаточно памяти хотя бы для
+        x = 80;         // экрана размером 80×50.
     if( y < 50 )
         y = 50;
 
-    // This is actually a CHAR_INFO *.
+    // Фактически это CHAR_INFO *.
     return (TScreenCell *) VirtualAlloc( 0, x * y * sizeof(CHAR_INFO), MEM_COMMIT, PAGE_READWRITE );
 }
 
@@ -231,7 +231,7 @@ inline void THardwareInfo::freeScreenBuffer( TScreenCell *buffer ) noexcept
 }
 
 
-// Mouse functions.
+// Методы Mouse
 
 inline DWORD THardwareInfo::getButtonCount()
 {
@@ -252,7 +252,7 @@ inline void THardwareInfo::cursorOff()
 #endif // __BORLANDC__
 
 
-// Event functions.
+// Методы Event
 
 inline void THardwareInfo::clearPendingEvent() noexcept
 {
@@ -260,7 +260,7 @@ inline void THardwareInfo::clearPendingEvent() noexcept
 }
 
 
-// System functions.
+// Методы System
 
 inline BOOL THardwareInfo::setCtrlBrkHandler( BOOL install ) noexcept
 {
@@ -275,7 +275,7 @@ inline BOOL THardwareInfo::setCtrlBrkHandler( BOOL install ) noexcept
 inline BOOL THardwareInfo::setCritErrorHandler( BOOL install ) noexcept
 {
     (void) install;
-    return TRUE;        // Handled by NT or DPMI32..
+    return TRUE;        // Обрабатывается NT или DPMI32.
 }
 
 

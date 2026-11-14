@@ -2,15 +2,15 @@
 /*                                                                         */
 /*   SURFACE.H                                                             */
 /*                                                                         */
-/*   Defines the classes TDrawSurface and TSurfaceView.                    */
+/* Определяет классы TDrawSurface и TSurfaceView. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
 #if defined( Uses_TDrawSurface ) && !defined( __TDrawSurface )
 #define __TDrawSurface
 
-// A TDrawSurface holds a two-dimensional buffer of TScreenCells
-// that can be freely written to.
+// TDrawSurface содержит двумерный буфер TScreenCell, доступный для
+// произвольной записи.
 
 class TDrawSurface
 {
@@ -30,7 +30,7 @@ public:
     void grow(TPoint aDelta);
     void clear();
 
-    // Warning: no bounds checking.
+    // Внимание: границы не проверяются.
     TScreenCell _FAR &at(int y, int x);
     const TScreenCell _FAR &at(int y, int x) const;
 
@@ -54,21 +54,21 @@ inline const TScreenCell _FAR &TDrawSurface::at(int y, int x) const
 #endif
 
 /* ---------------------------------------------------------------------- */
-/*      class TSurfaceView                                                */
+/* класс TSurfaceView */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Empty area                                                  */
+/* Структура палитры */
+/* 1 = Пустая область */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TSurfaceView ) && !defined( __TSurfaceView )
 #define __TSurfaceView
 
-// A TSurfaceView displays a region of a TDrawSurface between 'delta' and
-// '{delta.x + size.x, delta.y + size.y}'.
-// Out-of-bounds areas (or the whole view if 'surface' is null) are
-// displayed as whitespaces.
+// TSurfaceView отображает область TDrawSurface от delta до {delta.x +
+// size.x, delta.y + size.y}. Области вне границ, либо всё представление
+// при нулевом surface, заполняются пробелами.
+//
 
-// The "empty area" color maps to TWindow's and TDialog's "frame passive" color.
+// Цвет пустой области соответствует цвету неактивной рамки TWindow и TDialog.
 
 class TSurfaceView : public TView
 {

@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   VALIDATE.H                                                            */
 /*                                                                         */
-/*   defines the classes TValidator, TPXPictureValidator, TRangeValidator, */
-/*   TFilterValidator, TLookupValidator, and TStringLookupValidator.       */
+/* Определяет классы TValidator, TPXPictureValidator, TRangeValidator, */
+/* TFilterValidator, TLookupValidator и TStringLookupValidator. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -17,24 +17,24 @@
 #if defined(Uses_TValidator) && !defined(__TValidator)
 #define __TValidator
 
-// TValidator Status constants
+// Константы состояния TValidator.
 
 static const int
   vsOk     =  0,
-  vsSyntax =  1,      // Error in the syntax of either a TPXPictureValidator
-                      // or a TDBPictureValidator
+  vsSyntax =  1,      // Ошибка синтаксиса TPXPictureValidator или TDBPictureValidator.
+                      //
 
-// Validator option flags
+// Флаги параметров валидатора.
   voFill     =  0x0001,
   voTransfer =  0x0002,
   voReserved =  0x00FC;
 
-// TVTransfer constants
+// Константы TVTransfer.
 
 
 enum TVTransfer {vtDataSize, vtSetData, vtGetData};
 
-// Abstract TValidator object
+// Абстрактный объект TValidator.
 
 
 class TValidator : public TObject, public TStreamable
@@ -69,7 +69,7 @@ public:
 #if defined(Uses_TPXPictureValidator) && !defined(__TPXPictureValidator)
 #define __TPXPictureValidator
 
-// TPXPictureValidator result type
+// Тип результата TPXPictureValidator.
 
 enum TPicResult {prComplete, prIncomplete, prEmpty, prError, prSyntax,
     prAmbiguous, prIncompNoFill};

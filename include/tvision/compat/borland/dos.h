@@ -1,9 +1,9 @@
-/*  dos.h
-
-    Defines structs, unions, macros, and functions for dealing
-    with MSDOS and the Intel iAPX86 microprocessor family.
-
-*/
+/*
+ * dos.h определяет структуры, объединения, макросы и функции для работы
+ * с MS-DOS и семейством микропроцессоров Intel iAPX86.
+ *
+ *
+ */
 /*
  *      C/C++ Run Time Library - Version 6.0
  *
@@ -37,23 +37,23 @@
 #include <errno.h>
 #include <stdint.h>
 
-#define FA_NORMAL   0x00        /* Normal file, no attributes */
-#define FA_RDONLY   0x01        /* Read only attribute */
-#define FA_HIDDEN   0x02        /* Hidden file */
-#define FA_SYSTEM   0x04        /* System file */
-#define FA_LABEL    0x08        /* Volume label */
-#define FA_DIREC    0x10        /* Directory */
-#define FA_ARCH     0x20        /* Archive */
+#define FA_NORMAL   0x00        /* Обычный файл без атрибутов. */
+#define FA_RDONLY   0x01        /* Атрибут «только чтение». */
+#define FA_HIDDEN   0x02        /* Скрытый файл. */
+#define FA_SYSTEM   0x04        /* Системный файл. */
+#define FA_LABEL    0x08        /* Метка тома. */
+#define FA_DIREC    0x10        /* Каталог. */
+#define FA_ARCH     0x20        /* Архивный атрибут. */
 
-/* MSC names for file attributes */
+/* Имена атрибутов файлов в MSC. */
 
-#define _A_NORMAL   0x00        /* Normal file, no attributes */
-#define _A_RDONLY   0x01        /* Read only attribute */
-#define _A_HIDDEN   0x02        /* Hidden file */
-#define _A_SYSTEM   0x04        /* System file */
-#define _A_VOLID    0x08        /* Volume label */
-#define _A_SUBDIR   0x10        /* Directory */
-#define _A_ARCH     0x20        /* Archive */
+#define _A_NORMAL   0x00        /* Обычный файл без атрибутов. */
+#define _A_RDONLY   0x01        /* Атрибут «только чтение». */
+#define _A_HIDDEN   0x02        /* Скрытый файл. */
+#define _A_SYSTEM   0x04        /* Системный файл. */
+#define _A_VOLID    0x08        /* Метка тома. */
+#define _A_SUBDIR   0x10        /* Каталог. */
+#define _A_ARCH     0x20        /* Архивный атрибут. */
 
 #ifndef _FFBLK_DEF
 #define _FFBLK_DEF
@@ -67,14 +67,14 @@ struct  ffblk   {
 };
 #endif  /* __FFBLK_DEF */
 
-/* The MSC find_t structure corresponds exactly to the ffblk structure */
+/* Структура MSC find_t в точности соответствует ffblk. */
 struct  find_t {
     int32_t         reserved;
-    int32_t         size;              /* size of file */
-    uint32_t        attrib;            /* attribute byte for matched file */
-    unsigned short  wr_time;           /* time of last write to file */
-    unsigned short  wr_date;           /* date of last write to file */
-    char            name[256];         /* asciiz name of matched file */
+    int32_t         size;              /* Размер файла. */
+    uint32_t        attrib;            /* Байт атрибутов найденного файла. */
+    unsigned short  wr_time;           /* Время последней записи в файл. */
+    unsigned short  wr_date;           /* Дата последней записи в файл. */
+    char            name[256];         /* Имя найденного файла с завершающим нулём. */
 };
 
 #include <stdio.h> // SEEK_SET, SEEK_CUR, SEEK_END

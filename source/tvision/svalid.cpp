@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       svalid.cpp                                */
+/* файл — svalid.cpp */
 /*                                                            */
-/* Registeration object for the TValidator classes            */
+/* Объект регистрации классов TValidator. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

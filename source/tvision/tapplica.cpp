@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------------*/
-/* filename -       tapplica.cpp                                     */
+/* файл — tapplica.cpp */
 /*                                                                   */
-/* function(s)                                                       */
-/*          TApplication member functions (constructor & destructor) */
+/* функции:  */
+/* Методы TApplication: конструктор и деструктор. */
 /*-------------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -30,13 +30,13 @@ void doneHistory();
 
 TAppInit::TAppInit() noexcept
 {
-    // Initialize the subsystems needed for the application to work when first
-    // constructing a TApplication object.
+    // При первом создании TApplication инициализирует подсистемы приложения.
+    // Раньше они инициализировались статически при запуске, что мешало
+    // программам без консоли или терминала, например TVHC, и вызывало
+    // проблемы порядка статической инициализации.
     //
-    // Originally, they were initialized statically at program startup,
-    // but that caused issues for applications that might be executed without
-    // a console or terminal (e.g., TVHC), and it could also lead to problems
-    // related to static initialization order.
+    //
+    //
     static THardwareInfo hwInfoManager;
     static TMouse tms;
     static TScreen tsc;

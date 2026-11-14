@@ -1,6 +1,6 @@
 /*----------------------------------------------------------*/
 /*                                                          */
-/*   Turbo Vision TVDEMO source file                        */
+/* Исходный файл TVDEMO для Turbo Vision. */
 /*                                                          */
 /*----------------------------------------------------------*/
 /*
@@ -46,13 +46,13 @@
 #define HELP_FILENAME "demohelp.h16"
 #endif
 
+// main создаёт объект приложения. Конструктор выполняет инициализацию.
+// Вызов run() из TProgram запускает цикл обработки событий, а деструктор
+// освобождает все объекты. Имена файлов можно передать в командной
+// строке для автоматического открытия.
 //
-// main: create an application object.  Constructor takes care of all
-//   initialization.  Calling run() from TProgram makes it tick and
-//   the destructor will destroy the world.
 //
-//   File names can be specified on the command line for automatic
-//   opening.
+//
 //
 
 int main(int argc, char **argv)
@@ -66,10 +66,10 @@ int main(int argc, char **argv)
 }
 
 
+// Конструктор приложения. Параметры командной строки трактуются как
+// имена файлов и открываются. Разрешены маски: для них открывается
+// диалог с соответствующим путём поиска.
 //
-// Constructor for the application.  Command line parameters are interpreted
-//   as file names and opened.  Wildcards are accepted and put up a dialog
-//   box with the appropriate search path.
 //
 
 TVDemo::TVDemo( int argc, char **argv ) :
@@ -81,20 +81,20 @@ TVDemo::TVDemo( int argc, char **argv ) :
     char fileSpec[128];
     int len;
 
-    TRect r = getExtent();                      // Create the clock view.
+    TRect r = getExtent();                      // Создаём представление часов.
     r.a.x = r.b.x - 9;      r.b.y = r.a.y + 1;
     clock = new TClockView( r );
     clock->growMode = gfGrowLoX | gfGrowHiX;
     insert(clock);
 
-    r = getExtent();                            // Create the heap view.
+    r = getExtent();                            // Создаём представление памяти.
     r.a.x = r.b.x - 13;     r.a.y = r.b.y - 1;
     heap = new THeapView( r );
     heap->growMode = gfGrowAll;
     insert(heap);
 
-    while (--argc > 0)                              // Display files specified
-        {                                           //  on command line.
+    while (--argc > 0)                              // Показываем файлы, указанные
+        {                                           // в командной строке.
         strcpy( fileSpec, *++argv );
         len = strlen( fileSpec );
         if( fileSpec[len-1] == '\\' || fileSpec[len-1] == '/' )
@@ -112,9 +112,9 @@ TVDemo::TVDemo( int argc, char **argv ) :
 }
 
 
+// DemoApp::getEvent() — цикл проверки запросов контекстной справки.
 //
-// DemoApp::getEvent()
-//  Event loop to check for context help request
+//
 //
 
 void TVDemo::getEvent(TEvent &event)
@@ -165,8 +165,8 @@ void TVDemo::getEvent(TEvent &event)
 
 }  
 
+// Создаём строку состояния.
 //
-// Create statusline.
 //
 
 TStatusLine *TVDemo::initStatusLine( TRect r )
@@ -191,8 +191,8 @@ TStatusLine *TVDemo::initStatusLine( TRect r )
 }
 
 
+// Функция головоломки.
 //
-// Puzzle function
 //
 
 void TVDemo::puzzle()
@@ -207,8 +207,8 @@ void TVDemo::puzzle()
 }
 
 
+// retrieveDesktop() восстанавливает ранее сохранённый рабочий стол.
 //
-// retrieveDesktop() function ( restores the previously stored Desktop )
 //
 
 void TVDemo::retrieveDesktop()
@@ -230,8 +230,8 @@ void TVDemo::retrieveDesktop()
         }
 }
 
+// saveDesktop() сохраняет рабочий стол, вызывая storeDesktop.
 //
-// saveDesktop() function ( saves the DeskTop by calling storeDesktop function )
 //
 
 void TVDemo::saveDesktop()
@@ -252,8 +252,8 @@ void TVDemo::saveDesktop()
     delete f;
 }
 
+// writeView() записывает объект представления в файл ресурсов.
 //
-// writeView() function ( writes a view object to a resource file )
 //
 
 static void writeView(TView *p, void *strm)
@@ -263,8 +263,8 @@ static void writeView(TView *p, void *strm)
       *s << p;
 }
 
+// storeDesktop() сохраняет рабочий стол в файле ресурсов.
 //
-// storeDesktop() function ( stores the Desktop in a resource file )
 //
 
 void TVDemo::storeDesktop(fpstream& s)

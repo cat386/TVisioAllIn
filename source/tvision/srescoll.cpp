@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------*/
-/* filename -           srescoll.cpp                            */
+/* файл — srescoll.cpp */
 /*                                                              */
-/* Registeration object for the class TResourceCollection       */
+/* Объект регистрации класса TResourceCollection. */
 /*--------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------*/
-/* filename -           trescoll.cpp                            */
+/* файл — trescoll.cpp */
 /*                                                              */
-/* function(s)                                                  */
-/*                      TResourceCollection member functions    */
+/* функции:  */
+/* Методы TResourceCollection */
 /*--------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

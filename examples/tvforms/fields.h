@@ -1,9 +1,9 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Fields.h: Header file for Fields.cpp                */
-/*             (Support header file for TVFORMS Demo)    */
+/* Fields.h — заголовочный файл для Fields.cpp */
+/* Вспомогательный заголовочный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -20,7 +20,7 @@
 #define Uses_TStreamable
 #include <tvision/tv.h>
 
-// Same as TInputLine, except invalid if empty 
+// Как TInputLine, но пустое значение недопустимо.
 
 class TKeyInputLine : public TInputLine
 {
@@ -57,7 +57,7 @@ inline opstream& operator << ( opstream& os, TKeyInputLine* cl )
     { return os << (TStreamable *)cl; }
 
 
-// Accepts only valid numeric input between Min and Max
+// Принимает только корректное число в диапазоне от Min до Max.
 
 class TNumInputLine : public TInputLine
 {

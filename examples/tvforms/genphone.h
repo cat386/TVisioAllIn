@@ -1,6 +1,6 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
 /*-------------------------------------------------------*/
 /*
@@ -11,8 +11,8 @@
  *
  */
 
-// Use GENFORMS.MAK to generate data files for TVFORMS demo
-// (this file is used in GENFORM.CPP).
+// Используйте GENFORMS.MAK для создания файлов данных демонстрации
+// TVFORMS; этот файл используется в GENFORM.CPP.
 
 #if !defined( __GENPHONE_H )
 #define __GENPHONE_H
@@ -118,11 +118,11 @@ TForm *makeForm()
     int x,y;
     TView *control;
 
-    // Create a form
+    // Создаём форму.
     TRect r(formX1, formY1, formX1 + formWd, formY1 + formHt);
     f = new TForm(r, "Phone Numbers");
 
-    // Create and insert controls into the form
+    // Создаём и вставляем элементы управления в форму.
     y = 2;
     f->keyWidth = nameWidth + 2;
     r = TRect(inputCol, y, inputCol + nameWidth + 2, y + 1);
@@ -157,7 +157,7 @@ TForm *makeForm()
     r = TRect(labelCol, y, labelCol + labelWid, y + 1);
     f->insert(new TLabel(r, "~P~hone", control));
 
-    // Checkboxes
+    // Флажки.
     x = inputCol;
     y += 3;
     r = TRect(inputCol, y , inputCol + strlen("Business") + 6, y + 2);
@@ -169,7 +169,7 @@ TForm *makeForm()
     r = TRect(x, y - 1, x + labelWid, y);
     f->insert(new TLabel(r, "~T~ype", control));
 
-    // Radio buttons 
+    // Переключатели.
     x += 15;
     r = TRect(x, y, x + strlen("Female") + 6, y + 2);
 
@@ -180,7 +180,7 @@ TForm *makeForm()
     r = TRect(x, y - 1, x + labelWid, y);
     f->insert(new TLabel(r, "~G~ender", control));
 
-    // Buttons 
+    // Кнопки.
     y += 3;
     x = formWd - 2 * (buttonWd + 2);
     r = TRect(x, y, x + buttonWd, y + 2);
@@ -189,7 +189,7 @@ TForm *makeForm()
     x = formWd - 1 * (buttonWd + 2);
     r = TRect(x, y, x + buttonWd, y + 2);
     f->insert(new TButton(r, "Cancel", cmCancel, bfNormal));
-    f->selectNext(False);      // Select first field 
+    f->selectNext(False);      // Выбираем первое поле.
 
     return f;
 }

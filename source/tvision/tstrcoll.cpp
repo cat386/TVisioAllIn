@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tstrcoll.cpp                              */
+/* файл — tstrcoll.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TStringCollection member functions        */
+/* функции:  */
+/* Методы TStringCollection */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   MSGBOX.H                                                              */
 /*                                                                         */
-/*   defines the functions messageBox(), messageBoxRect(),                 */
-/*   inputBox(), and inputBoxRect()                                        */
+/* Определяет функции messageBox(), messageBoxRect(), */
+/* inputBox() и inputBoxRect(). */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -39,24 +39,24 @@ ushort inputBoxRect( const TRect &bounds, TStringView title,
 
 const int
 
-//  Message box classes
+// Виды окон сообщений.
 
-    mfWarning      = 0x0000,       // Display a Warning box
-    mfError        = 0x0001,       // Display a Error box
-    mfInformation  = 0x0002,       // Display an Information Box
-    mfConfirmation = 0x0003,       // Display a Confirmation Box
+    mfWarning      = 0x0000,       // Показать предупреждение.
+    mfError        = 0x0001,       // Показать ошибку.
+    mfInformation  = 0x0002,       // Показать информацию.
+    mfConfirmation = 0x0003,       // Показать запрос подтверждения.
 
-// Message box button flags
+// Флаги кнопок окна сообщения.
 
-    mfYesButton    = 0x0100,       // Put a Yes button into the dialog
-    mfNoButton     = 0x0200,       // Put a No button into the dialog
-    mfOKButton     = 0x0400,       // Put an OK button into the dialog
-    mfCancelButton = 0x0800,       // Put a Cancel button into the dialog
+    mfYesButton    = 0x0100,       // Добавить в диалог кнопку Yes.
+    mfNoButton     = 0x0200,       // Добавить в диалог кнопку No.
+    mfOKButton     = 0x0400,       // Добавить в диалог кнопку OK.
+    mfCancelButton = 0x0800,       // Добавить в диалог кнопку Cancel.
 
     mfYesNoCancel  = mfYesButton | mfNoButton | mfCancelButton,
-                                    // Standard Yes, No, Cancel dialog
+                                    // Стандартный диалог Yes, No, Cancel.
     mfOKCancel     = mfOKButton | mfCancelButton;
-                                    // Standard OK, Cancel dialog
+                                    // Стандартный диалог OK, Cancel.
 
 class MsgBoxText
 {

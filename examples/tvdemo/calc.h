@@ -1,6 +1,6 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Calc.h: Header file for Calc.cpp                    */
+/* Calc.h — заголовочный файл для Calc.cpp */
 /*                                                       */
 /*-------------------------------------------------------*/
 /*
@@ -18,7 +18,7 @@
 #include <math.h>
 #endif       // __MATH_H
 
-#define DISPLAYLEN  25      // Length (width) of calculator display
+#define DISPLAYLEN  25      // Длина (ширина) дисплея калькулятора.
 
 enum TCalcState { csFirst = 1, csValid, csError };
 
@@ -42,7 +42,7 @@ private:
     TCalcState status;
     char *number;
     char sign;
-    char operate;           // since 'operator' is a reserved word.
+    char operate;           // Поскольку 'operator' — зарезервированное слово.
     double operand;
 
     void calcKey(unsigned char key);

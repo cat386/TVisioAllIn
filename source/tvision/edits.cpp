@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       edits.cpp                                 */
+/* файл — edits.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TEditor member functions                  */
+/* функции:  */
+/* Методы TEditor */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -53,8 +53,8 @@ void TEditor::formatLine( TDrawBuffer &b,
         int nextPos = pos;
         nextCharAndPos(nextP, nextPos);
 
-        // Only break when exceeding 'width', so that combining characters in
-        // the last visible column can be drawn properly.
+        // Останавливаемся только после превышения width, чтобы правильно вывести
+        // комбинируемые символы последнего видимого столбца.
         if (x > width || (x == width && pos < nextPos))
             break;
 
@@ -65,12 +65,12 @@ void TEditor::formatLine( TDrawBuffer &b,
         if (buf[0] == '\r' || buf[0] == '\n')
             break;
 
-        // Only draw text beyond position 'hScroll'.
+        // Выводим только текст после позиции hScroll.
         if (nextPos > hScroll)
         {
             TColorAttr color = getColorAt(P, colors, *this);
-            // If pos < hScroll, we are dealing with an incomplete tabulator or
-            // double-width character which we have to represent as spaces.
+            // При pos < hScroll имеем неполную табуляцию либо широкий символ;
+            // представляем их пробелами.
             int charWidth = nextPos - max(pos, hScroll);
             if (buf[0] == '\t' || pos < hScroll)
                 b.moveChar(x, ' ', color, charWidth);

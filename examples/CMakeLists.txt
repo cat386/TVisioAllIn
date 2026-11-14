@@ -22,8 +22,8 @@ if (TV_BUILD_EXAMPLES)
         tv_add_private_includes(${app})
         tv_set_warnings(${app})
         tv_app_optimize(${app})
-        # Until CMake 3.13, 'install' only accepts targets defined
-        # in the current directory. So install from this function.
+        # До CMake 3.13 команда 'install' принимает только цели текущего
+        # каталога. Поэтому выполняем установку из этой функции.
         if (${app} IN_LIST TVINSTALLAPPS)
             install(TARGETS ${app} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
         endif()

@@ -26,6 +26,6 @@ inline int getEnv<int>(const char* name, int def) noexcept
     return def;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_GETENV_H

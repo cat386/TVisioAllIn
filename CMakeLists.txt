@@ -1,22 +1,22 @@
-# Options summary:
+# Параметры сборки: TV_BUILD_EXAMPLES (по умолчанию ON) — собирать
+# примеры приложений. TV_BUILD_USING_GPM (по умолчанию ON, только Linux)
+# — поддерживать мышь в консоли Linux через сервер GPM; отдельная
+# библиотека не требуется. TV_USE_STATIC_RTL (по умолчанию OFF) —
+# связывать со статической библиотекой времени выполнения, только MSVC.
+# TV_REDUCE_APP_SIZE (по умолчанию OFF) — уменьшать размер исполняемых
+# файлов, удаляя неиспользуемые функции и данные при компоновке; влияет
+# на PUBLIC-флаги компоновки библиотеки. TV_OPTIMIZE_BUILD (по умолчанию
+# ON) — использовать предкомпилированные заголовки, требуется CMake 3.16
+# или новее. TV_LIBRARY_UNITY_BUILD (по умолчанию OFF) — ускорять сборку
+# основной библиотеки за счёт объединения единиц трансляции; требуется
+# CMake 3.16 или новее, размер библиотеки может увеличиться.
+# TV_BUILD_TESTS (по умолчанию OFF) — собирать и запускать тесты.
 #
-# * TV_BUILD_EXAMPLES (default ON) to build example applications.
-# * TV_BUILD_USING_GPM (default ON) (only on linux) to enable mouse support in
-#   the Linux console through the GPM server (no library is required).
-# * TV_USE_STATIC_RTL (default OFF) to link against the static version of the
-#   runtime library (MSVC only).
-# * TV_REDUCE_APP_SIZE (default OFF) to reduce executable size by asking the
-#   linker to strip out unused functions and data. This affects the library's PUBLIC
-#   linker flags.
-# * TV_OPTIMIZE_BUILD (default ON) to build with Precompiled Headers (CMake 3.16
-#   or newer).
-# * TV_LIBRARY_UNITY_BUILD (default OFF) to reduce the build time of the main library
-#   (CMake 3.16 or newer), at the cost of possibly increasing its size.
-# * TV_BUILD_TESTS (default OFF) to build and run tests.
+#
 
 cmake_minimum_required (VERSION 3.5...3.30)
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.13.0")
-    cmake_policy(SET CMP0077 NEW) # 'option()' honors normal variables.
+    cmake_policy(SET CMP0077 NEW) # 'option()' учитывает обычные переменные.
 endif()
 
 set(MASTER_PROJECT FALSE)
@@ -44,7 +44,7 @@ endfunction()
 
 project(tvision)
 
-# Project options
+# Параметры проекта
 
 include(CheckCXXSourceCompiles)
 
@@ -69,7 +69,7 @@ endfunction()
 set(TV_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 function(tv_set_output_dir target)
-    # Place everything in the build directory, for ease of use.
+    # Для удобства размещаем все результаты в каталоге сборки.
     set_target_properties(${target} PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY ${TV_BINARY_DIR}
         LIBRARY_OUTPUT_DIRECTORY ${TV_BINARY_DIR}
@@ -97,12 +97,12 @@ endfunction()
 function(tv_set_warnings target)
     if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         target_compile_options(${target} PRIVATE
-            /wd4068 # Unrecognized pragmas
-            /wd4146 # Unsigned despite minus sign
-            /wd4166 # Illegal calling convention for constructor/destructor
-            /wd4244 # Possible data loss in type conversion
-            /wd4250 # Inheritance via dominance
-            /wd4267 # Possible data loss in conversion from size_t to other type
+            /wd4068 # Неизвестные директивы pragma.
+            /wd4146 # Беззнаковый результат, несмотря на знак минус.
+            /wd4166 # Недопустимое соглашение о вызовах конструктора или деструктора.
+            /wd4244 # Возможная потеря данных при преобразовании типа.
+            /wd4250 # Наследование с доминированием.
+            /wd4267 # Возможная потеря данных при преобразовании size_t в другой тип.
         )
     else()
         target_compile_options(${target} PRIVATE
@@ -161,14 +161,14 @@ endif()
 
 option(TV_BUILD_TESTS "Build and run tests" OFF)
 
-# Library
+# Библиотека
 
 add_subdirectory(source)
 
-# Examples
+# Примеры
 
 add_subdirectory(examples)
 
-# Test
+# Тесты
 
 add_subdirectory(test)

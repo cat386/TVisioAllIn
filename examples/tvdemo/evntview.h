@@ -5,10 +5,10 @@
 #define Uses_TRect
 #include <tvision/tv.h>
 
-// TEventViewer: a TTerminal window displaying the attributes of TEvents
-// received by the application.
+// TEventViewer — окно TTerminal, показывающее атрибуты событий TEvent,
+// полученных приложением. Основано на TTYWindow Дэниела Эмброуза.
 //
-// Inspired by TTYWindow from Daniel Ambrose.
+//
 
 class TTerminal;
 

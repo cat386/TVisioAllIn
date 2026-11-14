@@ -180,7 +180,7 @@ std::vector<PanelEntry> scanDirectory(const std::string &input, std::string &pat
     }
     return entries;
 }
-} // namespace
+} // пространство имён
 FileClass PanelEntry::fileClass() const
 {
     if (directory)
@@ -546,4 +546,4 @@ void TDualPanel::changeBounds(const TRect &r)
     left_->changeBounds(TRect(0, 0, size.x / 2, size.y));
     right_->changeBounds(TRect(size.x / 2, 0, size.x, size.y));
 }
-} // namespace tvision
+} // пространство имён tvision

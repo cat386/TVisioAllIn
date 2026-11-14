@@ -71,7 +71,7 @@ void printChar(int ch, std::ostream &os)
 
 void printCharArray(const char *data, size_t size, std::ostream &os)
 {
-    // Like GoogleTest, omit the terminating null character, if any.
+    // Как GoogleTest, пропускаем завершающий нулевой символ, если он есть.
     if (size > 0 && data[size - 1] == '\0')
         --size;
     os << '"';
@@ -82,7 +82,7 @@ void printCharArray(const char *data, size_t size, std::ostream &os)
 
 static bool matchesPattern(const char *pattern, const char *patternEnd, const char *str)
 {
-    // Supports '*' and '?' wildcards.
+    // Поддерживает подстановочные символы '*' и '?'.
     if (pattern == patternEnd)
         return *str == '\0';
     if (*pattern == '*')
@@ -95,7 +95,7 @@ static bool matchesPattern(const char *pattern, const char *patternEnd, const ch
 
 static bool matchesAny(const char *patterns, const char *end, const char *str)
 {
-    // Patterns are separated by ':'.
+    // Шаблоны разделяются двоеточием.
     const char *begin = patterns;
     while (begin <= end)
     {
@@ -155,7 +155,7 @@ int runAllTests(int argc, char **argv)
     {
         std::string fullName = std::string(info->suiteName) + "." + info->testName;
         printf("[ RUN      ] %s\n", fullName.c_str());
-        // Flush before running the test, as tests may fork.
+        // Сбрасываем вывод перед тестом: тесты могут создавать процесс через fork.
         fflush(stdout);
         currentTestFailed = false;
         try
@@ -195,8 +195,8 @@ int runAllTests(int argc, char **argv)
     return failed.empty() ? 0 : 1;
 }
 
-} // namespace internal
-} // namespace testing
+} // пространство имён internal
+} // пространство имён testing
 
 int main(int argc, char **argv)
 {

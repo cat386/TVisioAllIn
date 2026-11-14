@@ -66,7 +66,7 @@ void TTimerQueue::killTimer(TTimerId id)
 }
 
 static TTimePoint calcNextExpiresAt(TTimePoint expiresAt, TTimePoint now, int32_t period)
-// Pre: expiresAt <= now && period > 0.
+// Предусловие: expiresAt <= now && period > 0.
 {
     return (1 + (now - expiresAt + period)/period)*period + expiresAt - period;
 }
@@ -76,10 +76,10 @@ void TTimerQueue::collectExpiredTimers(void (&func)(TTimerId, void *), void *arg
     if (first == 0)
         return;
 
-    // Given that the timer list may be mutated while we process expired timers,
-    // we iterate it from the beginning every time. In order to know which
-    // timers have already been processed, we mark them with a 'collectId'
-    // which identifies the current invocation of 'collectExpiredTimers'.
+    // Список таймеров может изменяться при обработке истёкших, поэтому
+    // каждый раз начинаем обход сначала. Уже обработанные помечаем
+    // collectId, идентифицирующим текущий вызов collectExpiredTimers.
+    //
     void *collectId = &collectId;
     TTimePoint now = getTimeMs();
     while (True)
@@ -97,14 +97,14 @@ void TTimerQueue::collectExpiredTimers(void (&func)(TTimerId, void *), void *arg
             if ((*p)->period > 0)
                 (*p)->expiresAt = calcNextExpiresAt((*p)->expiresAt, now, (*p)->period);
         }
-        else // One-shot timer
+        else // Одноразовый таймер.
         {
             TTimer *next = (*p)->next;
             delete *p;
             *p = next;
         }
 
-        func(id, args); // May mutate the timer list.
+        func(id, args); // Может изменить список таймеров.
     }
 
     TTimer *timer = first;

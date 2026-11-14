@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmchdrdl.cpp                              */
+/* файл — nmchdrdl.cpp */
 /*                                                            */
-/* defines the streamable name for class TChDirDialog         */
+/* Определяет имя сериализуемого класса TChDirDialog. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

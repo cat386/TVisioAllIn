@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sdialog.cpp                               */
+/* файл — sdialog.cpp */
 /*                                                            */
-/* Registeration object for the class TDialog                 */
+/* Объект регистрации класса TDialog. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

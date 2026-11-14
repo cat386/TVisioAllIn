@@ -13,12 +13,12 @@ namespace tvision
 
 class WinWidth
 {
-    // Since there is no equivalent to wcwidth and the console API allows
-    // having buffers out of sight, character widths are measured by printing
-    // to a console buffer and taking the cursor position.
+    // Аналога wcwidth нет, но API консоли поддерживает скрытые буферы.
+    // Поэтому ширина символа измеряется его выводом в консольный буфер и
+    // проверкой позиции курсора.
 
-    // A separate state is stored for every thread so that mbcwidth() is both
-    // thread-safe and lock-free.
+    // Для каждого потока хранится отдельное состояние: mbcwidth()
+    // потокобезопасна и не требует блокировок.
 
     static std::atomic<size_t> lastReset;
     static std::atomic<bool> isLegacyConsole;
@@ -52,7 +52,7 @@ inline void WinWidth::reset(bool isLegacyConsole) noexcept
     ++lastReset;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _WIN32
 

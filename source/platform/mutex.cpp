@@ -7,10 +7,10 @@ void SignalSafeMutexState::acquire(SignalSafeMutexState *self) noexcept
 {
     ThreadId none {};
     ThreadId current {currentThreadId()};
-    // Use a spin lock because regular mutexes are not signal-safe.
+    // Используем спин-блокировку: обычные мьютексы небезопасны в обработчиках сигналов.
     if (self)
         while (self->lockingThread.compare_exchange_weak(none, current))
             ;
 }
 
-} // namespace tvision
+} // пространство имён tvision

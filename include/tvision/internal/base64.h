@@ -7,12 +7,12 @@
 namespace tvision
 {
 
-// Returns the region of 'output' that contains the encoded data.
-// Pre: the capacity of 'output' is no less than 4/3 of 'input.size()'.
+// Возвращает область output с закодированными данными. Предусловие:
+// ёмкость output не меньше 4/3 от input.size().
 TStringView encodeBase64(TStringView input, char *output) noexcept;
 
-// Returns the region of 'output' that contains the decoded data.
-// Pre: the capacity of 'output' is no less than 3/4 of 'input.size()'.
+// Возвращает область output с декодированными данными. Предусловие:
+// ёмкость output не меньше 3/4 от input.size().
 TStringView decodeBase64(TStringView input, char *output) noexcept;
 
 inline std::string encodeBase64(TStringView input)
@@ -31,6 +31,6 @@ inline std::string decodeBase64(TStringView input)
     return result;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_BASE64_H

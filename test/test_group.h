@@ -8,9 +8,9 @@
 #include <forward_list>
 #include <test_operators.h>
 
-// A TGroup whose getEvent()/putEvent() are backed by a queue, so that code
-// relying on event loops can be driven deterministically in tests. Once the
-// queue is exhausted, 'fallbackEvent' is returned on every subsequent getEvent().
+// TGroup с очередью для getEvent()/putEvent(), позволяющая
+// детерминированно тестировать циклы событий. После исчерпания очереди
+// каждый getEvent() возвращает fallbackEvent.
 class TestGroup : public TGroup
 {
 public:

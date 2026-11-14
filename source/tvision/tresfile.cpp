@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------*/
-/* filename -       tresfile.cpp                                */
+/* файл — tresfile.cpp */
 /*                                                              */
-/* function(s)                                                  */
-/*                  TResourceFile member functions              */
+/* функции:  */
+/* Методы TResourceFile */
 /*--------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

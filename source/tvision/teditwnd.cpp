@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename - teditwnd.cpp                                    */
+/* файл — teditwnd.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*            TEditWindow member functions                    */
+/* функции:  */
+/* Методы TEditWindow */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

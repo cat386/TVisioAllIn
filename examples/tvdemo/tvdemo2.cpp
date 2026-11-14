@@ -1,6 +1,6 @@
 /*----------------------------------------------------------*/
 /*                                                          */
-/*   Turbo Vision TVDEMO source file                        */
+/* Исходный файл TVDEMO для Turbo Vision. */
 /*                                                          */
 /*----------------------------------------------------------*/
 /*
@@ -40,9 +40,9 @@
 #include <stdlib.h>
 #include <signal.h>
 
+// DemoApp::handleEvent() — цикл распределения работы.
 //
-// DemoApp::handleEvent()
-//  Event loop to distribute the work.
+//
 //
 
 void TVDemo::handleEvent(TEvent &event)
@@ -53,59 +53,59 @@ void TVDemo::handleEvent(TEvent &event)
     {
         switch (event.message.command)
             {
-            case cmAboutCmd:            //  About Dialog Box
+            case cmAboutCmd:            // Диалог «О программе».
                 aboutDlgBox();
                 break;
 
-            case cmCalendarCmd:         //  Calendar Window
+            case cmCalendarCmd:         // Окно календаря.
                 calendar();
                 break;
 
-            case cmAsciiCmd:            //  Ascii Table
+            case cmAsciiCmd:            // Таблица ASCII.
                 asciiTable();
                 break;
 
-            case cmCalcCmd:             //  Calculator
+            case cmCalcCmd:             // Калькулятор.
                 calculator();
                 break;
 
-            case cmPuzzleCmd:           //  Puzzle
+            case cmPuzzleCmd:           // Головоломка.
                 puzzle();
                 break;
 
-            case cmEventViewCmd:        //  Open Event Viewer
+            case cmEventViewCmd:        // Открываем просмотр событий.
                 eventViewer();
                 break;
 
-            case cmChBackground:        //  Change Background pattern
+            case cmChBackground:        // Меняем узор фона.
                 chBackground();
                 break;
 
-            case cmOpenCmd:             //  View a file
+            case cmOpenCmd:             // Просматриваем файл.
                 openFile("*.*");
                 break;
 
-            case cmChDirCmd:            //  Change directory
+            case cmChDirCmd:            // Смена каталога.
                 changeDir();
                 break;
 
-            case cmMouseCmd:            //  Mouse control dialog box
+            case cmMouseCmd:            // Диалог настройки мыши.
                 mouse();
                 break;
 
-            case cmColorCmd:            //  Color control dialog box
+            case cmColorCmd:            // Диалог настройки цветов.
                 colors();
                 break;
 
-        case cmSaveCmd:             //  Save current desktop
+        case cmSaveCmd:             // Сохраняем текущий рабочий стол.
                 saveDesktop();
                 break;
  
-        case cmRestoreCmd:          //  Restore saved desktop
+        case cmRestoreCmd:          // Восстанавливаем сохранённый рабочий стол.
                 retrieveDesktop();
                 break;
 
-            default:                    //  Unknown command
+            default:                    // Неизвестная команда.
                 return;
 
             }
@@ -115,8 +115,8 @@ void TVDemo::handleEvent(TEvent &event)
 
 
 
+// Функция окна «О программе».
 //
-// About Box function()
 //
 
 void TVDemo::aboutDlgBox()
@@ -125,9 +125,9 @@ void TVDemo::aboutDlgBox()
 
     aboutBox->insert(
       new TStaticText(TRect(9, 2, 30, 9),
-        "\003Turbo Vision Demo\n\n"       // These strings will be
-        "\003C++ Version\n\n"             // concatenated by the compiler.
-        "\003Copyright (c) 1994\n\n"      // The \003 centers the line.
+        "\003Turbo Vision Demo\n\n"       // Эти строки будут
+        "\003C++ Version\n\n"             // объединены компилятором.
+        "\003Copyright (c) 1994\n\n"      // Последовательность \003 центрирует строку.
         "\003Borland International"
         )
       );
@@ -143,8 +143,8 @@ void TVDemo::aboutDlgBox()
 }
 
 
+// Функция таблицы ASCII.
 //
-// Ascii Chart function
 //
 
 void TVDemo::asciiTable()
@@ -169,8 +169,8 @@ void TVDemo::chBackground()
 }
 
 
+// Функция календаря.
 //
-// Calendar function()
 //
 
 void TVDemo::calendar()
@@ -185,8 +185,8 @@ void TVDemo::calendar()
 }
 
 
+// Функция калькулятора.
 //
-// Calculator function
 //
 
 void TVDemo::calculator()
@@ -216,8 +216,8 @@ void TVDemo::printEvent(const TEvent &event)
         viewer->print(event);
 }
 
+// Функция смены каталога.
 //
-// Change Directory function
 //
 
 void TVDemo::changeDir()
@@ -233,8 +233,8 @@ void TVDemo::changeDir()
 }
 
 
+// Функция диалога настройки цветов.
 //
-// Color Control Dialog Box function
 //
 
 void TVDemo::colors()
@@ -342,7 +342,7 @@ void TVDemo::colors()
 
     if( validView( c ) != 0 )
     {
-        c->helpCtx = hcOCColorsDBox;  // set context help constant
+        c->helpCtx = hcOCColorsDBox;  // Задаём константу контекстной справки.
         c->setData(&getPalette());
         if( deskTop->execView( c ) != cmCancel )
             {

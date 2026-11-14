@@ -9,7 +9,7 @@
 namespace tvision
 {
 
-// Same as unordered_map, but with operator[] const.
+// Аналог unordered_map с константным operator[].
 
 template<typename Key, typename Value>
 class const_unordered_map_base : public std::unordered_map<Key, Value>
@@ -43,21 +43,21 @@ public:
 
 };
 
-// Overload of const_unordered_map for Key=uint64_t, which provides an additional
-// constructor function 'with_string_keys'.
+// Специализация const_unordered_map для Key=uint64_t с дополнительной
+// функцией создания with_string_keys. Она позволяет использовать
+// короткие строки в качестве ключей, переинтерпретируя их как целые
+// числа на лету. Например, "012" превращается в (uint64_t)0x323130.
+// Полный пример: const auto map = const_unordered_map<uint64_t,
+// bool>::with_string_keys({ { "012", true }, }); assert(map["012"] ==
+// true); assert(map[0x323130] == true); assert(map["abc"] == false);
 //
-// 'with_string_keys' allows using short strings as keys. These strings are reinterpreted
-// as integers on-the-fly. For example, "012" becomes (uint64_t) 0x323130.
 //
-// Complete example:
 //
-// const auto map = const_unordered_map<uint64_t, bool>::with_string_keys({
-//     { "012", true },
-// });
 //
-// assert(map["012"]    == true);
-// assert(map[0x323130] == true);
-// assert(map["abc"]    == false);
+//
+//
+//
+//
 
 template<typename Value>
 class const_unordered_map<uint64_t, Value> : public const_unordered_map_base<uint64_t, Value>
@@ -98,6 +98,6 @@ public:
 
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_CONSTMAP_H

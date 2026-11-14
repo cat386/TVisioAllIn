@@ -2,9 +2,9 @@
 /*                                                                         */
 /*   DIALOGS.H                                                             */
 /*                                                                         */
-/*   defines the classes TDialog, TInputLine, TButton, TCluster,           */
+/* Определяет классы TDialog, TInputLine, TButton, TCluster, */
 /*   TRadioButtons, TCheckBoxes, TMultiCheckBoxes, TStaticText,            */
-/*   TParamText, TLabel, THistoryViewer, and THistoryWindow.               */
+/* TParamText, TLabel, THistoryViewer и THistoryWindow. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -37,41 +37,41 @@ const int
 #endif  // __BUTTON_TYPE
 
 /* ---------------------------------------------------------------------- */
-/*      class TDialog                                                     */
+/* класс TDialog */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Frame passive                                               */
-/*        2 = Frame active                                                */
-/*        3 = Frame icon                                                  */
-/*        4 = ScrollBar page area                                         */
-/*        5 = ScrollBar controls                                          */
+/* Структура палитры */
+/* 1 = Неактивная рамка */
+/* 2 = Активная рамка */
+/* 3 = Значок рамки */
+/* 4 = Область страницы полосы прокрутки */
+/* 5 = Элементы полосы прокрутки */
 /*        6 = StaticText                                                  */
-/*        7 = Label normal                                                */
-/*        8 = Label selected                                              */
-/*        9 = Label shortcut                                              */
-/*       10 = Button normal                                               */
-/*       11 = Button default                                              */
-/*       12 = Button selected                                             */
-/*       13 = Button disabled                                             */
-/*       14 = Button shortcut                                             */
-/*       15 = Button shadow                                               */
-/*       16 = Cluster normal                                              */
-/*       17 = Cluster selected                                            */
-/*       18 = Cluster shortcut                                            */
-/*       19 = InputLine normal text                                       */
-/*       20 = InputLine selected text                                     */
-/*       21 = InputLine arrows                                            */
-/*       22 = History arrow                                               */
-/*       23 = History sides                                               */
-/*       24 = HistoryWindow scrollbar page area                           */
-/*       25 = HistoryWindow scrollbar controls                            */
-/*       26 = ListViewer normal                                           */
-/*       27 = ListViewer focused                                          */
-/*       28 = ListViewer selected                                         */
-/*       29 = ListViewer divider                                          */
+/* 7 = Обычная метка */
+/* 8 = Выбранная метка */
+/* 9 = Горячая буква метки */
+/* 10 = Обычная кнопка */
+/* 11 = Кнопка по умолчанию */
+/* 12 = Выбранная кнопка */
+/* 13 = Недоступная кнопка */
+/* 14 = Горячая буква кнопки */
+/* 15 = Тень кнопки */
+/* 16 = Обычная группа выбора */
+/* 17 = Выбранная группа выбора */
+/* 18 = Горячая буква группы выбора */
+/* 19 = Обычный текст поля ввода */
+/* 20 = Выделенный текст поля ввода */
+/* 21 = Стрелки поля ввода */
+/* 22 = Стрелка истории */
+/* 23 = Края истории */
+/* 24 = Область страницы полосы прокрутки окна истории */
+/* 25 = Элементы полосы прокрутки окна истории */
+/* 26 = Обычный список */
+/* 27 = Список в фокусе */
+/* 28 = Выделенный список */
+/* 29 = Разделитель списка */
 /*       30 = InfoPane                                                    */
-/*       31 = Cluster Disabled                                            */
-/*       32 = Reserved                                                    */
+/* 31 = Недоступная группа выбора */
+/* 32 = Зарезервировано */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TDialog ) && !defined( __TDialog )
@@ -140,13 +140,13 @@ inline opstream& operator << ( opstream& os, TDialog* cl )
 #endif  // Uses_TDialog
 
 /* ---------------------------------------------------------------------- */
-/*      class TInputLine                                                  */
+/* класс TInputLine */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Passive                                                     */
-/*        2 = Active                                                      */
-/*        3 = Selected                                                    */
-/*        4 = Arrows                                                      */
+/* Структура палитры */
+/* 1 = Неактивный */
+/* 2 = Активный */
+/* 3 = Выделенный */
+/* 4 = Стрелки */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TInputLine ) && !defined( __TInputLine )
@@ -246,17 +246,17 @@ inline opstream& operator << ( opstream& os, TInputLine* cl )
 
 
 /* ---------------------------------------------------------------------- */
-/*      TButton object                                                    */
+/* Объект TButton. */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Default text                                                */
-/*        3 = Selected text                                               */
-/*        4 = Disabled text                                               */
-/*        5 = Normal shortcut                                             */
-/*        6 = Default shortcut                                            */
-/*        7 = Selected shortcut                                           */
-/*        8 = Shadow                                                      */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Текст по умолчанию */
+/* 3 = Выделенный текст */
+/* 4 = Недоступный текст */
+/* 5 = Обычная горячая буква */
+/* 6 = Горячая буква по умолчанию */
+/* 7 = Выделенная горячая буква */
+/* 8 = Тень */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TButton ) && !defined( __TButton )
@@ -354,14 +354,14 @@ public:
 #endif  // Uses_TSItem
 
 /* ---------------------------------------------------------------------- */
-/*      class TCluster                                                    */
+/* класс TCluster */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Selected text                                               */
-/*        3 = Normal shortcut                                             */
-/*        4 = Selected shortcut                                           */
-/*        5 = Disabled text                                               */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
+/* 3 = Обычная горячая буква */
+/* 4 = Выделенная горячая буква */
+/* 5 = Недоступный текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TCluster ) && !defined( __TCluster )
@@ -442,14 +442,14 @@ inline opstream& operator << ( opstream& os, TCluster* cl )
 
 
 /* ---------------------------------------------------------------------- */
-/*      class TRadioButtons                                               */
+/* класс TRadioButtons */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Selected text                                               */
-/*        3 = Normal shortcut                                             */
-/*        4 = Selected shortcut                                           */
-/*        5 = Disabled text                                               */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
+/* 3 = Обычная горячая буква */
+/* 4 = Выделенная горячая буква */
+/* 5 = Недоступный текст */
 /* ---------------------------------------------------------------------- */
 
 
@@ -510,12 +510,12 @@ inline TRadioButtons::TRadioButtons( const TRect& bounds, TSItem *aStrings ) noe
 /* ---------------------------------------------------------------------- */
 /*      TCheckBoxes                                                       */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Selected text                                               */
-/*        3 = Normal shortcut                                             */
-/*        4 = Selected shortcut                                           */
-/*        5 = Disabled text                                               */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
+/* 3 = Обычная горячая буква */
+/* 4 = Выделенная горячая буква */
+/* 5 = Недоступный текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TCheckBoxes ) && !defined( __TCheckBoxes )
@@ -583,12 +583,12 @@ const unsigned short cfOneBit       = 0x0101,
 /* ---------------------------------------------------------------------- */
 /*      TMultiCheckBoxes                                                  */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Selected text                                               */
-/*        3 = Normal shortcut                                             */
-/*        4 = Selected shortcut                                           */
-/*        5 = Disabled text                                               */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
+/* 3 = Обычная горячая буква */
+/* 4 = Выделенная горячая буква */
+/* 5 = Недоступный текст */
 /* ---------------------------------------------------------------------- */
 
 class _FAR TRect;
@@ -639,14 +639,14 @@ inline opstream& operator << ( opstream& os, TMultiCheckBoxes* cl )
 #endif
 
 /* ---------------------------------------------------------------------- */
-/*      class TListBox                                                    */
+/* класс TListBox */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Active                                                      */
-/*        2 = Inactive                                                    */
-/*        3 = Focused                                                     */
-/*        4 = Selected                                                    */
-/*        5 = Divider                                                     */
+/* Структура палитры */
+/* 1 = Активный */
+/* 2 = Неактивный */
+/* 3 = В фокусе */
+/* 4 = Выделенный */
+/* 5 = Разделитель */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TListBox ) && !defined( __TListBox )
@@ -717,10 +717,10 @@ inline TCollection *TListBox::list()
 
 
 /* ---------------------------------------------------------------------- */
-/*      class TStaticText                                                 */
+/* класс TStaticText */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Text                                                        */
+/* Структура палитры */
+/* 1 = Текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TStaticText ) && !defined( __TStaticText )
@@ -776,10 +776,10 @@ inline opstream& operator << ( opstream& os, TStaticText* cl )
 
 
 /* ---------------------------------------------------------------------- */
-/*      class TParamText                                                  */
+/* класс TParamText */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Text                                                        */
+/* Структура палитры */
+/* 1 = Текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TParamText ) && !defined( __TParamText )
@@ -834,13 +834,13 @@ inline opstream& operator << ( opstream& os, TParamText* cl )
 
 
 /* ---------------------------------------------------------------------- */
-/*      class TLabel                                                      */
+/* класс TLabel */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Selected text                                               */
-/*        3 = Normal shortcut                                             */
-/*        4 = Selected shortcut                                           */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
+/* 3 = Обычная горячая буква */
+/* 4 = Выделенная горячая буква */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TLabel ) && !defined( __TLabel )
@@ -900,14 +900,14 @@ inline opstream& operator << ( opstream& os, TLabel* cl )
 
 
 /* ---------------------------------------------------------------------- */
-/*      class THistoryViewer                                              */
+/* класс THistoryViewer */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Active                                                      */
-/*        2 = Inactive                                                    */
-/*        3 = Focused                                                     */
-/*        4 = Selected                                                    */
-/*        5 = Divider                                                     */
+/* Структура палитры */
+/* 1 = Активный */
+/* 2 = Неактивный */
+/* 3 = В фокусе */
+/* 4 = Выделенный */
+/* 5 = Разделитель */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_THistoryViewer ) && !defined( __THistoryViewer )
@@ -964,14 +964,14 @@ protected:
 /* ---------------------------------------------------------------------- */
 /*      THistoryWindow                                                    */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Frame passive                                               */
-/*        2 = Frame active                                                */
-/*        3 = Frame icon                                                  */
-/*        4 = ScrollBar page area                                         */
-/*        5 = ScrollBar controls                                          */
-/*        6 = HistoryViewer normal text                                   */
-/*        7 = HistoryViewer selected text                                 */
+/* Структура палитры */
+/* 1 = Неактивная рамка */
+/* 2 = Активная рамка */
+/* 3 = Значок рамки */
+/* 4 = Область страницы полосы прокрутки */
+/* 5 = Элементы полосы прокрутки */
+/* 6 = Обычный текст просмотра истории */
+/* 7 = Выделенный текст просмотра истории */
 /* ---------------------------------------------------------------------- */
 
 class THistoryWindow : public TWindow, public virtual THistInit
@@ -994,11 +994,11 @@ protected:
 #endif  // Uses_THistoryWindow
 
 /* ---------------------------------------------------------------------- */
-/*      class THistory                                                    */
+/* класс THistory */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Arrow                                                       */
-/*        2 = Sides                                                       */
+/* Структура палитры */
+/* 1 = Стрелка */
+/* 2 = Края */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_THistory ) && !defined( __THistory )

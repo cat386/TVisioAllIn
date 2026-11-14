@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tscrlbar.cpp                              */
+/* файл — tscrlbar.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TScrollBar member functions               */
+/* функции:  */
+/* Методы TScrollBar */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -163,8 +163,8 @@ void TScrollBar::handleEvent( TEvent& event )
                 }
             if( step )
                 {
-                // E.g. when the bar is associated to a TListViewer, this message
-                // causes it to become selected.
+                // Например, у полосы, связанной с TListViewer, это сообщение выбирает
+                // список.
                 message(owner, evBroadcast, cmScrollBarClicked, this);
                 setValue(value + 3*step);
                 clearEvent(event);
@@ -180,8 +180,8 @@ void TScrollBar::handleEvent( TEvent& event )
             clickPart= getPartCode();
             switch( clickPart )
                 {
-                case sbLeftArrow:   // If an arrow was pressed,
-                case sbRightArrow:  // do the appropiate action.
+                case sbLeftArrow:   // Если нажата стрелка,
+                case sbRightArrow:  // выполняем соответствующее действие.
                 case sbUpArrow:
                 case sbDownArrow:
                     do  {
@@ -190,17 +190,17 @@ void TScrollBar::handleEvent( TEvent& event )
                             setValue(value + scrollStep(clickPart) );
                         } while( mouseEvent(event, evMouseAuto) );
                     break;
-                default:            // Otherwise, move the thumb along the mouse cursor.
+                default:            // Иначе перемещаем ползунок вслед за курсором мыши.
                     do  {
                         mouse = makeLocal( event.mouse.where );
                         if( size.x == 1 )
                             i = mouse.y;
                         else
                             i = mouse.x;
-                        i = max( i, 1 ); // Keep the thumb between the two arrows.
+                        i = max( i, 1 ); // Удерживаем ползунок между двумя стрелками.
                         i = min( i, s-1 );
                         p = i;
-                        if( s > 2 ) // Update the scroll value if there's free scroll space.
+                        if( s > 2 ) // Обновляем прокрутку при наличии свободной области.
                             setValue( int(((long(p - 1) * (maxVal - minVal) + ((s - 2) >> 1)) / (s - 2)) + minVal) );
                         drawPos(p);
                         } while( mouseEvent(event, evMouseMove) );
@@ -266,7 +266,7 @@ void TScrollBar::handleEvent( TEvent& event )
                         default:
                             return;
                         }
-                message(owner,evBroadcast,cmScrollBarClicked,this); // Clicked
+                message(owner,evBroadcast,cmScrollBarClicked,this); // Нажатие.
                 if( clickPart != sbIndicator )
                     i = value + scrollStep(clickPart);
                 setValue(i);

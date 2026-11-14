@@ -21,7 +21,7 @@ struct SignalHandlerTest : public ::testing::Test
         size_t wrapperInvocations;
     };
 
-    // Counters stored in shared memory.
+    // Счётчики находятся в общей памяти.
     static Counters *counters;
 
     SignalHandlerTest() noexcept
@@ -77,8 +77,8 @@ static void extendedSignalHandlerThatDoesNotKillTheProcess(int, siginfo_t *, voi
 
 static void signalCallbackThatTemporarilyDisablesSignalHandler(bool enter) noexcept
 {
-    // Disable and re-enable SignalHandler because this is also what is done in
-    // practice by Platform::signalCallback.
+    // Отключаем и снова включаем SignalHandler, как на практике делает
+    // Platform::signalCallback.
     if (enter)
     {
         ++SignalHandlerTest::counters->callbackEnterInvocations;
@@ -259,6 +259,6 @@ TEST_F(SignalHandlerTest, ShouldNotInvokeNeitherAPreviouslyInstalledHandlerNorTh
     ASSERT_EQ(counters->wrapperInvocations, 1);
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // __linux__

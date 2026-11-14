@@ -136,10 +136,10 @@ static void pollHandles(PollData &pd, int ms) noexcept
 {
     auto &fds = pd.handles;
     auto &states = pd.states;
-    // We use 'select' instead of 'poll' because it is more portable, especially
-    // on macOS. However, 'select' only supports file descriptors smaller than
-    // 'FD_SETSIZE'. But this should not be an issue, since we just open a few
-    // of them at program startup and when suspending/resuming the application.
+    // Используем select вместо poll ради переносимости, особенно на macOS.
+    // select допускает только дескрипторы меньше FD_SETSIZE. Это не должно
+    // мешать: при старте и приостановке/возобновлении приложения открывается
+    // лишь несколько дескрипторов.
     fd_set readFds;
     FD_ZERO(&readFds);
     int maxFd = -1;
@@ -298,4 +298,4 @@ void EventWaiter::interruptEventWait() noexcept
         wakeUp->signal();
 }
 
-} // namespace tvision
+} // пространство имён tvision

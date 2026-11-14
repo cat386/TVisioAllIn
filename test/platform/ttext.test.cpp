@@ -61,8 +61,8 @@ TEST(TText, ShouldConvertCodePageToUtf8)
 TEST(TText, ShouldOverrideCodePageTranslation)
 {
     char customCodepageToUtf8[256][4] = {};
-    memcpy(customCodepageToUtf8[0x10], "¥", 2); // ASCII position.
-    memcpy(customCodepageToUtf8[0x80], "\U00010000", 4); // non-ASCII position, 4 bytes in UTF-8.
+    memcpy(customCodepageToUtf8[0x10], "¥", 2); // Позиция ASCII.
+    memcpy(customCodepageToUtf8[0x80], "\U00010000", 4); // Позиция вне ASCII, четыре байта UTF-8.
 
     TText::setCodePageTranslation(&customCodepageToUtf8);
 

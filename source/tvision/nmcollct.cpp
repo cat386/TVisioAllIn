@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmcollct.cpp                              */
+/* файл — nmcollct.cpp */
 /*                                                            */
-/* defines the streamable name for class TCollection          */
+/* Определяет имя сериализуемого класса TCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

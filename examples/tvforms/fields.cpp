@@ -1,8 +1,8 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Fields.cpp: Support source file for TVFORMS demo    */
+/* Fields.cpp — вспомогательный исходный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

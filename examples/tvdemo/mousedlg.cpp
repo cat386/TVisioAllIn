@@ -1,6 +1,6 @@
 /*---------------------------------------------------------*/
 /*                                                         */
-/*   Mousedlg.cpp : Member functions of following classes: */
+/* Mousedlg.cpp — методы следующих классов: */
 /*                     TClickTester                        */
 /*                     TMouseDialog                        */
 /*                                                         */
@@ -38,8 +38,8 @@
 #define cpMousePalette "\x07\x08"
 
 
+// Методы TClickTester
 //
-// TClickTester functions
 //
 
 TClickTester::TClickTester(TRect& r, const char *aText) :
@@ -88,8 +88,8 @@ void TClickTester::draw()
 }
 
 
+// Методы TMouseDialog
 //
-// TMouseDialog functions
 //
 
 TMouseDialog::TMouseDialog() :

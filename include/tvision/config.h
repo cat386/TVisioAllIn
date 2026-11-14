@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   CONFIG.H                                                              */
 /*                                                                         */
-/*   miscellaneous system-wide configuration parameters                    */
-/*   FOR INTERNAL USE ONLY                                                 */
+/* Прочие общесистемные параметры конфигурации. */
+/* ТОЛЬКО ДЛЯ ВНУТРЕННЕГО ИСПОЛЬЗОВАНИЯ. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -34,9 +34,9 @@ const int maxReplaceStrLen = 80;
 const int minPasteEventCount = 3;
 
 #if !defined( __BORLANDC__ )
-const int maxCharSize = 4; // A UTF-8-encoded character is up to 4 bytes long.
+const int maxCharSize = 4; // Один символ в UTF-8 занимает до четырёх байт.
 #else
-const int maxCharSize = 1; // All characters are single-byte-encoded.
+const int maxCharSize = 1; // Все символы кодируются одним байтом.
 #endif
 
 #endif  // __CONFIG_H

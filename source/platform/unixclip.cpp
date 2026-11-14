@@ -38,37 +38,37 @@ constexpr const char * xselPasteArgv[] = {"xsel", "--output", "--clipboard", 0};
 constexpr const char * xclipPasteArgv[] = {"xclip", "-out", "-selection", "clipboard", 0};
 
 static char wslPasteCmd[] =
-    // Both PowerShell and CScript can be used to read the clipboard.
-    // Although PowerShell is more modern and can be run without a script file,
-    // it is far slower and requires a very complicated workaround for
-    // https://github.com/microsoft/terminal/issues/280. Therefore, we stick
-    // to CScript.
-    // The environment variable 'q' is used to insert quoutes in order
-    // to work around https://github.com/microsoft/WSL/issues/2835.
+    // Читать буфер обмена можно PowerShell и CScript. Хотя PowerShell
+    // современнее и запускается без файла сценария, он намного медленнее и
+    // требует сложного обхода
+    // https://github.com/microsoft/terminal/issues/280. Поэтому используем
+    // CScript. Переменная окружения q вставляет кавычки для обхода
+    // https://github.com/microsoft/WSL/issues/2835.
+    //
     "(FOR"
         " %i IN (%q%%TMP%%q% %q%%TEMP%%q% %q%%USERPROFILE%%q% \\. .)"
     " DO"
         " set SCRIPT_PATH=%q%%~i\\" PID_PLACEHOLDER "%RANDOM%.vbs%q%"
-        // Try to write the script file.
+        // Пытаемся записать файл сценария.
         " && cmd /C"
             " echo"
-                // Print the clipboard contents in UTF-16.
+                // Выводим содержимое буфера обмена в UTF-16.
                 " WScript.StdOut.Write"
                     " CreateObject(%q%HTMLFile%q%^).ParentWindow.ClipboardData.GetData(%q%Text%q%^)"
             " ^> ^%SCRIPT_PATH^%"
-        // If it worked, run it and exit.
+        // При успехе запускаем и выходим.
         " && ("
             " cmd /C"
                 " cscript //NoLogo //B //U ^%SCRIPT_PATH^%"
-                // Delete the files and keep the error status.
+                // Удаляем файлы, сохраняя код ошибки.
                 " ^&^& (del /Q ^%SCRIPT_PATH^% ^& exit ^)"
                 " ^|^| (del /Q ^%SCRIPT_PATH^% ^& exit 1^)"
             " && exit"
             " || exit 1"
         ")"
-        // Otherwise, try another path.
+        // Иначе пробуем другой путь.
     ")"
-    // We could not write anywhere.
+    // Записать не удалось никуда.
     " & exit 1";
 
 constexpr const char *wslPasteArgv[] = {"/mnt/c/Windows/System32/cmd.exe", "/D", "/Q", "/C", wslPasteCmd, 0};
@@ -84,9 +84,9 @@ static int initPlaceholders = []
 {
     static_assert(sizeof(PID_PLACEHOLDER) - 1 == 8, "");
 
-    // Use the PID to avoid name clashes between files created by different
-    // processes. This is more effective than pseudo-random values which
-    // depend on the current timestamp such as %RANDOM%.
+    // Используем PID для уникальности имён файлов разных процессов. Это
+    // надёжнее псевдослучайных значений от текущего времени, например
+    // %RANDOM%.
     int pid = (int) getpid();
     char buf[sizeof(PID_PLACEHOLDER)];
     snprintf(buf, sizeof(buf), "%08X", pid);
@@ -100,9 +100,9 @@ static int initPlaceholders = []
 }();
 
 static void wslCopyPrepare(TSpan<char> &text) noexcept
-// Pre: 'text' is malloc-allocated.
-// When writing text to clip.exe, append a null character at the end
-// to work around https://github.com/microsoft/WSL/issues/4852.
+// Предусловие: text выделен malloc. При записи в clip.exe добавляем
+// завершающий нулевой символ для обхода
+// https://github.com/microsoft/WSL/issues/4852.
 {
     if (char *dstText = (char *) realloc(text.data(), text.size() + 1))
     {
@@ -112,15 +112,15 @@ static void wslCopyPrepare(TSpan<char> &text) noexcept
 }
 
 static void wslPastePrepare(TSpan<char> &text) noexcept
-// Pre: 'text' is malloc-allocated.
-// We receive the clipboard contents from CScript in UTF-16, so we have to
-// convert them to UTF-8.
+// Предусловие: text выделен malloc. CScript возвращает содержимое буфера
+// обмена в UTF-16; преобразуем в UTF-8.
+//
 {
     uint16_t *srcText = (uint16_t *) text.data();
     size_t srcLength = text.size()/2;
     char *dstText;
     size_t dstLength = 0;
-    // Each UTF-16 code unit may produce up to 3 UTF-8 bytes.
+    // Кодовая единица UTF-16 может дать до трёх байтов UTF-8.
     if ((dstText = (char *) malloc(srcLength * 3)))
         dstLength = utf16To8({srcText, srcLength}, dstText);
     free(srcText);
@@ -404,6 +404,6 @@ static bool write_subprocess(const char * const cmd[], TStringView text, int tim
     return processOk && res.success;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

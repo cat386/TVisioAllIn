@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sclrsel.cpp                               */
+/* файл — sclrsel.cpp */
 /*                                                            */
-/* Registeration objects for the following classes:           */
+/* Объекты регистрации следующих классов: */
 /*                      TColorSelector                        */
 /*                      TMonoSelector                         */
 /*                      TColorDisplay                         */

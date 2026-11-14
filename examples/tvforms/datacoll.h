@@ -1,9 +1,9 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Datacoll.h: Header file for Datacoll.cpp            */
-/*               (Support header file for TVFORMS Demo)  */
+/* Datacoll.h — заголовочный файл для Datacoll.cpp */
+/* Вспомогательный заголовочный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -27,9 +27,9 @@
 
 enum KeyTypes {stringKey, longIntKey};
 
-// WARNING: This collection can only be used with trivial types.
-// It uses malloc/free for item allocations in order to bypass the
-// safety pool when building with Borland C++.
+// ВНИМАНИЕ: коллекция допускает только тривиальные типы. Для элементов
+// используются malloc/free, чтобы при сборке Borland C++ обходить
+// резервный пул памяти.
 
 class TDataCollection : public TStringCollection
 {

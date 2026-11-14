@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmstrcol.cpp                              */
+/* файл — nmstrcol.cpp */
 /*                                                            */
-/* defines the streamable name for class TStringCollection    */
+/* Определяет имя сериализуемого класса TStringCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

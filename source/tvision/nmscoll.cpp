@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmscoll.cpp                               */
+/* файл — nmscoll.cpp */
 /*                                                            */
-/* defines the streamable name for class TSortedCollection    */
+/* Определяет имя сериализуемого класса TSortedCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

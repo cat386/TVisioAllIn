@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sradiobu.cpp                              */
+/* файл — sradiobu.cpp */
 /*                                                            */
-/* Registeration object for the class TRadioButtons           */
+/* Объект регистрации класса TRadioButtons. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

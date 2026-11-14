@@ -51,9 +51,9 @@ class LinuxConsoleAdapter final : public ConsoleAdapter
 
 public:
 
-    // Pre: 'io.isLinuxConsole()' returns 'true'.
-    // The lifetime of 'con' and 'displayBuf' must exceed that of the returned object.
-    // Takes ownership over 'inputState', 'display' and 'input'.
+    // Предусловие: io.isLinuxConsole() возвращает true. con и displayBuf
+    // должны существовать дольше возвращаемого объекта. Забирает владение
+    // inputState, display и input.
     static LinuxConsoleAdapter &create( ConsoleCtl &con,
                                         DisplayBuffer &displayBuf,
                                         InputState &inputState,
@@ -62,7 +62,7 @@ public:
     ~LinuxConsoleAdapter();
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // __linux__
 

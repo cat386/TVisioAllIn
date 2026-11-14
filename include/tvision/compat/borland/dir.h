@@ -1,9 +1,9 @@
-/*  dir.h
-
-    Defines structures, macros, and functions for dealing with
-    directories and pathnames.
-
-*/
+/*
+ * dir.h определяет структуры, макросы и функции для работы с каталогами
+ * и путями.
+ *
+ *
+ */
 
 /*
  *      C/C++ Run Time Library - Version 6.0

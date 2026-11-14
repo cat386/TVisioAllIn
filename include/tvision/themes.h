@@ -20,7 +20,7 @@ const char *themeName(Theme theme) noexcept;
 TColorAttr color256(unsigned char foreground, unsigned char background) noexcept;
 unsigned char contrast256(unsigned char color) noexcept;
 std::array<TColorAttr, 135> themeColors(Theme theme, bool extended = true);
-// Discard cached group images before painting with an updated palette.
+// Перед отрисовкой с обновлённой палитрой удаляет кэшированные изображения групп.
 void refreshTheme(TGroup &root);
 class ThemePalette
 {
@@ -48,5 +48,5 @@ class TThemedApplication : public TApplication
     }
     TPalette &getPalette() const override;
 };
-} // namespace tvision
+} // пространство имён tvision
 #endif

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tinputli.cpp                              */
+/* файл — tinputli.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TInputLine member functions               */
+/* функции:  */
+/* Методы TInputLine */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -52,7 +52,7 @@ TStringView hotKeyStr( TStringView s ) noexcept
     const char *begin = (const char *) memchr( s.begin(), '~', s.size() );
     if( begin != 0 )
         {
-        begin += 1; // Skip the '~'.
+        begin += 1; // Пропускаем '~'.
         const char *end = (const char *) memchr( begin, '~', s.end() - begin );
         if ( end == 0 )
             end = s.end();
@@ -299,7 +299,7 @@ Boolean TInputLine::checkValid(Boolean noAutoFill)
 void TInputLine::handleEvent( TEvent& event )
 {
     Boolean extendBlock;
-    /* Home, Left Arrow, Right Arrow, End, Ctrl-Left Arrow, Ctrl-Right Arrow */
+    /* Home, стрелки влево и вправо, End, Ctrl+стрелка влево, Ctrl+стрелка вправо. */
     static const char padKeys[] = {0x47,0x4b,0x4d,0x4f,0x73,0x74};
     TView::handleEvent(event);
 
@@ -416,8 +416,8 @@ void TInputLine::handleEvent( TEvent& event )
                         setState(sfCursorIns, Boolean(!(state & sfCursorIns)));
                         break;
                     default:
-                        // The event text may contain null characters, but 'data' is null-terminated,
-                        // so rely on strlen to measure the text length.
+                        // Текст события может содержать нулевые символы, но data завершена
+                        // нулём. Поэтому длину текста определяем strlen.
                         strnzcpy( keyText, event.keyDown.getText(), sizeof( keyText ) );
                         if( (len = strlen(keyText)) > 0 )
                             {
@@ -428,7 +428,7 @@ void TInputLine::handleEvent( TEvent& event )
                             if( checkValid(True) )
                                 {
                                 if( strchr("\t\r\n", keyText[0]) != 0 )
-                                    keyText[0] = ' '; // Replace tabs and newlines into spaces.
+                                    keyText[0] = ' '; // Заменяем табуляции и переводы строк пробелами.
                                 TTextMetrics dataMts = TText::measure(data);
                                 TTextMetrics keyMts = TText::measure(keyText);
                                 if( strlen(data) + len <= (uint) maxLen &&

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmdialog.cpp                              */
+/* файл — nmdialog.cpp */
 /*                                                            */
-/* defines the streamable name for class TDialog              */
+/* Определяет имя сериализуемого класса TDialog. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

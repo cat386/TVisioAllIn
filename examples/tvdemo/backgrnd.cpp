@@ -8,7 +8,7 @@ TChBackground::TChBackground(TBackground *b) :
     TDialog(TRect(0, 0, 29, 9), 0),
     background(b)
 {
-    // Ideally, we would show an ASCII table and let the user choose from there.
+    // В идеале следует показать таблицу ASCII и дать пользователю выбрать символ.
     TRect r = getExtent();
     r.move((TProgram::deskTop->size.x - r.b.x) / 2,
            (TProgram::deskTop->size.y - r.b.y) / 2);
@@ -33,7 +33,7 @@ Boolean TChBackground::valid(ushort command)
                 background->pattern = pattern;
                 background->drawView();
             }
-            return False; // Keep dialog open.
+            return False; // Не закрываем диалог.
         }
         return True;
     }

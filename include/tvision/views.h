@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   VIEWS.H                                                               */
 /*                                                                         */
-/*   defines the classes TView, TFrame, TScrollBar, TScroller,             */
-/*   TListViewer, TGroup, and TWindow                                      */
+/* Определяет классы TView, TFrame, TScrollBar, TScroller, */
+/* TListViewer, TGroup и TWindow. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -26,7 +26,7 @@
 
 const ushort
 
-//  Standard command codes
+// Стандартные коды команд.
 
     cmValid         = 0,
     cmQuit          = 1,
@@ -39,7 +39,7 @@ const ushort
     cmPrev          = 8,
     cmHelp          = 9,
 
-//  TDialog standard commands
+// Стандартные команды TDialog.
 
     cmOK            = 10,
     cmCancel        = 11,
@@ -47,7 +47,7 @@ const ushort
     cmNo            = 13,
     cmDefault       = 14,
 
-// Standard application commands
+// Стандартные команды приложения.
 
     cmNew           = 30,
     cmOpen          = 31,
@@ -58,7 +58,7 @@ const ushort
     cmDosShell      = 36,
     cmCloseAll      = 37,
 
-//  TView State masks
+// Маски состояния TView.
 
     sfVisible       = 0x001,
     sfCursorVis     = 0x002,
@@ -73,7 +73,7 @@ const ushort
     sfDefault       = 0x400,
     sfExposed       = 0x800,
 
-// TView Option masks
+// Маски параметров TView.
 
     ofSelectable    = 0x001,
     ofTopSelect     = 0x002,
@@ -88,7 +88,7 @@ const ushort
     ofCentered      = 0x300,
     ofValidate      = 0x400,
 
-// TView GrowMode masks
+// Маски GrowMode для TView.
 
     gfGrowLoX       = 0x01,
     gfGrowLoY       = 0x02,
@@ -98,7 +98,7 @@ const ushort
     gfGrowRel       = 0x10,
     gfFixed         = 0x20,
 
-// TView DragMode masks
+// Маски DragMode для TView.
 
     dmDragMove      = 0x01,
     dmDragGrow      = 0x02,
@@ -109,12 +109,12 @@ const ushort
     dmLimitHiY      = 0x80,
     dmLimitAll      = dmLimitLoX | dmLimitLoY | dmLimitHiX | dmLimitHiY,
 
-// TView Help context codes
+// Коды контекстов справки TView.
 
     hcNoContext     = 0,
     hcDragging      = 1,
 
-// TScrollBar part codes
+// Коды частей TScrollBar.
 
     sbLeftArrow     = 0,
     sbRightArrow    = 1,
@@ -126,20 +126,20 @@ const ushort
     sbPageDown      = 7,
     sbIndicator     = 8,
 
-// TScrollBar options for TWindow.StandardScrollBar
+// Параметры TScrollBar для TWindow.StandardScrollBar.
 
     sbHorizontal    = 0x000,
     sbVertical      = 0x001,
     sbHandleKeyboard = 0x002,
 
-// TWindow Flags masks
+// Маски флагов TWindow.
 
     wfMove          = 0x01,
     wfGrow          = 0x02,
     wfClose         = 0x04,
     wfZoom          = 0x08,
 
-//  TView inhibit flags
+// Флаги запретов TView.
 
     noMenuBar       = 0x0001,
     noDeskTop       = 0x0002,
@@ -149,17 +149,17 @@ const ushort
     noViewer        = 0x0020,
     noHistory       = 0x0040,
 
-// TWindow number constants
+// Константы номеров TWindow.
 
     wnNoNumber      = 0,
 
-// TWindow palette entries
+// Элементы палитры TWindow.
 
     wpBlueWindow    = 0,
     wpCyanWindow    = 1,
     wpGrayWindow    = 2,
 
-//  Application command codes
+// Коды команд приложения.
 
     cmCut           = 20,
     cmCopy          = 21,
@@ -170,31 +170,31 @@ const ushort
     cmCascade       = 26,
     cmRedo          = 27,
 
-// Standard messages
+// Стандартные сообщения.
 
     cmReceivedFocus     = 50,
     cmReleasedFocus     = 51,
     cmCommandSetChanged = 52,
     cmTimerExpired      = 58,
 
-// TScrollBar messages
+// Сообщения TScrollBar.
 
     cmScrollBarChanged  = 53,
     cmScrollBarClicked  = 54,
 
-// TWindow select messages
+// Сообщения выбора TWindow.
 
     cmSelectWindowNum   = 55,
 
-//  TListViewer messages
+// Сообщения TListViewer.
 
     cmListItemSelected  = 56,
 
-//  TProgram messages
+// Сообщения TProgram.
 
     cmScreenChanged     = 57,
 
-//  Event masks
+// Маски событий.
 
     positionalEvents    = evMouse & ~evMouseWheel,
     focusedEvents       = evKeyboard | evCommand;
@@ -308,9 +308,9 @@ public:
 
     TColorAttr& operator[]( int ) const noexcept;
 
-    // For regular views, this contains 1-based indices into the owner's
-    // palette (TColorAttr is only used to store numeric values).
-    // For TApplication, this contains actual color attributes.
+    // Для обычных представлений содержит индексы палитры владельца начиная с
+    // 1; TColorAttr служит лишь для хранения числовых значений. Для
+    // TApplication содержит собственно цветовые атрибуты.
     TColorAttr *data;
 
 };
@@ -358,8 +358,8 @@ public:
     Boolean containsMouse( TEvent& event ) noexcept;
 
     void locate( TRect& bounds );
-    virtual void dragView( TEvent& event, uchar mode,   //  temporary fix
-      TRect& limits, TPoint minSize, TPoint maxSize ); //  for Miller's stuff
+    virtual void dragView( TEvent& event, uchar mode,   // Временное исправление.
+      TRect& limits, TPoint minSize, TPoint maxSize ); // Для кода Миллера.
     virtual void calcBounds( TRect& bounds, TPoint delta );
     virtual void changeBounds( const TRect& bounds );
     void growTo( short x, short y );
@@ -533,14 +533,14 @@ inline void TView::writeLine( short x, short y, short w, short h,
 #endif  // Uses_TView
 
 /* ---------------------------------------------------------------------- */
-/*      class TFrame                                                      */
+/* класс TFrame */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Passive frame                                               */
-/*        2 = Passive title                                               */
-/*        3 = Active frame                                                */
-/*        4 = Active title                                                */
-/*        5 = Icons                                                       */
+/* Структура палитры */
+/* 1 = Неактивная рамка */
+/* 2 = Неактивный заголовок */
+/* 3 = Активная рамка */
+/* 4 = Активный заголовок */
+/* 5 = Значки */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TFrame ) && !defined( __TFrame )
@@ -603,12 +603,12 @@ inline opstream& operator << ( opstream& os, TFrame* cl )
 #endif  // Uses_TFrame
 
 /* ---------------------------------------------------------------------- */
-/*      class TScrollBar                                                  */
+/* класс TScrollBar */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Page areas                                                  */
-/*        2 = Arrows                                                      */
-/*        3 = Indicator                                                   */
+/* Структура палитры */
+/* 1 = Области страниц */
+/* 2 = Стрелки */
+/* 3 = Индикатор */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TScrollBar ) && !defined( __TScrollBar )
@@ -685,11 +685,11 @@ inline opstream& operator << ( opstream& os, TScrollBar* cl )
 #endif  // Uses_TScrollBar
 
 /* ---------------------------------------------------------------------- */
-/*      class TScroller                                                   */
+/* класс TScroller */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*      1 = Normal text                                                   */
-/*      2 = Selected text                                                 */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Выделенный текст */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TScroller ) && !defined( __TScroller )
@@ -761,14 +761,14 @@ inline opstream& operator << ( opstream& os, TScroller* cl )
 #endif  // Uses_TScroller
 
 /* ---------------------------------------------------------------------- */
-/*      class TListViewer                                                 */
+/* класс TListViewer */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Active                                                      */
-/*        2 = Inactive                                                    */
-/*        3 = Focused                                                     */
-/*        4 = Selected                                                    */
-/*        5 = Divider                                                     */
+/* Структура палитры */
+/* 1 = Активный */
+/* 2 = Неактивный */
+/* 3 = В фокусе */
+/* 4 = Выделенный */
+/* 5 = Разделитель */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TListViewer ) && !defined( __TListViewer )
@@ -980,17 +980,17 @@ protected:
 };
 
 /* ---------------------------------------------------------------------- */
-/*      class TWindow                                                     */
+/* класс TWindow */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Frame passive                                               */
-/*        2 = Frame active                                                */
-/*        3 = Frame icon                                                  */
-/*        4 = ScrollBar page area                                         */
-/*        5 = ScrollBar controls                                          */
-/*        6 = Scroller normal text                                        */
-/*        7 = Scroller selected text                                      */
-/*        8 = Reserved                                                    */
+/* Структура палитры */
+/* 1 = Неактивная рамка */
+/* 2 = Активная рамка */
+/* 3 = Значок рамки */
+/* 4 = Область страницы полосы прокрутки */
+/* 5 = Элементы полосы прокрутки */
+/* 6 = Обычный текст прокручиваемого представления */
+/* 7 = Выделенный текст прокручиваемого представления */
+/* 8 = Зарезервировано */
 /* ---------------------------------------------------------------------- */
 
 class TWindow: public TGroup, public virtual TWindowInit

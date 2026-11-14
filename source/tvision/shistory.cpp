@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       shistory.cpp                              */
+/* файл — shistory.cpp */
 /*                                                            */
-/* Registeration object for the class THistory                */
+/* Объект регистрации класса THistory. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

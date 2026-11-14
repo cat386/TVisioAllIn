@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmstctxt.cpp                              */
+/* файл — nmstctxt.cpp */
 /*                                                            */
-/* defines the streamable name for class TStaticText          */
+/* Определяет имя сериализуемого класса TStaticText. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

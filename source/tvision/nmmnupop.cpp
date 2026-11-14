@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmmnupop.cpp                              */
+/* файл — nmmnupop.cpp */
 /*                                                            */
-/* defines the streamable name for class TMenuPopup           */
+/* Определяет имя сериализуемого класса TMenuPopup. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

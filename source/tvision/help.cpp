@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       Help.cpp                                  */
+/* файл — Help.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  Member function(s) of following classes   */
+/* функции:  */
+/* Методы следующих классов. */
 /*                      THelpViewer                           */
 /*                      THelpWindow                           */
 /*------------------------------------------------------------*/
@@ -71,7 +71,7 @@ THelpViewer::THelpViewer( const TRect& bounds, TScrollBar* aHScrollBar,
     growMode = gfGrowHiX | gfGrowHiY;
     hFile = aHelpFile;
     topic = aHelpFile->getTopic(context);
-    topic->setWidth(size.x); // Width used for line wrapping.
+    topic->setWidth(size.x); // Ширина для переноса строк.
     setLimit(topic->longestLineWidth(), topic->numLines());
     selected = 1;
 }

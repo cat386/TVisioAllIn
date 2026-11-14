@@ -1,6 +1,6 @@
 /*---------------------------------------------------------*/
 /*                                                         */
-/*   Turbo Vision Puzzle Demo                              */
+/* Демонстрация головоломки Turbo Vision. */
 /*                                                         */
 /*---------------------------------------------------------*/
 /*
@@ -38,8 +38,8 @@ __link( RWindow )
 #define cpPuzzlePalette "\x06\x07"
 
 
+// Методы и статические переменные TPuzzleView.
 //
-// TPuzzleView functions & static variables
 //
 
 const char * const TPuzzleView::name = "TPuzzleView";
@@ -91,8 +91,8 @@ static char map[15] =
 
 TPuzzleView::TPuzzleView(TRect& r) : TView(r)
 {
-    /* Initialize random number generator so that rand(), later used in
-     * scramble(), works properly. */
+    /* Инициализируем генератор случайных чисел, чтобы rand(), используемая далее в scramble(), работала правильно.
+ */
     srand((uint)time(0));
 
     options |= ofSelectable;
@@ -236,19 +236,19 @@ void TPuzzleView::moveTile(TPoint p)
 
     switch( (y*4 + x - i) )
         {
-        case -4:                            //  Piece moves down
+        case -4:                            // Фишка перемещается вниз.
             moveKey(kbDown);
             break;
 
-        case -1:                            //  Piece moves right
+        case -1:                            // Фишка перемещается вправо.
             moveKey(kbRight);
             break;
 
-        case 1:                             //  Piece moves left
+        case 1:                             // Фишка перемещается влево.
             moveKey(kbLeft);
             break;
 
-        case 4:                             //  Piece moves up
+        case 4:                             // Фишка перемещается вверх.
             moveKey(kbUp);
             break;
 
@@ -302,8 +302,8 @@ void TPuzzleView::winCheck()
 }
 
 
+// Методы TPuzzleWindow
 //
-// TPuzzleWindow functions
 //
 
 const char * const TPuzzleWindow::name = "TPuzzleWindow";

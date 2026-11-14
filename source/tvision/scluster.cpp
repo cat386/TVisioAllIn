@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       scluster.cpp                              */
+/* файл — scluster.cpp */
 /*                                                            */
-/* Registeration object for the class TCluster                */
+/* Объект регистрации класса TCluster. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

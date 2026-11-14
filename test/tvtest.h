@@ -1,18 +1,18 @@
 #ifndef TVISION_TVTEST_H
 #define TVISION_TVTEST_H
 
-// A minimal unit testing framework, source-compatible with the subset of
-// GoogleTest used by Turbo Vision's tests:
+// Минимальная среда модульного тестирования, совместимая с используемой
+// в Turbo Vision частью GoogleTest: TEST(Suite, Name), TEST_F(Fixture,
+// Name), фикстуры от testing::Test с конструктором, деструктором и
+// SetUp/TearDown. Поддерживает EXPECT_EQ, EXPECT_NE, EXPECT_TRUE,
+// EXPECT_FALSE и варианты ASSERT_*, с добавлением сообщения через '<<';
+// testing::PrintToString; параметры --gtest_filter=POSITIVE[-NEGATIVE] и
+// --gtest_list_tests. Позволяет собирать тесты без внешних зависимостей.
 //
-// * TEST(Suite, Name) and TEST_F(Fixture, Name), with fixtures derived from
-//   'testing::Test' (constructor/destructor, SetUp/TearDown).
-// * EXPECT_EQ, EXPECT_NE, EXPECT_TRUE, EXPECT_FALSE and their ASSERT_*
-//   counterparts, to which a message can be appended with '<<'.
-// * testing::PrintToString.
-// * Command line options: --gtest_filter=POSITIVE[-NEGATIVE] and
-//   --gtest_list_tests.
 //
-// It exists so that the tests can be built without external dependencies.
+//
+//
+//
 
 #include <ostream>
 #include <sstream>
@@ -75,7 +75,7 @@ public:
 namespace internal
 {
 
-// Printing of values.
+// Вывод значений.
 
 template <class T, class = void>
 struct IsStreamable : std::false_type {};
@@ -106,13 +106,13 @@ template <class T, size_t N>
 inline void printValue(const T (&value)[N], std::ostream &os);
 
 template <class T>
-inline void printDispatch(const T &value, std::ostream &os, std::true_type /*streamable*/, ...)
+inline void printDispatch(const T &value, std::ostream &os, std::true_type /* Сериализуемый в поток. */, ...)
 {
     os << value;
 }
 
 template <class T>
-inline void printDispatch(const T &value, std::ostream &os, std::false_type, std::true_type /*container*/)
+inline void printDispatch(const T &value, std::ostream &os, std::false_type, std::true_type /* Контейнер. */)
 {
     os << "{ ";
     bool first = true;
@@ -160,7 +160,7 @@ inline void printValue(const T (&value)[N], std::ostream &os)
     os << " }";
 }
 
-// Test registration and execution.
+// Регистрация и выполнение тестов.
 
 struct TestInfo
 {
@@ -199,9 +199,9 @@ public:
     }
 };
 
-// Comparisons between values of different signedness are common in tests;
-// like GoogleTest (whose headers are usually treated as system headers),
-// do not warn about them.
+// Тесты часто сравнивают значения разной знаковости. Как GoogleTest, чьи
+// заголовки обычно считаются системными, не выдаём предупреждений об
+// этом.
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
@@ -256,13 +256,13 @@ inline AssertionResult boolHelper(const char *expr, bool value, bool expected)
 
 int runAllTests(int argc, char **argv);
 
-} // namespace internal
+} // пространство имён internal
 
 namespace internal
 {
 
 template <class T>
-inline void streamValue(const T &value, std::ostream &os, std::true_type /*streamable*/)
+inline void streamValue(const T &value, std::ostream &os, std::true_type /* Сериализуемый в поток. */)
 {
     os << value;
 }
@@ -273,12 +273,12 @@ inline void streamValue(const T &value, std::ostream &os, std::false_type)
     printValue(value, os);
 }
 
-} // namespace internal
+} // пространство имён internal
 
 template <class T>
 inline Message &Message::operator<<(const T &value)
 {
-    // Like GoogleTest, streamable values are written as they are.
+    // Как в GoogleTest, значения с оператором вывода в поток записываются без преобразований.
     internal::streamValue(value, ss, internal::IsStreamable<T>());
     return *this;
 }
@@ -291,7 +291,7 @@ inline std::string PrintToString(const T &value)
     return os.str();
 }
 
-} // namespace testing
+} // пространство имён testing
 
 #define TVTEST_TEST_CLASS_NAME_(suite, name) suite##_##name##_Test
 

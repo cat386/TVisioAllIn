@@ -1,4 +1,4 @@
-# Turbo Vision sources.
+# Исходные файлы Turbo Vision.
 
 file(GLOB_RECURSE TVSOURCE "${CMAKE_CURRENT_LIST_DIR}/*/*.cpp")
 
@@ -23,7 +23,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         /Zc:externConstexpr
         /Zc:inline
     )
-    if (TV_REDUCE_APP_SIZE) # Implies CMake >= 3.13.0
+    if (TV_REDUCE_APP_SIZE) # Подразумевает CMake >= 3.13.0.
         target_compile_options(${PROJECT_NAME} PRIVATE
             /Gy
         )
@@ -32,7 +32,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         )
     endif()
 else()
-    if (TV_REDUCE_APP_SIZE) # Implies CMake >= 3.13.0
+    if (TV_REDUCE_APP_SIZE) # Подразумевает CMake >= 3.13.0.
         target_compile_options(${PROJECT_NAME} PRIVATE
             -fdata-sections -ffunction-sections
         )
@@ -43,8 +43,8 @@ else()
 endif()
 
 foreach (cfg ${CMAKE_CONFIGURATION_TYPES})
-    # Ensure all configurations produce different library names,
-    # so that they can be installed together.
+    # Все конфигурации должны создавать библиотеки с разными именами для
+    # совместной установки.
     string(TOUPPER ${cfg} cfg_up)
     string(TOLOWER ${cfg} cfg_low)
     if (NOT (cfg_up STREQUAL "RELEASE"))
@@ -52,7 +52,7 @@ foreach (cfg ${CMAKE_CONFIGURATION_TYPES})
     endif()
 endforeach()
 
-if (TV_USE_STATIC_RTL) # Implies MSVC
+if (TV_USE_STATIC_RTL) # Подразумевает MSVC.
     target_compile_options(${PROJECT_NAME} PUBLIC
         /MT$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:d>
     )
@@ -64,14 +64,14 @@ if (WIN32)
         _CRT_SECURE_NO_WARNINGS
     )
     target_compile_definitions(${PROJECT_NAME} PRIVATE
-        # We need Windows Vista symbols during compilation (GetCurrentConsoleFontEx, etc.),
-        # even though the program may be able to run in older versions.
+        # При компиляции нужны символы Windows Vista, например
+        # GetCurrentConsoleFontEx, хотя программа может работать и в старых версиях.
         _WIN32_WINNT=0x0600
     )
 endif()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-    # Do not include unnecessary STL headers to speed up compilation.
+    # Не подключаем ненужные заголовки STL, чтобы ускорить компиляцию.
     TVISION_NO_STL
 )
 
@@ -86,13 +86,13 @@ if (IS_BIG_ENDIAN)
     )
 endif()
 
-# Dependencies
+# Зависимости. Turbo Vision требует только библиотеку времени выполнения
+# C/C++ и системные API. В Unix терминал обслуживается напрямую; см.
+# source/platform/terminfo.cpp, termdisp.cpp и terminp.cpp. Поддержка
+# мыши GPM реализована прямым обменом с сервером GPM; см.
+# source/platform/gpminput.cpp.
 #
-# Turbo Vision has no external dependencies other than the C/C++ runtime and
-# the system APIs. On Unix, the terminal is handled directly (see
-# 'source/platform/terminfo.cpp', 'termdisp.cpp' and 'terminp.cpp') and GPM
-# mouse support is implemented by talking to the GPM server directly
-# (see 'source/platform/gpminput.cpp').
+#
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TV_BUILD_USING_GPM)
     target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GPM)
@@ -101,9 +101,9 @@ endif()
 
 tv_set_output_dir(${PROJECT_NAME})
 
-# allow CMAKE_INSTALL_PREFIX to decide final install position
+# Конечный каталог установки статической библиотеки определяется
+# CMAKE_INSTALL_PREFIX.
 #
-# static lib
 #
 install(TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}-config
@@ -111,7 +111,7 @@ install(TARGETS ${PROJECT_NAME}
     COMPONENT library
 )
 
-# package configuration
+# Конфигурация пакета.
 
 install(EXPORT ${PROJECT_NAME}-config
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
@@ -120,20 +120,20 @@ install(EXPORT ${PROJECT_NAME}-config
     COMPONENT library
 )
 
-# includes
-# ./include/tvision and children copied to destination/include/tvision etc...
+# Заголовки ./include/tvision и подкаталогов копируются в
+# destination/include/tvision и далее.
 #
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/tvision" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-# Build optimization
+# Оптимизация сборки.
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.16.0" AND TV_OPTIMIZE_BUILD)
-    # Enable precompiled headers.
+    # Включаем предкомпилированные заголовки.
     target_precompile_headers(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/include/pch.h")
 
     if (TV_LIBRARY_UNITY_BUILD)
-        # Enable Unity Build.
-        # Files with non-trivial global variables must not be included in Unity Build.
+        # Включаем объединённую сборку Unity. Файлы с нетривиальными глобальными
+        # переменными не должны входить в Unity.
         file(GLOB_RECURSE TVSOURCE_NOUNITY "${CMAKE_CURRENT_LIST_DIR}/tvision/s*.cpp")
         list(APPEND TVSOURCE_NOUNITY "${CMAKE_CURRENT_LIST_DIR}/tvision/new.cpp")
         list(REMOVE_ITEM TVSOURCE_NOUNITY

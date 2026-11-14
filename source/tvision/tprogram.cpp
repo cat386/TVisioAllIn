@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tprogram.cpp                              */
+/* файл — tprogram.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TProgram member functions                 */
+/* функции:  */
+/* Методы TProgram */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -29,14 +29,14 @@
 #include <tvision/tv.h>
 #include <tvision/themes.h>
 
-// Public variables
+// Открытые переменные
 
 TStatusLine * _NEAR TProgram::statusLine = 0;
 TMenuBar * _NEAR TProgram::menuBar = 0;
 TDeskTop * _NEAR TProgram::deskTop = 0;
 TProgram * _NEAR TProgram::application = 0;
 int _NEAR TProgram::appPalette = apColor;
-int _NEAR TProgram::eventTimeoutMs = 20; // 50 wake-ups per second.
+int _NEAR TProgram::eventTimeoutMs = 20; // 50 пробуждений в секунду.
 TEvent _NEAR TProgram::pending;
 TTimerQueue _NEAR TProgram::timerQueue;
 

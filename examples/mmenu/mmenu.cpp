@@ -1,9 +1,9 @@
-/***********************************************************************
- *                                                                     *
- * MMENU.CPP                                                           *
- *   This module contains the code to support the TMultiMenu class.    *
- *                                                                     *
- ***********************************************************************/
+/*
+ * MMENU.CPP. Модуль содержит реализацию класса TMultiMenu.
+ *
+ *
+ *
+ */
 
 #define Uses_TEvent
 #define Uses_TMenu
@@ -17,15 +17,15 @@
 #endif
 
 
-/***********************************************************************
- * global operator +
+/*
+ * Глобальный operator+. Объекты всегда находятся в связанном списке, а
+ * operator+ вычисляется слева направо. Поэтому добавляем menuItem2 в
+ * конец menuItem1 и возвращаем menuItem1.
  *
- * Since the objects will always be in a linked list, and the operator+
- * is processd left-to-right, we will define the function as appending
- * menuItem2 to menuItem1, and then return menuItem1.
- ***********************************************************************/
+ *
+ */
 
-#if 0 // This function is now already provided by the library.
+#if 0 // Эта функция уже предоставляется библиотекой.
 TMenuItem& operator +( TMenuItem& menuItem1, TMenuItem& menuItem2 )
 {
     TMenuItem *p = &menuItem1;
@@ -37,15 +37,15 @@ TMenuItem& operator +( TMenuItem& menuItem1, TMenuItem& menuItem2 )
 #endif
 
 
-/***********************************************************************
- *                                                                     *
- * class TTestList                                                     *
- *                                                                     *
- ***********************************************************************
- * TMultiMenu::TMultiMenu
- *   Constructor for a TMultiMenu object.  This version takes an array
- *   of TMenu pointers.
- ***********************************************************************/
+/*
+ * Класс TTestList. TMultiMenu::TMultiMenu — конструктор объекта
+ * TMultiMenu. Эта версия принимает массив указателей TMenu.
+ *
+ *
+ *
+ *
+ *
+ */
 
 TMultiMenu::TMultiMenu( const TRect& bounds, TMenu *aMenu[],
             int nMenus ) :    TMenuBar( bounds, aMenu[0] )
@@ -61,11 +61,11 @@ TMultiMenu::TMultiMenu( const TRect& bounds, TMenu *aMenu[],
 }
 
 
-/***********************************************************************
- * TMultiMenu::TMultiMenu
- *   Constructor for a TMultiMenu object.  This version takes an array
- *   of TSubMenu objects.
- ***********************************************************************/
+/*
+ * TMultiMenu::TMultiMenu — конструктор объекта TMultiMenu. Эта версия
+ * принимает массив объектов TSubMenu.
+ *
+ */
 
 TMultiMenu::TMultiMenu( const TRect& bounds, TSubMenu aMenu[],
                         int nMenus ) :
@@ -73,35 +73,35 @@ TMultiMenu::TMultiMenu( const TRect& bounds, TSubMenu aMenu[],
     mList( new TMenu *[nMenus] ),
     numMenus( nMenus )
 {
-    mList[0] = menu;                  // First menu is already allocated.
+    mList[0] = menu;                  // Первое меню уже создано.
     for( int i = 1; i < nMenus; i++ )
         mList[i] = new TMenu( aMenu[i] );
 }
 
 
-/***********************************************************************
- * TMultiMenu::~TMultiMenu
- *   Destructor for a TMultiMenu object.  Destroys any stored menus
- *   except for the current one (which will be destroyed by ~TMenuBar)
- *   and frees the space where the list was stored.
- ***********************************************************************/
+/*
+ * TMultiMenu::~TMultiMenu — деструктор объекта TMultiMenu. Уничтожает
+ * все сохранённые меню, кроме текущего, которое удалит ~TMenuBar, и
+ * освобождает память списка.
+ *
+ */
 
 TMultiMenu::~TMultiMenu()
 {
     for( int i = 0; i < numMenus; i++ )
-        if( mList[i] != menu )          // Delete all but current menu.
+        if( mList[i] != menu )          // Удаляем все меню, кроме текущего.
             delete mList[i];
 
     delete [] mList;
 }
 
 
-/***********************************************************************
- * TMultiMenu::handleEvent
- *   Code to respond to the cmMMChangeMenu broadcast message.  The
- *   data the arrives with this message specifies which menu to switch
- *   to, passed via the infoInt data member of TEvent.
- ***********************************************************************/
+/*
+ * TMultiMenu::handleEvent обрабатывает широковещательное сообщение
+ * cmMMChangeMenu. Данные сообщения задают номер меню для переключения и
+ * передаются в поле infoInt объекта TEvent.
+ *
+ */
 
 void TMultiMenu::handleEvent( TEvent& event )
 {

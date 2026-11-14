@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sinputli.cpp                              */
+/* файл — sinputli.cpp */
 /*                                                            */
-/* Registeration object for the class TInputLine              */
+/* Объект регистрации класса TInputLine. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

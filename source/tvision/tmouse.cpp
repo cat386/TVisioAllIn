@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tmouse.cpp                                */
+/* файл — tmouse.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TMouse and THWMouse member functions      */
+/* функции:  */
+/* Методы TMouse и THWMouse. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

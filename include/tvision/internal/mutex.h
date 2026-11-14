@@ -10,7 +10,7 @@ namespace tvision
 #warning The code below assumes that atomic pointers are lock-free, but they are not.
 #endif
 
-// Spinlock-based mutex that ensures signal safety, unlike the STL mutexes.
+// Мьютекс на основе спин-блокировки, безопасный для обработчиков сигналов, в отличие от мьютексов STL.
 struct SignalSafeMutexState
 {
     using ThreadId = const void *;
@@ -60,7 +60,7 @@ struct SignalSafeReentrantMutex
     SignalSafeMutexState state;
 
     template <class Func>
-    // 'func' takes a 'T &' by parameter.
+    // func принимает параметр типа T &.
     auto lock(Func &&func) noexcept
     {
         SignalSafeMutexState::LockGuard lk {lockedByCurrentThread() ? nullptr
@@ -74,6 +74,6 @@ struct SignalSafeReentrantMutex
     }
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_MUTEX_H

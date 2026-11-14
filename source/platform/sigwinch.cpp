@@ -15,8 +15,8 @@ void SigwinchHandler::handleSignal(int) noexcept
 {
     if (instance)
         instance->signal();
-    // Don't call the previous SIGWINCH handler. Handlers installed by other
-    // terminal libraries (e.g. Ncurses) may clear the screen and cause blinking.
+    // Не вызываем прежний обработчик SIGWINCH: обработчики других терминальных
+    // библиотек, например Ncurses, могут очистить экран и вызвать мерцание.
 }
 
 bool SigwinchHandler::emitScreenChangedEvent(void *, TEvent &ev) noexcept
@@ -58,6 +58,6 @@ SigwinchHandler::~SigwinchHandler()
     instance = nullptr;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

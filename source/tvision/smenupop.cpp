@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       smenupop.cpp                              */
+/* файл — smenupop.cpp */
 /*                                                            */
-/* Registeration object for the class TMenuPopup              */
+/* Объект регистрации класса TMenuPopup. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmmnuvw.cpp                               */
+/* файл — nmmnuvw.cpp */
 /*                                                            */
-/* defines the streamable name for class TMenuView            */
+/* Определяет имя сериализуемого класса TMenuView. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

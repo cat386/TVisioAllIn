@@ -29,8 +29,8 @@ inline LinuxConsoleAdapter::LinuxConsoleAdapter( DisplayAdapter &aDisplay,
     wrapper(aWrapper),
     gpm(aGpm)
 {
-    // Ensure we don't miss a possible undetected screen size change (e.g. after
-    // recovering from SIGTSTP).
+    // Не пропускаем незамеченное изменение размера экрана, например после
+    // восстановления из SIGTSTP.
     if (sigwinch)
         sigwinch->signal();
 }
@@ -59,23 +59,23 @@ LinuxConsoleAdapter::~LinuxConsoleAdapter()
 
 bool LinuxConsoleInput::getEvent(TEvent &ev) noexcept
 {
-    // The keyboard event getter is usually unaware of key modifiers in the
-    // console, so we add them on top of the previous translation.
+    // Функция чтения клавиш обычно не знает модификаторы консоли, поэтому
+    // дополняем ими результат предыдущего преобразования.
     if (input.getEvent(ev))
     {
         auto &keyCode = ev.keyDown.keyCode;
         auto &controlKeyState = ev.keyDown.controlKeyState;
         controlKeyState = getKeyboardModifiers();
-        // Prevent Ctrl+H/Ctrl+I/Ctrl+J/Ctrl+M from being interpreted as
+        // Не трактуем Ctrl+H/Ctrl+I/Ctrl+J/Ctrl+M как
         // Ctrl+Back/Ctrl+Tab/Ctrl+Enter.
         if (keyCode == kbBack || keyCode == kbTab || keyCode == kbEnter)
             controlKeyState &= ~kbCtrlShift;
-        // Special cases for Ctrl+Back, Shift+Tab and Alt+Tab.
+        // Особые случаи Ctrl+Back, Shift+Tab и Alt+Tab.
         if (keyCode == 0x001F && (controlKeyState & kbCtrlShift))
             keyCode = kbCtrlBack;
         else if (keyCode == kbShiftTab || keyCode == kbAltTab)
-            keyCode = kbTab; // Take into account just the controlKeyState modifiers.
-        // If right Alt produces text, it's AltGr and we should discard the modifier.
+            keyCode = kbTab; // Учитываем только модификаторы controlKeyState. Если правый Alt создаёт
+        // текст, это AltGr и модификатор нужно отбросить.
         if ((controlKeyState & kbRightAlt) && ev.keyDown.textLength != 0)
             controlKeyState &= ~kbRightAlt;
         TermIO::normalizeKey(ev.keyDown);
@@ -116,12 +116,12 @@ ushort LinuxConsoleInput::convertLinuxKeyModifiers(ushort linuxShiftState) noexc
     for (const auto &flags : linuxModifierFlags)
         if (linuxShiftState & flags.kb)
             modifiers |= flags.tv;
-    // It may be that KG_CTRL was detected, but not KG_CTRLL or KG_CTRLR.
+    // Возможно, обнаружен KG_CTRL, но не KG_CTRLL и не KG_CTRLR.
     if ((linuxShiftState & (1 << KG_CTRL)) && !(modifiers & kbCtrlShift))
         modifiers |= kbLeftCtrl;
     return modifiers;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // __linux__

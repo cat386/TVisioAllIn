@@ -12,8 +12,8 @@
 namespace tvision
 {
 
-// Names of the standard capabilities, in the order in which they are stored
-// in compiled terminfo entries (the System V order, also used by Ncurses).
+// Имена стандартных возможностей в порядке хранения в скомпилированном
+// terminfo: порядок System V, используемый также Ncurses.
 
 static const char *const boolNames[] =
 {
@@ -91,35 +91,35 @@ static_assert(boolNameCount == 44, "");
 static_assert(numNameCount == 39, "");
 static_assert(strNameCount == 414, "");
 
-/////////////////////////////////////////////////////////////////////////
-// Binary format reader.
+// Чтение двоичного формата. Все целые — little-endian. Запись terminfo
+// начинается шестью 16-битными числами: сигнатура, размер секции имён,
+// число логических, числовых и строковых возможностей и размер таблицы
+// строк. Сигнатура 0432 в восьмеричной системе означает 16-битные числа,
+// 01036 — 32-битные. Далее идут имена терминалов через '|', завершённые
+// нулём; логические значения по байту; при необходимости байт
+// выравнивания до чётного смещения; числа по 16 или 32 бита; 16-битные
+// смещения строк; таблица строк. Отрицательные числа и смещения означают
+// отсутствие или отмену. Необязательная расширенная секция
+// пользовательских возможностей начинается с чётного смещения. Её
+// заголовок содержит пять 16-битных чисел: количества логических,
+// числовых и строковых возможностей, число элементов таблицы строк и её
+// размер. Затем идут логические значения, выравнивание, числа, строковые
+// смещения и смещения имён возможностей в порядке логических, числовых и
+// строковых. Имена находятся в таблице непосредственно после значений
+// строк, смещения отсчитываются от начала имён. Завершает секцию таблица
+// строк.
 //
-// A compiled terminfo entry is laid out as follows (all integers are
-// little-endian):
 //
-// * Header: six 16-bit integers: magic number, size of the names section,
-//   number of booleans, number of numbers, number of strings and size of
-//   the string table. The magic number is 0432 (octal) when numbers are
-//   16-bit and 01036 when they are 32-bit.
-// * The terminal names, separated by '|' and null-terminated.
-// * Booleans, one byte each. A padding byte follows if needed so that the
-//   next section starts at an even offset.
-// * Numbers (16 or 32 bits each). Negative values mean absent/cancelled.
-// * String offsets (16 bits each) into the string table. Negative values
-//   mean absent/cancelled.
-// * The string table.
 //
-// Optionally, an extended section for user-defined capabilities follows,
-// starting at an even offset:
 //
-// * Header: five 16-bit integers: number of booleans, number of numbers,
-//   number of strings, number of entries in the string table and size of
-//   the string table.
-// * Booleans, padding, numbers and string offsets, as above.
-// * Offsets of the capability names, for booleans, numbers and strings,
-//   in this order. They are relative to the beginning of the names, which
-//   are stored in the string table right after the string values.
-// * The string table.
+//
+//
+//
+//
+//
+//
+//
+//
 
 namespace
 {
@@ -186,7 +186,7 @@ public:
     }
 };
 
-} // namespace
+} // пространство имён
 
 static bool getTableString( const uint8_t *table, size_t tableSize,
                             int offset, std::string &result ) noexcept
@@ -258,7 +258,7 @@ bool TermInfo::parse(const char *aData, size_t aSize, TermInfo &ti) noexcept
         }
     }
 
-    // Extended section (optional).
+    // Расширенная секция, необязательная.
     r.alignEven();
     if (r.remaining() >= 10)
     {
@@ -270,7 +270,7 @@ bool TermInfo::parse(const char *aData, size_t aSize, TermInfo &ti) noexcept
         (void) extStrUsage;
         if ( !r.ok || extBoolCount < 0 || extNumCount < 0 || extStrCount < 0
              || extStrSize < 0 )
-            return true; // Ignore a malformed extended section.
+            return true; // Игнорируем повреждённую расширенную секцию.
 
         std::vector<uint8_t> boolValues;
         if (const uint8_t *b = r.take(extBoolCount))
@@ -289,7 +289,7 @@ bool TermInfo::parse(const char *aData, size_t aSize, TermInfo &ti) noexcept
         if (!r.ok)
             return true;
 
-        // The names begin right after the last string value.
+        // Имена начинаются непосредственно после последнего строкового значения.
         size_t namesBegin = 0;
         for (int off : strOffsets)
             if (off >= 0 && off < extStrSize)
@@ -317,13 +317,13 @@ bool TermInfo::parse(const char *aData, size_t aSize, TermInfo &ti) noexcept
     return true;
 }
 
-/////////////////////////////////////////////////////////////////////////
-// Database lookup.
+// Поиск в базе данных.
+//
 
 static bool readFile(const std::string &path, std::string &result) noexcept
 {
-    // Compiled entries are small (Ncurses limits them to 32 KiB, or 128 KiB
-    // in the extended format).
+    // Скомпилированные записи невелики: Ncurses ограничивает их 32 КиБ либо
+    // 128 КиБ в расширенном формате.
     enum { maxSize = 1 << 20 };
     bool ok = false;
     if (FILE *f = fopen(path.c_str(), "rb"))
@@ -346,8 +346,8 @@ static bool tryDirectory(const std::string &dir, const char *termName, TermInfo 
     char first = termName[0];
     char hex[3];
     snprintf(hex, sizeof(hex), "%02x", (unsigned char) first);
-    // Two layouts exist: 'x/xterm' (most systems) and '78/xterm'
-    // (case-insensitive filesystems, e.g. macOS).
+    // Есть две схемы размещения: x/xterm в большинстве систем и 78/xterm в
+    // регистронезависимых файловых системах, например macOS.
     for (const char *subdir : {(const char *) nullptr, (const char *) hex})
     {
         std::string path = dir;
@@ -368,8 +368,8 @@ static bool tryDirectory(const std::string &dir, const char *termName, TermInfo 
     return false;
 }
 
-// Default system locations of the terminfo database. The list covers the
-// locations used by Ncurses on common distributions and package managers.
+// Стандартные системные каталоги базы terminfo. Список охватывает
+// распространённые дистрибутивы и менеджеры пакетов Ncurses.
 static const char *const defaultDirs[] =
 {
     "/etc/terminfo",
@@ -393,12 +393,12 @@ bool TermInfo::loadFromDatabase(const char *termName, TermInfo &ti) noexcept
     if (!termName || !*termName || strchr(termName, '/') || strlen(termName) > 255)
         return false;
 
-    // Search order, as in Ncurses:
-    // 1. $TERMINFO.
-    // 2. $HOME/.terminfo.
-    // 3. Each directory in $TERMINFO_DIRS, where an empty entry stands for
-    //    the system locations.
-    // 4. The system locations.
+    // Порядок поиска как в Ncurses: $TERMINFO; $HOME/.terminfo; каталоги из
+    // $TERMINFO_DIRS, где пустой элемент означает системные каталоги; затем
+    // системные каталоги.
+    //
+    //
+    //
     if (const char *env = getenv("TERMINFO"))
         if (tryDirectory(env, termName, ti))
             return true;
@@ -428,14 +428,14 @@ bool TermInfo::loadFromDatabase(const char *termName, TermInfo &ti) noexcept
     for (const char *dir : defaultDirs)
         if (tryDirectory(dir, termName, ti))
             return true;
-    if (const char *prefix = getenv("PREFIX")) // Termux and similar.
+    if (const char *prefix = getenv("PREFIX")) // Termux и подобные среды.
         if (*prefix && tryDirectory(std::string(prefix) + "/share/terminfo", termName, ti))
             return true;
     return false;
 }
 
-/////////////////////////////////////////////////////////////////////////
-// Built-in descriptions, used when the terminal type is not in the database.
+// Встроенные описания используются, если тип терминала отсутствует в
+// базе.
 
 #include "terminfo_builtin.h"
 
@@ -454,8 +454,8 @@ void TermInfo::builtin(const char *termName, TermInfo &ti) noexcept
         ti.strs.push_back({cap.name, cap.value});
     for (const auto &cap : entry->nums)
         ti.nums.emplace_back(cap.name, cap.value);
-    // A generic terminal described as 'something-256color' most likely
-    // supports 256 colors. Otherwise, assume the entry's default.
+    // Терминал с именем вида something-256color, скорее всего, поддерживает
+    // 256 цветов. Иначе предполагаем значение записи по умолчанию.
     if (entry == &builtinXTerm)
     {
         int colors = 8;
@@ -474,8 +474,8 @@ void TermInfo::builtin(const char *termName, TermInfo &ti) noexcept
 
 const TermInfo &TermInfo::get(const char *termName) noexcept
 {
-    // The terminal type does not usually change during the lifetime of the
-    // process, but it might (e.g. if the application changes TERM).
+    // Тип терминала обычно постоянен в течение жизни процесса, но может
+    // измениться, например при изменении TERM приложением.
     static std::vector<TermInfo *> cache;
     std::string name = termName ? termName : "";
     for (TermInfo *ti : cache)
@@ -513,14 +513,14 @@ const char *TermInfo::getStr(const char *name) const noexcept
     return nullptr;
 }
 
-/////////////////////////////////////////////////////////////////////////
-// Parameterized strings.
+// Параметризованные строки. Реализует язык из раздела Parameterized
+// Strings справки terminfo(5): '%%', '%c', '%s',
+// '%[[:]flags][width[.precision]][doxX]', '%p[1-9]', '%P[a-z]',
+// '%g[a-z]', '%P[A-Z]', '%g[A-Z]', '%'c'', '%{nn}', '%l', '%+', '%-',
+// '%*', '%/', '%m', '%&', '%|', '%^', '%=', '%>', '%<', '%A', '%O',
+// '%!', '%~', '%i' и '%? expr %t then %e else %;'.
 //
-// Implements the language described in terminfo(5), section "Parameterized
-// Strings": '%%', '%c', '%s', '%[[:]flags][width[.precision]][doxX]',
-// '%p[1-9]', '%P[a-z]', '%g[a-z]', '%P[A-Z]', '%g[A-Z]', '%'c'', '%{nn}', '%l',
-// '%+', '%-', '%*', '%/', '%m', '%&', '%|', '%^', '%=', '%>', '%<', '%A',
-// '%O', '%!', '%~', '%i' and '%? expr %t then %e else %;'.
+//
 
 namespace
 {
@@ -537,10 +537,10 @@ public:
     int pop() noexcept { return size > 0 ? data[--size] : 0; }
 };
 
-} // namespace
+} // пространство имён
 
-// Skips to the matching '%e' or '%;' (if 'elseToo') or '%;', taking nested
-// conditionals into account. Returns the position after it.
+// Пропускает до соответствующего '%e' или '%;' при elseToo, иначе до
+// '%;', учитывая вложенные условия. Возвращает позицию после него.
 static const char *skipConditional(const char *s, bool stopAtElse) noexcept
 {
     int depth = 0;
@@ -596,14 +596,14 @@ std::string TermInfo::tparm(const char *str, const int *params, int paramCount) 
             case '%': out += '%'; break;
             case 'c':
             {
-                // Like Ncurses, a null character is output as '\200'.
+                // Как Ncurses, выводим нулевой символ в виде '\200'.
                 char ch = (char) stack.pop();
                 out += ch ? ch : '\200';
                 break;
             }
             case 's':
             {
-                // Strings are not supported as parameters; print the number.
+                // Строковые параметры не поддерживаются; выводим число.
                 char buf[32];
                 snprintf(buf, sizeof(buf), "%d", stack.pop());
                 out += buf;
@@ -643,8 +643,8 @@ std::string TermInfo::tparm(const char *str, const int *params, int paramCount) 
                 stack.push((int) n);
                 break;
             }
-            case 'l': stack.pop(); stack.push(0); break; // Strings are not supported.
-            // Arithmetic wraps around on overflow.
+            case 'l': stack.pop(); stack.push(0); break; // Строки не поддерживаются. При арифметическом переполнении выполняется
+            // циклический переход.
             case '+': { unsigned b = stack.pop(), a = stack.pop(); stack.push((int) (a + b)); break; }
             case '-': { unsigned b = stack.pop(), a = stack.pop(); stack.push((int) (a - b)); break; }
             case '*': { unsigned b = stack.pop(), a = stack.pop(); stack.push((int) (a * b)); break; }
@@ -667,13 +667,13 @@ std::string TermInfo::tparm(const char *str, const int *params, int paramCount) 
                     s = skipConditional(s, true);
                 break;
             case 'e':
-                // Reached the end of a 'then' part: skip the 'else' part.
+                // Достигнут конец ветви then: пропускаем else.
                 s = skipConditional(s, false);
                 break;
             case ';': break;
             default:
             {
-                // printf-style format: %[[:]flags][width[.precision]][doxX].
+                // Формат в стиле printf: %[[:]flags][width[.precision]][doxX].
                 const char *begin = s - 1;
                 const char *q = begin;
                 if (*q == ':')
@@ -715,7 +715,7 @@ std::string TermInfo::tparm(const char *str, const int *params, int paramCount) 
                         char buf[64];
                         int value = stack.pop();
                         int needed = snprintf(buf, sizeof(buf), fmt, value);
-                        // Bound work for malformed/untrusted terminal descriptions.
+                        // Ограничиваем объём работы с повреждёнными или недоверенными описаниями терминала.
                         if (needed < 0 || (unsigned) needed > maxFormattedSize)
                             return {};
                         if ((size_t) needed < sizeof(buf))
@@ -746,7 +746,7 @@ bool TermInfo::isStandardStrCap(const char *name) noexcept
 
 int TermInfo::getColorCount() const noexcept
 {
-    // Same as Ncurses' 'has_colors()' followed by 'start_color()'.
+    // Аналог has_colors() с последующим start_color() в Ncurses.
     int colors = getNum("colors");
     int pairs = getNum("pairs");
     bool canSetColors =
@@ -758,6 +758,6 @@ int TermInfo::getColorCount() const noexcept
     return 0;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

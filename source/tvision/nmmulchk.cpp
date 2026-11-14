@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmmulchk.cpp                              */
+/* файл — nmmulchk.cpp */
 /*                                                            */
-/* defines the streamable name for class TMultiCheckBoxes     */
+/* Определяет имя сериализуемого класса TMultiCheckBoxes. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

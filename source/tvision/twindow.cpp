@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       twindow.cpp                               */
+/* файл — twindow.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TWindow member functions                  */
+/* функции:  */
+/* Методы TWindow */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -65,7 +65,7 @@ void TWindow::close()
 {
     if( valid( cmClose ) )
     {
-        frame = 0;  // so we don't try to use the frame after it's been deleted
+        frame = 0;  // Чтобы не обращаться к рамке после её удаления.
         destroy( this );
     }
 }

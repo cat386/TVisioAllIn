@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmdsktop.cpp                              */
+/* файл — nmdsktop.cpp */
 /*                                                            */
-/* defines the streamable name for class TDeskTop             */
+/* Определяет имя сериализуемого класса TDeskTop. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

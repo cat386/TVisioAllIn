@@ -56,7 +56,7 @@ static const const_unordered_map<ushort, constarray<ushort, 3>> moddedKeyCodes =
 
 static ushort getModdedKeyCode(ushort keyCode, ushort tvMods)
 {
-    // Modifier precedece: Shift < Ctrl < Alt.
+    // Приоритет модификаторов: Shift < Ctrl < Alt.
     int largestMod = (tvMods & kbLeftAlt) ? 2
                    : (tvMods & kbLeftCtrl) ? 1
                    : 0;
@@ -103,9 +103,9 @@ static bool keyFromCodepoint(uint value, uint mods, KeyDownEvent &keyDown) noexc
         case    13: keyCode = kbEnter;  break;
         case    27: keyCode = kbEsc;    break;
         case   127: keyCode = kbBack;   break;
-        // Functional keys as represented in Kitty's keyboard protocol.
-        // https://sw.kovidgoyal.net/kitty/keyboard-protocol.html#functional
-        // Keypad.
+        // Функциональные клавиши протокола Kitty:
+        // https://sw.kovidgoyal.net/kitty/keyboard-protocol.html#functional.
+        // Цифровая клавиатура.
         case 57399: keyCode = '0';      break;
         case 57400: keyCode = '1';      break;
         case 57401: keyCode = '2';      break;
@@ -157,7 +157,7 @@ static bool keyFromLetter(uint letter, uint mod, KeyDownEvent &keyDown) noexcept
         case 'B': keyCode = kbDown; break;
         case 'C': keyCode = kbRight; break;
         case 'D': keyCode = kbLeft; break;
-        case 'E': keyCode = kbNoKey; break; // Numpad 5, "KP_Begin".
+        case 'E': keyCode = kbNoKey; break; // Клавиша 5 цифровой клавиатуры, KP_Begin.
         case 'F': keyCode = kbEnd; break;
         case 'H': keyCode = kbHome; break;
         case 'P': keyCode = kbF1; break;
@@ -165,7 +165,7 @@ static bool keyFromLetter(uint letter, uint mod, KeyDownEvent &keyDown) noexcept
         case 'R': keyCode = kbF3; break;
         case 'S': keyCode = kbF4; break;
         case 'Z': keyCode = kbTab; break;
-        // Keypad in XTerm (SS3).
+        // Цифровая клавиатура XTerm, SS3.
         case 'j': keyCode = '*'; break;
         case 'k': keyCode = '+'; break;
         case 'm': keyCode = '-'; break;
@@ -177,7 +177,7 @@ static bool keyFromLetter(uint letter, uint mod, KeyDownEvent &keyDown) noexcept
         case 'r': keyCode = kbDown; break;
         case 's': keyCode = kbPgDn; break;
         case 't': keyCode = kbLeft; break;
-        case 'u': keyCode = kbNoKey; break; // Numpad 5, "KP_Begin".
+        case 'u': keyCode = kbNoKey; break; // Клавиша 5 цифровой клавиатуры, KP_Begin.
         case 'v': keyCode = kbRight; break;
         case 'w': keyCode = kbHome; break;
         case 'x': keyCode = kbUp; break;
@@ -199,8 +199,8 @@ void GetChBuf::reject() noexcept
         unget();
 }
 
-// getNum, getInt: INVARIANT: the last non-digit read key (or -1)
-// can be accessed with 'last()' and can also be ungetted.
+// getNum, getInt: инвариант — последний прочитанный нецифровой код либо
+// -1 доступен через last() и может быть возвращён в очередь.
 
 bool GetChBuf::getNum(uint &result) noexcept
 {
@@ -250,7 +250,7 @@ bool GetChBuf::readStr(TStringView str) noexcept
 }
 
 bool CSIData::readFrom(GetChBuf &buf) noexcept
-// Pre: "\x1B[" has just been read.
+// Предусловие: только что прочитано "\x1B[".
 {
     for (uint i = 0; i < maxLength; ++i)
     {
@@ -258,7 +258,7 @@ bool CSIData::readFrom(GetChBuf &buf) noexcept
             _values[i] = UINT_MAX;
         int k = buf.last();
         if (k == -1)
-            // No more input and CSI is not yet complete.
+            // Ввод закончился, но CSI ещё не завершена.
             return false;
         if (k == ';' || k == ':')
             _separators[i] = (char) k;
@@ -269,29 +269,29 @@ bool CSIData::readFrom(GetChBuf &buf) noexcept
             return true;
         }
     }
-    // CSI may be longer than supported.
+    // CSI может превышать поддерживаемую длину.
     return false;
 }
 
-// Mouse events are requested and parsed manually, without depending on any
-// terminal library.
+// События мыши запрашиваются и разбираются вручную, без зависимости от
+// терминальной библиотеки.
 
 void TermIO::mouseOn(ConsoleCtl &con) noexcept
 {
-    TStringView seq = "\x1B[?1001s" // Save old highlight mouse reporting.
-                      "\x1B[?1000h" // Enable mouse reporting.
-                      "\x1B[?1002h" // Enable mouse drag reporting.
-                      "\x1B[?1006h" // Enable SGR extended mouse reporting.
+    TStringView seq = "\x1B[?1001s" // Сохраняем прежний режим передачи выделения мышью.
+                      "\x1B[?1000h" // Включаем передачу событий мыши.
+                      "\x1B[?1002h" // Включаем передачу перетаскиваний мышью.
+                      "\x1B[?1006h" // Включаем расширенные события мыши SGR.
                     ;
     con.write(seq.data(), seq.size());
 }
 
 void TermIO::mouseOff(ConsoleCtl &con) noexcept
 {
-    TStringView seq = "\x1B[?1006l" // Disable SGR extended mouse reporting.
-                      "\x1B[?1002l" // Disable mouse drag reporting.
-                      "\x1B[?1000l" // Disable mouse reporting.
-                      "\x1B[?1001r" // Restore old highlight mouse reporting.
+    TStringView seq = "\x1B[?1006l" // Отключаем расширенные события мыши SGR.
+                      "\x1B[?1002l" // Отключаем передачу перетаскиваний мышью.
+                      "\x1B[?1000l" // Отключаем передачу событий мыши.
+                      "\x1B[?1001r" // Восстанавливаем прежний режим передачи выделения мышью.
                     ;
     con.write(seq.data(), seq.size());
 }
@@ -301,38 +301,38 @@ void TermIO::keyModsOn(ConsoleCtl &con) noexcept
     char buf[256];
 
     strcpy(buf,
-        "\x1B[?1036s"   // Save metaSendsEscape (XTerm).
-        "\x1B[?1036h"   // Enable metaSendsEscape (XTerm).
-        "\x1B[?2004s"   // Save bracketed paste.
-        "\x1B[?2004h"   // Enable bracketed paste.
-        "\x1B[>4;1m"    // Enable modifyOtherKeys (XTerm).
-        "\x1B[>5u"      // Disambiguate escape codes (1) + Report alternate keys (4) (Kitty).
-        "\x1B[?9001h"   // Enable win32-input-mode (Conpty).
-        far2lEnableSeq  // Enable far2l terminal extensions.
+        "\x1B[?1036s"   // Сохраняем metaSendsEscape в XTerm.
+        "\x1B[?1036h"   // Включаем metaSendsEscape в XTerm.
+        "\x1B[?2004s"   // Сохраняем режим обрамлённой вставки.
+        "\x1B[?2004h"   // Включаем режим обрамлённой вставки.
+        "\x1B[>4;1m"    // Включаем modifyOtherKeys в XTerm.
+        "\x1B[>5u"      // Устраняем неоднозначность управляющих кодов, флаг 1, и включаем альтернативные коды клавиш, флаг 4, в Kitty.
+        "\x1B[?9001h"   // Включаем win32-input-mode в Conpty.
+        far2lEnableSeq  // Включаем терминальные расширения far2l.
     );
 
     if (char *term = getenv("TERM"))
     {
-        // Check for full OSC 52 clipboard support.
+        // Проверяем полную поддержку буфера обмена OSC 52.
         if (strstr(term, "alacritty") || strstr(term, "foot"))
             strcat(buf,
-                // Request clipboard contents to see if they are readable. It is
-                // not safe to print this blindly so only do it for TERMs which
-                // we know should work.
+                // Запрашиваем содержимое буфера обмена, чтобы проверить возможность
+                // чтения. Нельзя безусловно выводить этот запрос: используем только
+                // известные поддерживающие значения TERM.
                 "\x1B]52;;?\x07"
             );
         else
             strcat(buf,
-                // Check for the 'kitty-query-clipboard_control' capability (XTGETTCAP).
+                // Проверяем возможность kitty-query-clipboard_control через XTGETTCAP.
                 "\x1BP+q6b697474792d71756572792d636c6970626f6172645f636f6e74726f6c\x1B\\"
-                // Check for 'allowWindowOps' (XTQALLOWED).
+                // Проверяем allowWindowOps через XTQALLOWED.
                 "\x1B]60\x1B\\"
             );
     }
 
     strcat(buf,
-        // Some terminals do not recognize the sequences above and will display
-        // them on screen. Clear the screen to prevent this.
+        // Некоторые терминалы не распознают предыдущие последовательности и
+        // выводят их как текст. Поэтому очищаем экран.
         "\x1B[2J"
     );
 
@@ -342,12 +342,12 @@ void TermIO::keyModsOn(ConsoleCtl &con) noexcept
 void TermIO::keyModsOff(ConsoleCtl &con) noexcept
 {
     TStringView seq = far2lDisableSeq
-                      "\x1B[?9001l" // Disable win32-input-mode (Conpty).
-                      "\x1B[<u"     // Restore previous keyboard mode (Kitty).
-                      "\x1B[>4m"    // Reset modifyOtherKeys (XTerm).
-                      "\x1B[?2004l" // Disable bracketed paste.
-                      "\x1B[?2004r" // Restore bracketed paste.
-                      "\x1B[?1036r" // Restore metaSendsEscape (XTerm).
+                      "\x1B[?9001l" // Отключаем win32-input-mode в Conpty.
+                      "\x1B[<u"     // Восстанавливаем прежний режим клавиатуры Kitty.
+                      "\x1B[>4m"    // Сбрасываем modifyOtherKeys в XTerm.
+                      "\x1B[?2004l" // Отключаем обрамлённую вставку.
+                      "\x1B[?2004r" // Восстанавливаем обрамлённую вставку.
+                      "\x1B[?1036r" // Восстанавливаем metaSendsEscape в XTerm.
                     ;
     con.write(seq.data(), seq.size());
 }
@@ -363,8 +363,8 @@ void TermIO::normalizeKey(KeyDownEvent &keyDown) noexcept
             if (keyDown.charScan.charCode < ' ')
                 keyDown.textLength = 0;
         }
-    // TKey does not distinguish left/right modifiers, so preserve those
-    // when available.
+    // TKey не различает левые и правые модификаторы, поэтому сохраняем их
+    // при наличии.
     ushort origMods = keyDown.controlKeyState;
     keyDown.controlKeyState =
         ((origMods | newMods) & ~(kbCtrlShift | kbAltShift))
@@ -381,7 +381,7 @@ ParseResult TermIO::parseEvent(GetChBuf &buf, TEvent &ev, InputState &state) noe
 }
 
 ParseResult TermIO::parseEscapeSeq(GetChBuf &buf, TEvent &ev, InputState &state) noexcept
-// Pre: "\x1B" has just been read.
+// Предусловие: только что прочитано "\x1B".
 {
     ParseResult res = Rejected;
     switch (buf.get())
@@ -395,7 +395,7 @@ ParseResult TermIO::parseEscapeSeq(GetChBuf &buf, TEvent &ev, InputState &state)
         case '[':
             switch (buf.get())
             {
-                // Mouse events (X10 and SGR encodings).
+                // События мыши в кодировках X10 и SGR.
                 case 'M':
                     return parseX10Mouse(buf, ev, state) == Accepted ? Accepted : Ignored;
                 case '<':
@@ -445,11 +445,11 @@ const ushort
     mmCtrl = 0x10;
 
 ParseResult TermIO::parseX10Mouse(GetChBuf &buf, TEvent &ev, InputState &state) noexcept
-// Pre: "\x1B[M" has just been read.
-// The complete sequence looks like "\x1B[Mabc", where:
-// * 'a' is the button number plus 32.
-// * 'b' is the column number (one-based) plus 32.
-// * 'c' is the row number (one-based) plus 32.
+// Предусловие: прочитано "\x1B[M". Полная последовательность имеет вид
+// "\x1B[Mabc": a — номер кнопки плюс 32; b — номер столбца от единицы
+// плюс 32; c — номер строки от единицы плюс 32.
+//
+//
 {
     uint butm = (uint) buf.get();
     uint mod = butm & (mmAlt | mmCtrl);
@@ -461,16 +461,16 @@ ParseResult TermIO::parseX10Mouse(GetChBuf &buf, TEvent &ev, InputState &state) 
         *i = buf.get();
         if (*i < 0 || 255 < *i)
             return Rejected;
-        // In theory, this encoding only supports coordinates in the range [0, 222].
-        // However, some terminal emulators (e.g. urxvt) keep increasing the
-        // counters, causing an overflow. We can take advantage of this to support
-        // more coordinates, but we definitely don't want to reject the sequence,
-        // as that will cause Ctrl+key events to be generated.
+        // Теоретически эта кодировка ограничена координатами [0, 222]. Но
+        // некоторые терминалы, например urxvt, продолжают увеличивать счётчики
+        // до переполнения. Это позволяет поддержать больше координат. Отклонять
+        // такую последовательность нельзя: иначе появятся события Ctrl+клавиша.
+        //
         if (*i > 32)
             *i -= 32;
         else
             *i += (256 - 32);
-        // Make it zero-based.
+        // Переводим к нумерации с нуля.
         --*i;
     }
 
@@ -500,26 +500,26 @@ ParseResult TermIO::parseX10Mouse(GetChBuf &buf, TEvent &ev, InputState &state) 
 }
 
 ParseResult TermIO::parseSGRMouse(GetChBuf &buf, TEvent &ev, InputState &state) noexcept
-// https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-coordinates
-// Pre: "\x1B[<" has just been read.
-// The complete sequence looks like "\x1B[<a;b;cM" or "\x1B[<a;b;cm", where:
-// * 'a' is a sequence of digits representing the button number in decimal.
-// * 'b' is a sequence of digits representing the column number (one-based) in decimal.
-// * 'c' is a sequence of digits representing the row number (one-based) in decimal.
-// The sequence ends with 'M' on button press and on 'm' on button release.
+// https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-coordinates.
+// Предусловие: прочитано "\x1B[<". Полный вид — "\x1B[<a;b;cM" либо
+// "\x1B[<a;b;cm": a — десятичный номер кнопки; b и c — десятичные номера
+// столбца и строки от единицы. M завершает нажатие, m — отпускание.
+//
+//
+//
 {
     uint butm;
     if (!buf.getNum(butm)) return Rejected;
     uint mod = butm & (mmAlt | mmCtrl);
     uint but = butm & ~(mmAlt | mmCtrl);
-    // IntelliJ may emit negative coordinates.
+    // IntelliJ может передавать отрицательные координаты.
     int col, row;
     if (!buf.getInt(col) || !buf.getInt(row)) return Rejected;
-    // Make the coordinates zero-based.
+    // Переводим координаты к нумерации с нуля.
     row = max(row, 1);
     col = max(col, 1);
     --row, --col;
-    // Finally, the press/release state.
+    // В конце — состояние нажатия или отпускания.
     uint type = (uint) buf.last();
     if (!(type == 'M' || type == 'm')) return Rejected;
 
@@ -527,7 +527,7 @@ ParseResult TermIO::parseSGRMouse(GetChBuf &buf, TEvent &ev, InputState &state) 
     ev.mouse = {};
     ev.mouse.where = {col, row};
     ev.mouse.controlKeyState = (-!!(mod & mmAlt) & kbLeftAlt) | (-!!(mod & mmCtrl) & kbLeftCtrl);
-    if (type == 'M') // Press, wheel or drag.
+    if (type == 'M') // Нажатие, колесо или перетаскивание.
     {
         switch (but)
         {
@@ -559,10 +559,10 @@ ParseResult TermIO::parseSGRMouse(GetChBuf &buf, TEvent &ev, InputState &state) 
     return Accepted;
 }
 
-// The functions below are meant to parse a few sequences emitted
-// by terminals that do not match their terminfo / termcap entries, e.g.
-// Shift F1-4 on Konsole and F1-4 on Putty. It's easier than fixing the
-// application or updating the terminal database.
+// Функции ниже разбирают отдельные последовательности терминалов, не
+// соответствующие их описаниям terminfo/termcap: например Shift+F1–F4 в
+// Konsole и F1–F4 в Putty. Это проще исправления приложения или
+// обновления базы терминалов.
 
 ParseResult TermIO::parseCSIKey(const CSIData &csi, TEvent &ev, InputState &state) noexcept
 // https://invisible-island.net/xterm/xterm-function-keys.html
@@ -579,9 +579,9 @@ ParseResult TermIO::parseCSIKey(const CSIData &csi, TEvent &ev, InputState &stat
             case 4: ev.keyDown = {{kbEnd}}; break;
             case 5: ev.keyDown = {{kbPgUp}}; break;
             case 6: ev.keyDown = {{kbPgDn}}; break;
-            // Note that these numbers can be interpreted in different ways, i.e.
-            // they could be interpreted as F1-F12 instead of F1-F10.
-            // But this fallback is triggered by Putty, which uses F1-F10.
+            // Эти числа допускают разные трактовки, например F1–F12 вместо F1–F10.
+            // Но запасной разбор нужен Putty, который использует F1–F10.
+            //
             case 11: ev.keyDown = {{kbF1}}; break;
             case 12: ev.keyDown = {{kbF2}}; break;
             case 13: ev.keyDown = {{kbF3}}; break;
@@ -641,7 +641,7 @@ ParseResult TermIO::parseCSIKey(const CSIData &csi, TEvent &ev, InputState &stat
                 case 21: keyCode = kbF10; break;
                 case 23: keyCode = kbF11; break;
                 case 24: keyCode = kbF12; break;
-                case 29: keyCode = kbNoKey; break; // Menu key (XTerm).
+                case 29: keyCode = kbNoKey; break; // Клавиша меню XTerm.
                 default: return Rejected;
             }
             ev.keyDown = keyWithXTermMods(keyCode, csi.getValue(1));
@@ -655,7 +655,7 @@ ParseResult TermIO::parseCSIKey(const CSIData &csi, TEvent &ev, InputState &stat
               csi.getSeparator(1) == ';' &&
               terminator == '~' )
     {
-        // XTerm's "modifyOtherKeys" mode.
+        // Режим modifyOtherKeys в XTerm.
         uint key = csi.getValue(2);
         uint mod = csi.getValue(1);
         if (!keyFromCodepoint(key, mod, ev.keyDown))
@@ -668,9 +668,9 @@ ParseResult TermIO::parseCSIKey(const CSIData &csi, TEvent &ev, InputState &stat
 }
 
 ParseResult TermIO::parseSS3Key(GetChBuf &buf, TEvent &ev) noexcept
-// https://invisible-island.net/xterm/xterm-function-keys.html
-// Pre: "\x1BO" has just been read.
-// Konsole, IntelliJ.
+// https://invisible-island.net/xterm/xterm-function-keys.html.
+// Предусловие: прочитано "\x1BO". Konsole, IntelliJ.
+//
 {
     uint mod;
     if (!buf.getNum(mod)) return Rejected;
@@ -687,14 +687,14 @@ ParseResult TermIO::parseKittyKey(const CSIData &csi, TEvent &ev) noexcept
     if (csi.length < 1 || csi.terminator != 'u')
         return Rejected;
 
-    // NOTE: We are not requesting all of Kitty's Keyboard Protocol features in
-    // keyModsOn(), yet this code supports them.
+    // ПРИМЕЧАНИЕ: keyModsOn() запрашивает не все возможности протокола
+    // Kitty, однако код их поддерживает. Событие имеет вид: unicode-key-code
+    // : shifted-key-code : base-layout-key ; modifiers : event-type ;
+    // text-as-codepoints u. Обязателен только unicode-key-code, остальные
+    // части необязательны.
     //
-    // Kitty events are structured like:
     //
-    // unicode-key-code : shifted-key-code : base-layout-key ; modifiers : event-type ; text-as-codepoints u
     //
-    // Only the 'unicode-key-code' is mandatory; the rest are optional.
 
     uint kittyKeyCode = 0;
     uint kittyShiftedKeyCode = 0;
@@ -714,12 +714,12 @@ ParseResult TermIO::parseKittyKey(const CSIData &csi, TEvent &ev) noexcept
     if (i < csi.length && csi.getSeparator(i - 1) == ':')
         kittyEventType = csi.getValue(i++, 1);
     if (i < csi.length)
-        // In theory, there could be more than one character, but we
-        // do not currently support this, so just take the first one.
+        // Теоретически символов может быть несколько, но сейчас поддерживается
+        // только первый.
         kittyText = csi.getValue(i++, 0);
 
     if (kittyEventType != 1)
-        // We are only interested in Press events.
+        // Нас интересуют только события нажатия.
         return Ignored;
 
     uint codepoint = kittyKeyCode;
@@ -731,18 +731,18 @@ ParseResult TermIO::parseKittyKey(const CSIData &csi, TEvent &ev) noexcept
     if (!keyFromCodepoint(codepoint, kittyModifiers, ev.keyDown))
         return Ignored;
 
-    // When the unicode-key-code isn't an ASCII letter, but the base-layout-key
-    // is, and at the same time the Ctrl or Alt modifiers are present,
-    // initialize the event's keyCode as if it was Ctrl/Alt + A-Z, so that
-    // standard keyboard shortcuts can still be triggered when using a non-ASCII
-    // keyboard layout (e.g. Ctrl+Ф in the RU keyboard layout will match Ctrl+A).
+    // Если unicode-key-code не является буквой ASCII, но base-layout-key
+    // является ею и нажаты Ctrl или Alt, задаём keyCode как Ctrl/Alt+A–Z.
+    // Так стандартные сочетания работают и в не-ASCII-раскладках: например
+    // Ctrl+Ф в русской раскладке соответствует Ctrl+A.
+    //
     if ( !isAsciiLetter(kittyKeyCode) && isAsciiLetter(kittyBaseLayoutKey) &&
          (ev.keyDown.controlKeyState & (kbCtrlShift | kbAltShift)) != 0 )
     {
-        // Kitty's 'base-layout-key' is always in lowercase,
+        // base-layout-key в Kitty всегда задаётся в нижнем регистре.
         char upperBaseLayoutKey = kittyBaseLayoutKey - 'a' + 'A';
         ev.keyDown.keyCode = getModdedKeyCode(upperBaseLayoutKey, ev.keyDown.controlKeyState);
-        // Note that 'ev.keyDown.text' still contains the original key text.
+        // ev.keyDown.text всё равно содержит исходный текст клавиши.
     }
 
     ev.what = evKeyDown;
@@ -750,11 +750,11 @@ ParseResult TermIO::parseKittyKey(const CSIData &csi, TEvent &ev) noexcept
 }
 
 ParseResult TermIO::parseDCS(GetChBuf &buf, InputState &state) noexcept
-// Pre: '\x1BP' has just been read.
+// Предусловие: только что прочитано '\x1BP'.
 {
     if (char *s = readUntilBelOrSt(buf))
     {
-        // We only get a DCS in response to our request for kitty capabilities.
+        // Получаем DCS только в ответ на наш запрос возможностей Kitty.
         if (strstr(s, "726561642d636c6970626f617264")) // 'read-clipboard'
             state.hasFullOsc52 = true;
         free(s);
@@ -763,7 +763,7 @@ ParseResult TermIO::parseDCS(GetChBuf &buf, InputState &state) noexcept
 }
 
 ParseResult TermIO::parseOSC(GetChBuf &buf, InputState &state) noexcept
-// Pre: '\x1B]' has just been read.
+// Предусловие: только что прочитано '\x1B]'.
 {
     if (char *s = readUntilBelOrSt(buf))
     {
@@ -773,7 +773,7 @@ ParseResult TermIO::parseOSC(GetChBuf &buf, InputState &state) noexcept
             if (char *begin = (char *) memchr(&sv[3], ';', sv.size() - 3))
             {
                 if (!state.hasFullOsc52)
-                    // We got a response to our initial request.
+                    // Получен ответ на первоначальный запрос.
                     state.hasFullOsc52 = true;
                 else if (state.putPaste)
                 {
@@ -796,9 +796,9 @@ ParseResult TermIO::parseOSC(GetChBuf &buf, InputState &state) noexcept
 }
 
 ParseResult TermIO::parseCPR(const CSIData &csi, InputState &state) noexcept
-// Pre: csi.terminator == 'R'.
-// We receive a Cursor Position Report as response to the Device Status Report
-// request we make in 'consumeUnprocessedInput()'.
+// Предусловие: csi.terminator == 'R'. Отчёт о позиции курсора приходит в
+// ответ на запрос состояния устройства из consumeUnprocessedInput().
+//
 {
     if (csi.length != 2 || csi.getSeparator(0) != ';')
         return Rejected;
@@ -828,9 +828,9 @@ static ParseResult parseWin32InputModeKey(const CSIData &csi, TEvent &ev, InputS
     return Ignored;
 }
 
-// Due to issue https://github.com/microsoft/terminal/issues/15083, Conpty will
-// emit ANSI escape sequences wrapped in win32-input-mode events. This class
-// allows handling these sequences properly.
+// Из-за https://github.com/microsoft/terminal/issues/15083 Conpty
+// передаёт управляющие последовательности ANSI внутри событий
+// win32-input-mode. Этот класс обеспечивает их правильную обработку.
 
 class Win32InputModeUnwrapper : public InputGetter
 {
@@ -857,8 +857,8 @@ public:
         GetChBuf buf(in);
         CSIData csi;
         TEvent ev {};
-        // If we get a win32-input-mode event with no scan code and
-        // a single-byte character, take just that character.
+        // Если событие win32-input-mode не содержит скан-кода и содержит
+        // однобайтовый символ, берём только символ.
         if ( buf.get() == '\x1B' && buf.get() == '['
              && csi.readFrom(buf) && csi.terminator == '_'
              && parseWin32InputModeKey(csi, ev, state) == Accepted
@@ -871,26 +871,26 @@ public:
 
     void unget(int key) noexcept override
     {
-        // We could reconstruct the original win32-input-mode event and call
-        // 'in.unget()', but there is no need for that. However, we still need
-        // to be able to temporarily store characters returned by 'get()'.
+        // Можно восстановить исходное событие win32-input-mode и вызвать
+        // in.unget(), но это излишне. Однако символы, возвращённые get(), всё
+        // равно нужно временно хранить.
         if (ungetSize < maxSize)
             ungetBuffer[ungetSize++] = (short) key;
     }
 };
 
 ParseResult TermIO::parseWin32InputModeKeyOrEscapeSeq(const CSIData &csi, InputGetter &in, TEvent &ev, InputState &state) noexcept
-// Pre: csi.terminator == '_'.
+// Предусловие: csi.terminator == '_'.
 {
     ParseResult res = parseWin32InputModeKey(csi, ev, state);
     if (res == Accepted && ev.keyDown == 0x001B)
     {
-        // We received the initiator of an escape sequence wrapped in
-        // win32-input-mode events.
+        // Получено начало управляющей последовательности, переданной в событиях
+        // win32-input-mode.
         Win32InputModeUnwrapper unwrapper(in, state);
         GetChBuf buf(unwrapper);
         res = parseEscapeSeq(buf, ev, state);
-        // Avoid propagating 'Rejected' because we have used a secondary GetChBuf.
+        // Не распространяем Rejected, поскольку использован дополнительный GetChBuf.
         if (res != Accepted)
             res = Ignored;
     }
@@ -909,8 +909,8 @@ static bool setOsc52Clipboard(ConsoleCtl &con, TStringView text, InputState &sta
         con.write(buf, prefix.size() + b64.size() + suffix.size());
         free(buf);
     }
-    // Return false when there is no full OSC 52 support, even though we always
-    // make the request. This way, we can still use the internal clipboard.
+    // При отсутствии полной поддержки OSC 52 возвращаем false, хотя запрос отправляется
+    // всегда. Тогда можно продолжать использовать внутренний буфер обмена.
     return state.hasFullOsc52;
 }
 
@@ -939,7 +939,7 @@ bool TermIO::requestClipboardText(ConsoleCtl &con, void (&accept)(TStringView), 
 }
 
 char *TermIO::readUntilBelOrSt(GetChBuf &buf) noexcept
-// Returns a malloc-allocated and null-terminated string, or null.
+// Возвращает строку с завершающим нулём, выделенную malloc, либо null.
 {
     size_t capacity = 1024;
     size_t len = 0;
@@ -975,18 +975,18 @@ char *TermIO::readUntilBelOrSt(GetChBuf &buf) noexcept
 }
 
 void TermIO::consumeUnprocessedInput(ConsoleCtl &con, InputGetter &in, InputState &state) noexcept
-// The terminal might have kept sending us events while the application is
-// exiting. This is especially likely to happen when the application is running
-// remotely accross a slow connection and terminal extensions are in place
-// which report key release events (e.g. far2l and win32-input-mode), or when
-// the application gets killed by a signal while the user was dragging the mouse.
-// Therefore, we print a DSR request and attempt to read events until we get a
-// response to it. This has to be done after disabling keyboard and mouse extensions.
+// Во время выхода терминал может продолжать посылать события. Особенно
+// вероятно это при удалённой работе по медленному соединению с
+// расширениями отпускания клавиш, например far2l и win32-input-mode,
+// либо при завершении сигналом во время перетаскивания мышью. Поэтому
+// отправляем DSR и читаем события до ответа. Это делается после
+// отключения расширений клавиатуры и мыши.
+//
 {
     using namespace std::chrono;
     auto timeout = milliseconds(200);
 
-    TStringView seq = "\x1B[6n"; // Device Status Report.
+    TStringView seq = "\x1B[6n"; // Отчёт о состоянии устройства, DSR.
     con.write(seq.data(), seq.size());
 
     TEvent ev {};
@@ -1001,4 +1001,4 @@ void TermIO::consumeUnprocessedInput(ConsoleCtl &con, InputGetter &in, InputStat
             (steady_clock::now() - begin <= timeout) );
 }
 
-} // namespace tvision
+} // пространство имён tvision

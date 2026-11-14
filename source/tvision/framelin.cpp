@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -  framelin.cpp                                   */
+/* файл — framelin.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*             TFrame frameLine member function               */
+/* функции:  */
+/* Метод TFrame::frameLine. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

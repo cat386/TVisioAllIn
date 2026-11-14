@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nnrbtns.cpp                               */
+/* файл — nnrbtns.cpp */
 /*                                                            */
-/* defines the streamable name for class TRadioButtons        */
+/* Определяет имя сериализуемого класса TRadioButtons. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

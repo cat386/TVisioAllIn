@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sfilcoll.cpp                              */
+/* файл — sfilcoll.cpp */
 /*                                                            */
-/* Registeration object for the class TFileCollection         */
+/* Объект регистрации класса TFileCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

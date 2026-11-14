@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   UTIL.H                                                                */
 /*                                                                         */
-/*   defines various utility functions used throughout Turbo Vision        */
+/* Определяет вспомогательные функции, используемые во всей Turbo Vision. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -28,7 +28,7 @@ constexpr int max( int a, int b )
     return a > b ? a : b;
 }
 
-#if !defined( __MINMAX_DEFINED ) // Also defined in Borland C++'s stdlib.h.
+#if !defined( __MINMAX_DEFINED ) // Также определено в stdlib.h Borland C++.
 #define __MINMAX_DEFINED
 template <class T>
 constexpr const T& min( const T& a, const T& b )

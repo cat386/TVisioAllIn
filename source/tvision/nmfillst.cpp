@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmfillst.cpp                              */
+/* файл — nmfillst.cpp */
 /*                                                            */
-/* defines the streamable name for class TFileList            */
+/* Определяет имя сериализуемого класса TFileList. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

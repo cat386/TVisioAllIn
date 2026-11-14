@@ -1,10 +1,10 @@
 /*------------------------------------------------------------------------*/
 /*                                                                        */
-/*  filename - drivers2.cpp                                               */
+/* файл — drivers2.cpp */
 /*                                                                        */
-/*  function(s)                                                           */
-/*      ctrlToArrow -- map control keys to arrow keys                     */
-/*      cstrlen     -- calculate length of a control string               */
+/* функции:  */
+/* ctrlToArrow сопоставляет управляющие клавиши стрелкам. */
+/* cstrlen вычисляет длину строки с управляющими маркерами. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 /*
@@ -23,14 +23,14 @@
 /*                                                                        */
 /*  ctrlToArrow                                                           */
 /*                                                                        */
-/*  argument:                                                             */
+/* Аргумент: */
 /*                                                                        */
-/*      keyCode - scan code to be mapped to keypad arrow code             */
+/* keyCode — скан-код для сопоставления со стрелкой цифровой клавиатуры. */
 /*                                                                        */
-/*  returns:                                                              */
+/* Возвращает: */
 /*                                                                        */
-/*      scan code for arrow key corresponding to Wordstar key,            */
-/*      or original key code if no correspondence exists                  */
+/* Скан-код стрелки, соответствующей клавише WordStar, */
+/* либо исходный код, если соответствия нет. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 ushort ctrlToArrow(ushort keyCode) noexcept
@@ -58,18 +58,18 @@ const ushort arrowCodes[] =
 /*                                                                        */
 /*  cstrlen                                                               */
 /*                                                                        */
-/*  argument:                                                             */
+/* Аргумент: */
 /*                                                                        */
-/*      text    - input string                                            */
+/* text — входная строка. */
 /*                                                                        */
-/*  returns                                                               */
+/* Возвращает: */
 /*                                                                        */
-/*      displayed length of string, ignoring '~' characters.              */
+/* Видимую длину строки без учёта символов '~'. */
 /*                                                                        */
-/*  Comments:                                                             */
+/* Примечания: */
 /*                                                                        */
-/*      Used in determining the displayed length of command strings,      */
-/*      which use '~' to toggle between display attributes                */
+/* Используется для определения видимой длины строк команд, */
+/* где '~' переключает атрибуты отображения. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 
@@ -102,13 +102,13 @@ int cstrlen( TStringView text ) noexcept
 /*                                                                        */
 /*  strwidth                                                              */
 /*                                                                        */
-/*  argument:                                                             */
+/* Аргумент: */
 /*                                                                        */
-/*      text    - input string                                            */
+/* text — входная строка. */
 /*                                                                        */
-/*  returns                                                               */
+/* Возвращает: */
 /*                                                                        */
-/*      displayed length of string.                                       */
+/* Видимая длина строки. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tsurface.cpp                              */
+/* файл — tsurface.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  Member function(s) of following classes   */
+/* функции:  */
+/* Методы следующих классов. */
 /*                      TDrawSurface                          */
 /*                      TSurfaceView                          */
 /*------------------------------------------------------------*/
@@ -56,7 +56,7 @@ void TDrawSurface::resize(TPoint aSize)
         data = (TScreenCell _FAR *) newData;
         dataLength = newLength;
 #ifndef __BORLANDC__
-        // Initialize the buffer, like TGroup does.
+        // Инициализируем буфер, как TGroup.
         memset(data, 0, sz);
 #endif
     }
@@ -99,8 +99,8 @@ void TSurfaceView::draw()
     if (surface)
     {
         const TRect extent = TRect(TPoint(), size);
-        // This is the rectangle within the current view's extent where the
-        // surface is to be drawn.
+        // Прямоугольная область текущего представления для вывода поверхности.
+        //
         const TRect clip = TRect(TPoint(), surface->size)
             .move(-delta.x, -delta.y)
             .intersect(extent);
@@ -109,18 +109,18 @@ void TSurfaceView::draw()
         {
             const TScreenCell *data = &surface->at(max(delta.y, 0), max(delta.x, 0));
             if (clip == extent)
-                // Surface fills all of the view's extent. Can perform direct copy.
+                // Поверхность занимает всё представление; доступно прямое копирование.
                 for (y = 0; y < size.y; ++y, data += surface->size.x)
                     writeBuf(0, y, size.x, 1, data);
             else
             {
                 fillWithSpaces(b, size.x, cEmpty);
-                // Write the empty area at the top and the bottom.
+                // Заполняем пустую область сверху и снизу.
                 writeLine(0,        0, size.x,          clip.a.y, b);
                 writeLine(0, clip.b.y, size.x, size.y - clip.b.y, b);
-                // Write the surface's contents.
+                // Выводим содержимое поверхности.
                 if (clip.a.x == 0 && clip.b.x == size.x)
-                    // Direct copy also possible.
+                    // Прямое копирование тоже возможно.
                     for (y = clip.a.y; y < clip.b.y; ++y, data += surface->size.x)
                         writeBuf(0, y, size.x, 1, data);
                 else

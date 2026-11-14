@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmdircol.cpp                              */
+/* файл — nmdircol.cpp */
 /*                                                            */
-/* defines the streamable name for class TDirCollection       */
+/* Определяет имя сериализуемого класса TDirCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

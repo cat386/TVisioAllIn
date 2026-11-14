@@ -95,7 +95,7 @@ Decimal decimal(const std::string &input)
     n.valid = true;
     return n;
 }
-} // namespace
+} // пространство имён
 int naturalCompare(const std::string &a, const std::string &b)
 {
     auto x = decimal(a), y = decimal(b);
@@ -300,4 +300,4 @@ std::string writeCsv(const std::vector<std::vector<std::string>> &rows, char del
     }
     return out;
 }
-} // namespace tvision
+} // пространство имён tvision

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tevent.cpp                                */
+/* файл — tevent.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TEvent member functions                   */
+/* функции:  */
+/* Методы TEvent */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -177,8 +177,8 @@ void TEventQueue::getMouseEvent( TEvent & ev) noexcept
             {
             ev.what = evMouseWheel;
 #ifdef __BORLANDC__
-        // A bug in Borland C++ causes mouse position to be trash in
-        // MOUSE_WHEELED events.
+        // Из-за ошибки Borland C++ координаты мыши в MOUSE_WHEELED содержат
+        // мусор.
             ev.mouse.where = lastMouse.where;
 #endif
             lastMouse = ev.mouse;
@@ -218,7 +218,7 @@ Boolean TEventQueue::getMouseState( TEvent & ev ) noexcept
     if( mouseReverse == True && curMouse.buttons != 0 && curMouse.buttons != 3 )
         curMouse.buttons ^= 3;
 
-    ev.what = THardwareInfo::getTickCount();  // Temporarily save tick count when event was read.
+    ev.what = THardwareInfo::getTickCount();  // Временно сохраняем число тактов в момент чтения события.
     ev.mouse = curMouse;
     return True;
 #else
@@ -228,8 +228,8 @@ Boolean TEventQueue::getMouseState( TEvent & ev ) noexcept
         {
         ev.what = THardwareInfo::getTickCount();
         ev.mouse = curMouse;
-        // 'wheel' represents an event, not a state. So, in order not to process
-        // a mouse wheel event more than once, this field must be set back to zero.
+        // wheel представляет событие, а не состояние. Обнуляем поле после
+        // обработки, чтобы не обработать прокрутку повторно.
         curMouse.wheel = 0;
         }
     else
@@ -254,9 +254,9 @@ Boolean TEventQueue::getMouseState( TEvent & ev ) noexcept
 void __MOUSEHUGE TEventQueue::mouseInt()
 {
 #if defined( __DPMI16__ )
-I   PUSH DS          // Cannot use huge anymore, because someone might compile
-I   PUSH AX          //  this module with -WX and that generates Smart Callback
-I   MOV  AX, DGROUP  //  style prolog code.  This is an asynchronous callback!
+I   PUSH DS          // Больше нельзя использовать huge: модуль могут скомпилировать
+I   PUSH AX          // с -WX, что создаст пролог в стиле Smart Callback.
+I   MOV  AX, DGROUP  // Это асинхронный обратный вызов!
 I   MOV  DS, AX
 I   POP  AX
 #endif
@@ -298,7 +298,7 @@ void TEventQueue::getKeyEvent( TEvent &ev ) noexcept
     if( shouldSkipLf )
         {
         shouldSkipLf = False;
-        // Skip a LF, since we had previously read a CR.
+        // Пропускаем LF, поскольку перед ним уже прочитан CR.
         if( ev.what == evKeyDown && (ev.keyDown.controlKeyState & kbPaste) != 0 &&
             ( (ev.keyDown.textLength == 0 && ev.keyDown.charScan.charCode == '\n') ||
               (ev.keyDown.textLength == 1 && ev.keyDown.text[0] == '\n')
@@ -314,7 +314,7 @@ void TEventQueue::getKeyEvent( TEvent &ev ) noexcept
             ev.keyDown.text[0] = (char) ev.keyDown.charScan.charCode;
             ev.keyDown.textLength = 1;
             }
-        // Convert CR and CRLF into LF.
+        // Преобразуем CR и CRLF в LF.
         if( ev.keyDown.text[0] == '\r' )
             {
             ev.keyDown.text[0] = '\n';
@@ -325,11 +325,11 @@ void TEventQueue::getKeyEvent( TEvent &ev ) noexcept
 }
 
 void TEventQueue::setPasteText( TStringView text ) noexcept
-// Pre: 'text' does not point into 'pasteText'.
+// Предусловие: text не указывает внутрь pasteText.
 {
     delete[] pasteText;
-    // Always initialize the paste event, even if it is empty, so that
-    // 'waitForEvent' won't block in the next call.
+    // Всегда инициализируем событие вставки, даже пустое, чтобы следующий
+    // waitForEvent не заблокировался.
     if( (pasteText = new char[ text.size() ]) != 0 )
         {
         pasteTextLength = text.size();
@@ -386,8 +386,8 @@ void TEventQueue::getKeyOrPasteEvent( TEvent &ev ) noexcept
                 break;
                 }
             }
-        // If we receive at least X consecutive text events, then this is
-        // the beginning of a paste event.
+        // Не менее X последовательных текстовых событий означают начало вставки.
+        //
         if( keyEventCount == minPasteEventCount && firstNonText == minPasteEventCount )
             pasteState = True;
         if( pasteState )

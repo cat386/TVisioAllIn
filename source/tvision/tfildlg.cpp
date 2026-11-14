@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tfildlg.cpp                               */
+/* файл — tfildlg.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TFileDialog member functions              */
+/* функции:  */
+/* Методы TFileDialog */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -137,16 +137,16 @@ TFileDialog::TFileDialog( TStringView aWildCard,
     first()->growMode = gfGrowAll & ~gfGrowLoX;
     selectNext( False );
 
-    // I feel too lazy to update all the sizes above. The new default size
-    // is set by resizing the dialog.
+    // Чтобы не менять все размеры выше, новый размер по умолчанию задаётся
+    // изменением размера диалога.
     {
-        // In the 21st century we should be using percentages, not absolute
-        // units. :/
+        // В XXI веке следовало бы использовать проценты, а не абсолютные
+        // единицы.
         TRect bounds = getBounds();
         TPoint screenSize = TProgram::application->size;
         TRect screenBounds = TProgram::application->getBounds();
         if (screenSize.x > 90)
-            bounds.grow(15, 0); // New size 79
+            bounds.grow(15, 0); // Новая ширина — 79.
         else if (screenSize.x > 63)
             {
             screenBounds.grow(-7, 0);
@@ -154,15 +154,15 @@ TFileDialog::TFileDialog( TStringView aWildCard,
             bounds.b.x = screenBounds.b.x;
             }
         if (screenSize.y > 34)
-            bounds.grow(0, 5); // New height 29
+            bounds.grow(0, 5); // Новая высота — 29.
         else if (screenSize.y > 25)
             {
             screenBounds.grow(0, -3);
             bounds.a.y = screenBounds.a.y;
             bounds.b.y = screenBounds.b.y;
             }
-        // Making the dialog greater than this does not make much sense
-        // as it would be too sparse.
+        // Больший диалог был бы слишком разреженным и почти не имеет смысла.
+        //
         locate(bounds);
     }
 
@@ -189,8 +189,8 @@ void TFileDialog::sizeLimits( TPoint& min, TPoint& max )
     min.y = 19;
 }
 
-/* 'src' is cast to unsigned char * so that isspace sign extends it
-   correctly. */
+/* src приводится к unsigned char *, чтобы isspace правильно расширяла значение.
+ */
 static void trim( char *dest, const char *src ) noexcept
 {
 #ifndef __FLAT__

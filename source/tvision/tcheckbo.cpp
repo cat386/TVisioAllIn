@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tcheckbo.cpp                              */
+/* файл — tcheckbo.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*          TCheckBox member functions                        */
+/* функции:  */
+/* Методы TCheckBox */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

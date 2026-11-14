@@ -45,9 +45,9 @@ static void initUtf8ToCp( std::unordered_map<uint32_t, char> &map,
 
 static std::unordered_map<uint32_t, char> &utf8ToCp() noexcept
 {
-    // Ensure the map only gets created on first use, to avoid issues with the
-    // static initialization order, and also prevent it from being destroyed on
-    // program exit, since there could still be secondary threads using it.
+    // Создаём отображение только при первом использовании, избегая проблем
+    // порядка статической инициализации. Не уничтожаем его при завершении
+    // программы: вторичные потоки могут ещё обращаться к нему.
     static auto &map = [] () -> auto &
     {
         auto &map = *new std::unordered_map<uint32_t, char>;
@@ -86,4 +86,4 @@ char CpTranslator::fromUtf8(TStringView s) noexcept
     return 0;
 }
 
-} // namespace tvision
+} // пространство имён tvision

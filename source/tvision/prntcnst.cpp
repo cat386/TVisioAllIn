@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename - prntcnst.cpp                                    */
+/* файл — prntcnst.cpp */
 /*                                                            */
-/* function(s)                                                */
+/* функции:  */
 /*            printKeyCode                                    */
 /*            printControlKeyState                            */
 /*            printEventCode                                  */

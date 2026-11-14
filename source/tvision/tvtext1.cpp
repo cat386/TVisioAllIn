@@ -1,5 +1,5 @@
 /*------------------------------------------------------------*/
-/* filename -       tvtext1.cpp                               */
+/* файл — tvtext1.cpp */
 /*                                                            */
 /*------------------------------------------------------------*/
 /*
@@ -34,16 +34,16 @@ static unsigned getCodePage() noexcept
 {
 #if defined( __BORLANDC__ )
 #if !defined(__FLAT__)
-    //  get version number, in the form of a normal number
+    // Получаем номер версии обычным числом.
     unsigned ver = (_version >> 8) | (_version << 8);
     if( ver < 0x30C )
-        return 437; // United States code page, for all versions before 3.3
+        return 437; // Кодовая страница США для всех версий до 3.3.
 
 #if defined( __FLAT__ )
     Regs r; r.rDS.w.wl = r.rES.w.wl = -1;
 #endif
 
-    _AX = 0x6601;   // get code page
+    _AX = 0x6601;   // Получаем кодовую страницу.
     _genInt( 0x21 );
 
 #endif
@@ -72,7 +72,7 @@ const char _NEAR TFrame::initFrame[19] =
   "\x06\x0A\x0C\x05\x00\x05\x03\x0A\x09\x16\x1A\x1C\x15\x00\x15\x13\x1A\x19";
 
 char _NEAR TFrame::frameChars[33] =
-    "   \xC0 \xB3\xDA\xC3 \xD9\xC4\xC1\xBF\xB4\xC2\xC5   \xC8 \xBA\xC9\xC7 \xBC\xCD\xCF\xBB\xB6\xD1 "; // for UnitedStates code page
+    "   \xC0 \xB3\xDA\xC3 \xD9\xC4\xC1\xBF\xB4\xC2\xC5   \xC8 \xBA\xC9\xC7 \xBC\xCD\xCF\xBB\xB6\xD1 "; // Для кодовой страницы США.
 
 const char * _NEAR TFrame::closeIcon = "[~\xFE~]";
 const char * _NEAR TFrame::zoomIcon = "[~\x18~]";

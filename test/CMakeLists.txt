@@ -3,8 +3,8 @@ if (TV_BUILD_TESTS)
 
     add_executable(${PROJECT_NAME}-test ${TEST_SRC})
 
-    # The tests use a bundled, GoogleTest-compatible framework (tvtest.h),
-    # so no external libraries are required.
+    # Тесты используют встроенную GoogleTest-совместимую среду tvtest.h,
+    # внешние библиотеки не требуются.
     target_compile_features(${PROJECT_NAME}-test PRIVATE cxx_std_17)
     target_include_directories(${PROJECT_NAME}-test PRIVATE "${CMAKE_CURRENT_LIST_DIR}")
 

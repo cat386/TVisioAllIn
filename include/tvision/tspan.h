@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   TSPAN.H                                                               */
 /*                                                                         */
-/*   Defines the class TSpan and its member functions.                     */
+/* Определяет класс TSpan и его методы. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -15,18 +15,18 @@
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TSpan                                                            */
+/* класс TSpan */
 /*                                                                         */
-/*  Represents a view over a contiguous sequence of elements of type T,    */
-/*  similar to std::span. It is used to pass arrays around without         */
-/*  copying or owning them.                                                */
+/* Представляет непрерывную последовательность элементов типа T */
+/* подобно std::span. Используется для передачи массивов без */
+/* копирования и владения ими. */
 /*                                                                         */
-/*  If std::span is available to you, you can continue to use it in your   */
-/*  own code: TSpan is intercompatible with std::span, converting to and   */
-/*  from it implicitly where possible.                                     */
+/* Если std::span доступен, его можно продолжать использовать */
+/* в своём коде: TSpan совместим со std::span и по возможности */
+/* неявно преобразуется в него и обратно. */
 /*                                                                         */
-/*  Unlike std::span, TSpan can be constructed from a null pointer, in     */
-/*  which case it results in an empty span.                                */
+/* В отличие от std::span, TSpan можно создать из нулевого указателя; */
+/* в этом случае получается пустая последовательность. */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
 
@@ -35,8 +35,8 @@ class TSpan
 {
 public:
 
-    // These are defined inline because otherwise they trigger
-    // a bug in Borland C++ when T is const.
+    // Методы определены inline, поскольку иначе при константном T
+    // проявляется ошибка Borland C++.
 
     constexpr TSpan() noexcept :
         ptr(0),

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmbutton.cpp                              */
+/* файл — nmbutton.cpp */
 /*                                                            */
-/* defines the streamable name for class TButton              */
+/* Определяет имя сериализуемого класса TButton. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

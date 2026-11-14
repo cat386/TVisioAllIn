@@ -119,5 +119,5 @@ class TDualPanel : public TGroup
     void syncOther();
     void changeBounds(const TRect &bounds) override;
 };
-} // namespace tvision
+} // пространство имён tvision
 #endif

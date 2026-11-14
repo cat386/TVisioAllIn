@@ -469,7 +469,7 @@ class Demo : public TThemedApplication
         clearEvent(ev);
     }
 };
-} // namespace
+} // пространство имён
 int main(int argc, char **argv)
 {
     try

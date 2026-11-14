@@ -38,6 +38,6 @@ public:
     }
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_CODEPAGE_H

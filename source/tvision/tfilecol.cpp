@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tfilecol.cpp                              */
+/* файл — tfilecol.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TFileCollection member functions          */
+/* функции:  */
+/* Методы TFileCollection */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

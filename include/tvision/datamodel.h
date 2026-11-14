@@ -8,7 +8,7 @@
 namespace tvision
 {
 std::string columnLetters(size_t column);
-// Numeric cells compare by exact decimal value (including large integers).
+// Числовые ячейки сравниваются по точному десятичному значению, включая большие целые числа.
 int naturalCompare(const std::string &a, const std::string &b);
 std::vector<std::vector<std::string>> parseCsv(const std::string &text, char delimiter = ',');
 std::string writeCsv(const std::vector<std::vector<std::string>> &rows, char delimiter = ',');
@@ -91,5 +91,5 @@ class FnTableModel : public TableModel
     std::string cell(size_t r, size_t c) const override;
     std::string header(size_t c) const override;
 };
-} // namespace tvision
+} // пространство имён tvision
 #endif

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmfilcol.cpp                              */
+/* файл — nmfilcol.cpp */
 /*                                                            */
-/* defines the streamable name for class TFileCollection      */
+/* Определяет имя сериализуемого класса TFileCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

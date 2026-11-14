@@ -64,6 +64,6 @@ inline std::ostream &operator<<(std::ostream &os, const ParseResultEvent &p)
     return os;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_TERMIO_TEST_H

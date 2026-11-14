@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   COLORS.H                                                              */
 /*                                                                         */
-/*   Defines the classes TColorBIOS, TColorRGB, TColorXTerm,               */
-/*   TColor, TColorAttr and TAttrPair.                                     */
+/* Определяет классы TColorBIOS, TColorRGB, TColorXTerm, */
+/* TColor, TColorAttr и TAttrPair. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -12,14 +12,14 @@
 
 #if defined( __BORLANDC__ )
 
-// A BIOS color attribute byte. The lower four bits represent the foreground
-// color and the higher four bits the background color. Depending on the video
-// adapter configuration, the highest-order bit may represent either the
-// background color intensity or the blink attribute.
+// Байт цветового атрибута BIOS. Младшие четыре бита задают цвет текста,
+// старшие четыре — цвет фона. В зависимости от видеорежима старший бит
+// означает яркость фона либо мигание.
+//
 
 typedef uchar TColorAttr;
 
-// A pair of color attributes.
+// Пара цветовых атрибутов.
 
 typedef ushort TAttrPair;
 
@@ -27,17 +27,17 @@ typedef ushort TAttrPair;
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TColorRGB                                                        */
+/* класс TColorRGB */
 /*                                                                         */
-/*  Represents a 24-bit RGB color.                                         */
+/* Представляет 24-битный цвет RGB. */
 /*                                                                         */
-/*  Can be initialized like this:                                          */
-/*      TColorRGB rgb = {127, 0, 187}; // {red, green, blue}.              */
-/*  Or with an integer:                                                    */
+/* Пример инициализации: */
+/* TColorRGB rgb = {127, 0, 187}; // {красный, зелёный, синий}. */
+/* Либо целым числом: */
 /*      TColorRGB rgb = 0x7F00BB;      // 0xRRGGBB                         */
-/*  Can be converted back to integer types:                                */
+/* Можно преобразовать обратно в целочисленный тип: */
 /*      uint32_t asInt = TColorRGB(127, 0, 187);                           */
-/*  When doing so, the unused bits are discarded:                          */
+/* При этом неиспользуемые биты отбрасываются: */
 /*      uint32_t(TColorRGB(0xAABBCCDD)) == 0xBBCCDD;                       */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
@@ -127,20 +127,20 @@ constexpr TColorRGB::operator uint32_t() const noexcept
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TColorBIOS                                                       */
+/* класс TColorBIOS */
 /*                                                                         */
-/*  This is the 4-bit color encoding used originally by Turbo Vision on    */
+/* Эта 4-битная кодировка цвета изначально применялась в Turbo Vision для */
 /*  DOS.                                                                   */
 /*                                                                         */
-/*  In terminal emulators, BIOS colors are displayed using the 16 basic    */
-/*  ANSI colors.                                                           */
+/* В эмуляторах терминала цвета BIOS отображаются с помощью 16 базовых */
+/* цветов ANSI. */
 /*                                                                         */
-/*  This type can be converted from and into integer types:                */
+/* Тип допускает преобразование в целочисленные типы и обратно: */
 /*      TColorBIOS black = 0x0,                                            */
 /*                 blue = 0x1,                                             */
 /*                 dark_gray = 0x8;                                        */
 /*      uint8_t asChar = TColorBIOS(0xC);                                  */
-/*  When doing so, the unused bits are dropped:                            */
+/* При этом неиспользуемые биты отбрасываются: */
 /*      uint8_t(TColorBIOS(0xAB)) == 0xB;                                  */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
@@ -235,18 +235,18 @@ constexpr TColorBIOS::operator uint8_t() const noexcept
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TColorXTerm                                                      */
+/* класс TColorXTerm */
 /*                                                                         */
-/*  Index into an 256-color palette recognized by the 'xterm-256color'     */
-/*  terminal type. Some terminal emulators support modifying the palette,  */
-/*  but Turbo Vision does not make use of this feature.                    */
+/* Индекс в 256-цветной палитре, распознаваемой типом терминала 'xterm-256color'. */
+/* Некоторые эмуляторы позволяют изменять эту палитру, */
+/* но Turbo Vision не использует такую возможность. */
 /*                                                                         */
-/*  - Indices 0-15 are the basic ANSI colors. They will be displayed       */
-/*    according to the terminal emulator's color scheme.                   */
-/*  - Indices 16-231 are a 6x6x6 RGB cube.                                 */
-/*  - Indices 232-255 are a 24-step grayscale ramp.                        */
+/* Индексы 0–15 — базовые цвета ANSI. Они отображаются */
+/* в соответствии с цветовой схемой эмулятора терминала. */
+/* Индексы 16–231 образуют куб RGB размером 6×6×6. */
+/* Индексы 232–255 — шкала из 24 оттенков серого. */
 /*                                                                         */
-/*  This type can be converted from and into integer types:                */
+/* Тип допускает преобразование в целочисленные типы и обратно: */
 /*      TColorXTerm xterm = 0xFE;                                          */
 /*      uint8_t asChar = xterm;                                            */
 /*                                                                         */
@@ -282,11 +282,11 @@ constexpr TColorXTerm::operator uint8_t() const noexcept
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TColorDefault                                                    */
+/* класс TColorDefault */
 /*                                                                         */
-/*  Represents the terminal default color. This is the color used by       */
-/*  terminal emulators when no display attributes (bold, color...) are     */
-/*  enabled (usually white for foreground and black for background).       */
+/* Представляет цвет терминала по умолчанию. Эмулятор использует его, */
+/* если атрибуты вывода, например жирность и цвет, */
+/* не заданы: обычно белый для текста и чёрный для фона. */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
 
@@ -299,20 +299,20 @@ public:
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  Color Conversion Functions                                             */
+/* Функции преобразования цветов. */
 /*                                                                         */
-/*  They convert between some of the aforementioned color types            */
+/* Преобразуют некоторые из описанных выше типов цвета. */
 /*                                                                         */
-/*  No conversion from XTerm indices 0-15 to RGB is provided because the   */
-/*  way these colors are displayed depends on the terminal emulator,       */
-/*  which usually allow users to configure these colors through color      */
+/* Преобразование индексов XTerm 0–15 в RGB не предоставляется, поскольку */
+/* их отображение зависит от эмулятора терминала. */
+/* обычно позволяющего настраивать эти цвета с помощью цветовых */
 /*  schemes.                                                               */
 /*                                                                         */
-/*  Conversely, a conversion from RGB to XTerm indices 0-15 is provided,   */
-/*  but it's an approximation based on color hue.                          */
+/* Обратное преобразование RGB в индексы XTerm 0–15 предоставляется, */
+/* но это приближение на основе цветового тона. */
 /*                                                                         */
-/*  When it comes to XTerm indices 16-255, we assume that they can be      */
-/*  mapped to the same RGB values used by XTerm:                           */
+/* Для индексов XTerm 16–255 предполагается, что они */
+/* соответствуют тем же значениям RGB, что и в XTerm: */
 /*  https://invisible-island.net/xterm/xterm.faq.html#what_256colors       */
 /*  https://jonasjacek.github.io/colors/                                   */
 /*                                                                         */
@@ -323,11 +323,11 @@ class TColorConversion
 public:
 
     static constexpr TColorXTerm BIOStoXTerm16(TColorBIOS) noexcept;
-    static constexpr TColorBIOS XTerm16toBIOS(TColorXTerm) noexcept; // XTerm indices 0-15
-    static TColorXTerm XTerm256toXTerm16(TColorXTerm) noexcept; // XTerm indices 16-255 → 0-15
-    static TColorRGB XTerm256toRGB(TColorXTerm) noexcept; // XTerm indices 16-255
-    static TColorXTerm RGBtoXTerm16(TColorRGB) noexcept; // XTerm indices 0-15
-    static TColorXTerm RGBtoXTerm256(TColorRGB) noexcept; // XTerm indices 16-255
+    static constexpr TColorBIOS XTerm16toBIOS(TColorXTerm) noexcept; // Индексы XTerm 0–15.
+    static TColorXTerm XTerm256toXTerm16(TColorXTerm) noexcept; // Индексы XTerm 16–255 → 0–15.
+    static TColorRGB XTerm256toRGB(TColorXTerm) noexcept; // Индексы XTerm 16–255.
+    static TColorXTerm RGBtoXTerm16(TColorRGB) noexcept; // Индексы XTerm 0–15.
+    static TColorXTerm RGBtoXTerm256(TColorRGB) noexcept; // Индексы XTerm 16–255.
 
 private:
 
@@ -342,7 +342,7 @@ private:
 
 constexpr TColorXTerm TColorConversion::BIOStoXTerm16(TColorBIOS c) noexcept
 {
-    // Swap the Red and Blue bits.
+    // Меняем местами биты красного и синего.
     auto aux = c.getBlue();
     c.setBlue(c.getRed());
     c.setRed(aux);
@@ -366,20 +366,20 @@ inline TColorRGB TColorConversion::XTerm256toRGB(TColorXTerm idx) noexcept
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TColor                                                           */
+/* класс TColor */
 /*                                                                         */
-/*  Represents a color in any of the supported color types. It can be      */
-/*  initialized with a TColorBIOS, TColorRGB, TColorXTerm or               */
-/*  TColorDefault object.                                                  */
+/* Представляет цвет любого поддерживаемого типа. Допускает */
+/* инициализацию объектом TColorBIOS, TColorRGB, TColorXTerm или */
+/* TColorDefault. */
 /*                                                                         */
-/*  It also can be initialized as a BIOS color with a char literal; as an  */
-/*  RGB color with an integer literal; or as the terminal default color    */
-/*  through default-initialization or value-initialization:                */
+/* Также допускается инициализация цвета BIOS символьным литералом; */
+/* цвета RGB — целочисленным литералом; цвета терминала по умолчанию — */
+/* инициализацией по умолчанию или инициализацией значением: */
 /*      TColor bios = '\xF',                                               */
 /*             rgb  = 0x7F00BB,                                            */
-/*             def; // or 'def = {}'.                                      */
+/* def; // либо 'def = {}'. */
 /*                                                                         */
-/*  TColor is trivially copyable: 'memcpy' can be used to copy objects.    */
+/* TColor тривиально копируем: для копирования объектов можно использовать memcpy. */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
 
@@ -387,35 +387,35 @@ class TColor
 {
 public:
 
-    constexpr TColor() noexcept; // Default color.
+    constexpr TColor() noexcept; // Цвет по умолчанию.
 
-    // Constructors for use with literals.
+    // Конструкторы для литералов.
 
-    constexpr TColor(char bios) noexcept; // e.g. {'\xF'}
-    constexpr TColor(int rgb) noexcept; // e.g. {0x7F00BB}
+    constexpr TColor(char bios) noexcept; // Например, {'\xF'}.
+    constexpr TColor(int rgb) noexcept; // Например, {0x7F00BB}.
 
-    // Constructors for specific color types.
+    // Конструкторы для конкретных типов цвета.
 
     constexpr TColor(TColorBIOS bios) noexcept;
     constexpr TColor(TColorRGB rgb) noexcept;
     constexpr TColor(TColorXTerm xterm) noexcept;
     constexpr TColor(TColorDefault) noexcept;
 
-    // Color type getters.
+    // Методы получения типа цвета.
 
     constexpr bool isDefault() const noexcept;
     constexpr bool isBIOS() const noexcept;
     constexpr bool isRGB() const noexcept;
     constexpr bool isXTerm() const noexcept;
 
-    // Color value getters. They perform no conversion: make sure to check
-    // the color type first.
+    // Методы получения значения цвета не выполняют преобразований: сначала
+    // проверьте тип.
 
     constexpr TColorBIOS asBIOS() const noexcept;
     constexpr TColorRGB asRGB() const noexcept;
     constexpr TColorXTerm asXTerm() const noexcept;
 
-    // Quantization to TColorBIOS.
+    // Квантование в TColorBIOS.
 
     TColorBIOS toBIOS(bool isForeground) const noexcept;
 
@@ -424,8 +424,8 @@ public:
 
 private:
 
-    // Bit  0: Color (24 bits)
-    // Bit 24: Type (8 bits, of which only 2 are actually used)
+    // С бита 0: цвет, 24 бита. С бита 24: тип, 8 бит, из которых
+    // используются только два.
     uint32_t _data;
 
     friend struct TColorAttr;
@@ -528,62 +528,62 @@ constexpr uint8_t TColor::type() const noexcept
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  struct TColorAttr                                                      */
+/* структура TColorAttr */
 /*                                                                         */
-/*  Represents the colors and style used when writing text to the screen.  */
+/* Представляет цвета и стиль текста, выводимого на экран. */
 /*                                                                         */
-/*  TColorAttr is designed to be compatible with 'memset' and 'memcpy',    */
-/*  and it is therefore trivially constructible and copyable. Because of   */
-/*  this, variables of this type which are not explicitly initialized      */
-/*  will contain uninitialized data. Watch out!                            */
+/* TColorAttr совместим с memset и memcpy, */
+/* поэтому имеет тривиальные конструктор и копирование. По этой */
+/* причине переменные данного типа без явной инициализации */
+/* содержат неинициализированные данные. Будьте внимательны! */
 /*                                                                         */
-/*  A zero-initialized TColorAttr (using 'memset' or value-initialization) */
-/*  has both the foreground and background colors set to 'default' and no  */
-/*  style. Therefore, a zero-initialized TColorAttr is valid and produces  */
-/*  visible text.                                                          */
+/* TColorAttr, обнулённый через memset или инициализацию значением, */
+/* имеет цвета текста и фона по умолчанию и не содержит */
+/* флагов стиля. Поэтому обнулённый TColorAttr допустим */
+/* и даёт видимый текст. */
 /*                                                                         */
-/*  Examples:                                                              */
+/* Примеры: */
 /*                                                                         */
-/*      // Foreground: BIOS 0x7                                            */
-/*      // Background: RGB 0x7F00BB                                        */
-/*      // Style: Bold, Italic                                             */
+/* // Текст: BIOS 0x7 */
+/* // Фон: RGB 0x7F00BB */
+/* // Стиль: жирный, курсив */
 /*      TColorAttr a = {'\x07', 0x7F00BB, slBold | slItalic};              */
 /*                                                                         */
-/*      // Foreground: Default                                             */
-/*      // Background: BIOS 0xF                                            */
-/*      // Style: Normal                                                   */
+/* // Текст: по умолчанию */
+/* // Фон: BIOS 0xF */
+/* // Стиль: обычный */
 /*      TColorAttr b = {{}, '\xF'};                                        */
 /*                                                                         */
-/*      // Foreground: Default                                             */
-/*      // Background: Default                                             */
-/*      // Style: Normal                                                   */
+/* // Текст: по умолчанию */
+/* // Фон: по умолчанию */
+/* // Стиль: обычный */
 /*      TColorAttr c {};                                                   */
 /*                                                                         */
-/*      // An uninitialized TColorAttr. Watch out!                         */
+/* // Неинициализированный TColorAttr. Будьте внимательны! */
 /*      TColorAttr d;                                                      */
 /*                                                                         */
-/*  For backward-compatibility, you can also use initialize a TColorAttr   */
-/*  with a BIOS color attribute:                                           */
+/* Для обратной совместимости TColorAttr также можно инициализировать */
+/* цветовым атрибутом BIOS: */
 /*                                                                         */
-/*      // Foreground: BIOS 0xD                                            */
-/*      // Background: BIOS 0x3                                            */
-/*      // Style: Normal                                                   */
+/* // Текст: BIOS 0xD */
+/* // Фон: BIOS 0x3 */
+/* // Стиль: обычный */
 /*      TColorAttr e = 0x3D;                                               */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
 
 const ushort
 
-// TColorAttr Style masks
+// Маски стилей TColorAttr.
 
     slBold         = 0x001,
     slItalic       = 0x002,
     slUnderline    = 0x004,
     slBlink        = 0x008,
-    slReverse      = 0x010, // Prefer using 'reversed()' instead.
+    slReverse      = 0x010, // Предпочтительно использовать reversed().
     slStrike       = 0x020,
 
-// Private masks (used internally by TV)
+// Закрытые маски для внутреннего использования в TV.
 
     slWindowShadow = 0x200;
 
@@ -591,7 +591,7 @@ class TAttrPair;
 
 struct TColorAttr
 {
-    TColorAttr() = default; // Watch out! This is a trivial constructor.
+    TColorAttr() = default; // Внимание: конструктор тривиальный и не инициализирует поля.
 
     constexpr TColorAttr(int bios) noexcept;
     constexpr TColorAttr(TColor fg, TColor bg, ushort style = 0) noexcept;
@@ -607,33 +607,33 @@ struct TColorAttr
 
     constexpr TColorAttr reversed() const noexcept;
 
-    // Convert to a BIOS color attribute, using quantization if necessary.
-    // Style flags are ignored.
+    // Преобразует в цветовой атрибут BIOS, при необходимости с квантованием.
+    // Флаги стиля игнорируются.
 
     uchar toBIOS() const noexcept;
 
-    // Backward-compatibility functions:
+    // Функции обратной совместимости:
 
-    // Return the corresponding BIOS color attribute when both the foreground
-    // and background are BIOS colors, and there are no style flags. Otherwise,
-    // return a fixed color (white on magenta) indicating that the cast is invalid.
+    // Возвращает соответствующий цветовой атрибут BIOS, если оба цвета имеют
+    // тип BIOS и флаги стиля отсутствуют. Иначе возвращает фиксированный
+    // цвет — белый на пурпурном — как признак недопустимого приведения.
     constexpr operator uchar() const noexcept;
-    // Used to compose attribute pairs in legacy code.
+    // Используется для составления пар атрибутов в старом коде.
     constexpr TAttrPair operator<<(int shift) const noexcept;
 
     constexpr bool operator==(TColorAttr other) const noexcept;
     constexpr bool operator!=(TColorAttr other) const noexcept;
-    // Explicitly overload the comparison against int to avoid ambiguity.
+    // Явно перегружаем сравнение с int, чтобы избежать неоднозначности.
     constexpr bool operator==(int bios) const noexcept;
     constexpr bool operator!=(int bios) const noexcept;
 
 private:
 
-    // Bit field implemented manually so that copy and comparison operations
-    // can both get optimized by the compiler and be constexpr:
-    // Bit 0: Foreground (27 bits)
-    // Bit 27: Background (27 bits)
-    // Bit 54: Style (10 bits)
+    // Битовое поле реализовано вручную, чтобы компилятор мог оптимизировать
+    // копирование и сравнение, сохранив constexpr. С бита 0: цвет текста, 27
+    // бит; с бита 27: цвет фона, 27 бит; с бита 54: стиль, 10 бит.
+    //
+    //
     uint64_t _data;
 
     enum : uint64_t
@@ -699,9 +699,9 @@ constexpr TColorAttr TColorAttr::reversed() const noexcept
 {
     auto fg = getForeground(),
          bg = getBackground();
-    // The 'slReverse' attribute may be represented differently by different
-    // terminal emulators, so it is better to swap the colors manually unless
-    // either of them is the default color.
+    // Эмуляторы терминала могут по-разному отображать slReverse. Поэтому
+    // лучше вручную менять цвета местами, если ни один из них не является
+    // цветом по умолчанию.
     if (fg.isDefault() || bg.isDefault())
         return TColorAttr(fg, bg, getStyle() ^ slReverse);
     else
@@ -710,10 +710,10 @@ constexpr TColorAttr TColorAttr::reversed() const noexcept
 
 constexpr TColorAttr::operator uchar() const noexcept
 {
-    // 'this' must be a BIOS attribute, or else a fixed color will be returned
-    // instead. The key point is that the result shouldn't be '\x0' unless this
-    // is the BIOS attribute '\x0', so that legacy code comparing a TColorAttr
-    // against '0' keeps working.
+    // 'this' должен содержать атрибут BIOS, иначе возвращается фиксированный
+    // цвет. Важно не получать '\x0', кроме случая атрибута BIOS '\x0': это
+    // сохраняет работу старого кода, сравнивающего TColorAttr с нулём.
+    //
     auto fg = getForeground(),
          bg = getBackground();
     if (fg.isBIOS() && bg.isBIOS() && getStyle() == 0)
@@ -743,11 +743,11 @@ constexpr bool TColorAttr::operator!=(int bios) const noexcept
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TAttrPair                                                        */
+/* класс TAttrPair */
 /*                                                                         */
-/*  Represents a pair of color attributes.                                 */
+/* Представляет пару цветовых атрибутов. */
 /*                                                                         */
-/*  Example:                                                               */
+/* Пример: */
 /*                                                                         */
 /*      TColorAttr cNormal = {0x234983, 0x267232};                         */
 /*      TColorAttr cHigh = {0x309283, 0x127844};                           */
@@ -767,21 +767,21 @@ public:
     constexpr TAttrPair(TColorAttr low = 0x00, TColorAttr high = 0x00) noexcept;
     constexpr TAttrPair(int bios) noexcept;
 
-    // TAttrPair can be used as a 2-element array ([0]: low, [1]: high).
-    // Array reference conversion operators are used instead of 'operator[]'
-    // since they enable compile-time diagnostics based on the array length.
+    // TAttrPair можно использовать как массив из двух элементов: [0] — младший, [1] —
+    // старший. Вместо operator[] используются операторы преобразования в ссылку на
+    // массив: они позволяют компилятору проверять границы по длине массива.
     using ArrayRef = TColorAttr (&)[2];
     constexpr operator ArrayRef() noexcept;
     using ConstArrayRef = const TColorAttr (&)[2];
     constexpr operator ConstArrayRef() const noexcept;
 
-    // Backward-compatibility functions:
+    // Функции обратной совместимости:
 
-    // Return the corresponding pair of BIOS color attributes. Only works
-    // properly if both attributes are actually BIOS color attributes:
-    // see 'TColorAttr::operator uchar()'.
+    // Возвращает соответствующую пару атрибутов BIOS. Работает правильно,
+    // только если оба атрибута действительно имеют тип BIOS; см.
+    // TColorAttr::operator uchar().
     constexpr operator ushort() const noexcept;
-    // Used to compose attribute pairs in legacy code.
+    // Используется для составления пар атрибутов в старом коде.
     constexpr TAttrPair operator>>(int shift) const noexcept;
     constexpr TAttrPair& operator|=(TColorAttr attr) noexcept;
 
@@ -817,7 +817,7 @@ constexpr TAttrPair::operator ushort() const noexcept
 
 constexpr TAttrPair TAttrPair::operator>>(int shift) const noexcept
 {
-    // Legacy code may use '>> 8' on an attribute pair to get the higher attribute.
+    // В старом коде '>> 8' может извлекать старший атрибут пары.
     if (shift == 8)
         return {_attrs[1]};
     return ushort(*this) >> shift;
@@ -825,9 +825,9 @@ constexpr TAttrPair TAttrPair::operator>>(int shift) const noexcept
 
 constexpr TAttrPair& TAttrPair::operator|=(TColorAttr attr) noexcept
 {
-    // Legacy code may use '|=' on an attribute pair to set the lower attribute.
-    // However, that's only if the lower attribute is equivalent to the BIOS
-    // color attribute 0x00. Otherwise, this is just an arithmetic operation.
+    // В старом коде '|=' может задавать младший атрибут пары, но только если
+    // тот эквивалентен атрибуту BIOS 0x00. В остальных случаях это обычная
+    // арифметическая операция.
     if (_attrs[0] == 0)
         _attrs[0] = attr;
     else
@@ -835,7 +835,7 @@ constexpr TAttrPair& TAttrPair::operator|=(TColorAttr attr) noexcept
     return *this;
 }
 
-// Pending methods from TColorAttr.
+// Ещё не определённые методы TColorAttr.
 
 constexpr TColorAttr::TColorAttr(const TAttrPair &attrs) noexcept :
     TColorAttr(attrs[0])
@@ -844,7 +844,7 @@ constexpr TColorAttr::TColorAttr(const TAttrPair &attrs) noexcept :
 
 constexpr TAttrPair TColorAttr::operator<<(int shift) const noexcept
 {
-    // Legacy code may use '<< 8' on an attribute to construct an attribute pair.
+    // В старом коде '<< 8' может создавать пару из одного атрибута.
     if (shift == 8)
         return {uchar(0), *this};
     return uchar(*this) << shift;

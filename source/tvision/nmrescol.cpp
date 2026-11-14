@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmrescol.cpp                              */
+/* файл — nmrescol.cpp */
 /*                                                            */
-/* defines the streamable name for class TResourceCollection  */
+/* Определяет имя сериализуемого класса TResourceCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

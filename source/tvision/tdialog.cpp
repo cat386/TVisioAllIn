@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tdialog.cpp                               */
+/* файл — tdialog.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TDialog member functions                  */
+/* функции:  */
+/* Методы TDialog */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -17,9 +17,9 @@
 #define Uses_TEvent
 #include <tvision/tv.h>
 
-// TMultiCheckboxes flags
-//   hibyte = number of bits
-//   lobyte = bit mask
+// Флаги TMultiCheckboxes: старший байт — число битов, младший — битовая
+// маска.
+//
 
 
 TDialog::TDialog( const TRect& bounds, TStringView aTitle ) noexcept :

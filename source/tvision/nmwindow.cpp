@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmwindow.cpp                              */
+/* файл — nmwindow.cpp */
 /*                                                            */
-/* defines the streamable name for class TWindow              */
+/* Определяет имя сериализуемого класса TWindow. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

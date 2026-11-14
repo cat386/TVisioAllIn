@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   COLORSEL.H                                                            */
 /*                                                                         */
-/*   defines the class TColorDialog, used to set application palettes      */
+/* Определяет класс TColorDialog для настройки палитр приложения. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*

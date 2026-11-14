@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-// std::array is not constexpr until C++17. So we make our own, which costs
-// nothing.
+// До C++17 std::array не поддерживает constexpr. Поэтому используем
+// собственный вариант без дополнительных затрат.
 
 namespace tvision
 {
@@ -26,6 +26,6 @@ struct constarray
 
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_CONSTARR_H

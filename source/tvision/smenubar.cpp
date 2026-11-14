@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       smenubar.cpp                              */
+/* файл — smenubar.cpp */
 /*                                                            */
-/* Registeration object for the class TMenuBar                */
+/* Объект регистрации класса TMenuBar. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

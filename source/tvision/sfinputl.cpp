@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sfinputl.cpp                              */
+/* файл — sfinputl.cpp */
 /*                                                            */
-/* Registeration object for the class TFileInputLine          */
+/* Объект регистрации класса TFileInputLine. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

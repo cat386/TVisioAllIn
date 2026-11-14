@@ -20,17 +20,17 @@
 namespace tvision
 {
 
-// Paths used by the GPM library and server.
+// Пути, используемые библиотекой и сервером GPM.
 static const char gpmCtlPath[] = "/dev/gpmctl";
 static const char gpmDevfsConsole[] = "/dev/vc/0";
 static const char gpmOldConsole[] = "/dev/tty0";
 
 int GpmInput::open(gpm::Connect &conn) noexcept
 {
-    // Determine the virtual console number of the current terminal, as
-    // 'Gpm_Open' does: take the name of the first standard stream that is a
-    // terminal (e.g. "/dev/tty3") and parse the number at the position where
-    // the console name has its trailing '0' (e.g. "/dev/tty0").
+    // Определяем номер виртуальной консоли текущего терминала как Gpm_Open:
+    // берём имя первого стандартного потока, являющегося терминалом,
+    // например /dev/tty3, и читаем номер с позиции завершающего нуля в имени
+    // консоли, например /dev/tty0.
     struct stat st;
     const char *consoleName = stat(gpmDevfsConsole, &st) == 0 ? gpmDevfsConsole
                             : stat(gpmOldConsole, &st) == 0 ? gpmOldConsole
@@ -47,14 +47,14 @@ int GpmInput::open(gpm::Connect &conn) noexcept
     conn.pid = getpid();
     conn.vc = atoi(&tty[prefixLength]);
     {
-        // 'Gpm_Open' fails if it cannot open the terminal.
+        // Gpm_Open завершается ошибкой, если терминал не удалось открыть.
         int consoleFd = ::open(tty, O_WRONLY | O_CLOEXEC);
         if (consoleFd < 0)
             return -1;
         close(consoleFd);
     }
 
-    // Connect to the control socket.
+    // Подключаемся к управляющему сокету.
     int fd = socket(AF_UNIX, SOCK_STREAM, 0);
     if (fd < 0)
         return -1;
@@ -64,7 +64,7 @@ int GpmInput::open(gpm::Connect &conn) noexcept
     socklen_t addrLen = sizeof(addr.sun_family) + strlen(gpmCtlPath);
     if (connect(fd, (struct sockaddr *) &addr, addrLen) < 0)
     {
-        // Like 'Gpm_Open', try opening '/dev/gpmctl' as a character device.
+        // Как Gpm_Open, пытаемся открыть /dev/gpmctl в качестве символьного устройства.
         close(fd);
         if ((fd = ::open(gpmCtlPath, O_RDWR)) == -1)
             return -1;
@@ -76,7 +76,7 @@ int GpmInput::open(gpm::Connect &conn) noexcept
     }
     fcntl(fd, F_SETFD, FD_CLOEXEC);
 
-    // Complete the small handshake before switching event reads to nonblocking.
+    // Завершаем короткое начальное согласование перед переводом чтения событий в неблокирующий режим.
     size_t sent = 0;
     while (sent < sizeof(conn))
     {
@@ -104,9 +104,9 @@ GpmInput *GpmInput::create(DisplayBuffer &displayBuf) noexcept
 {
     gpm::Connect conn {};
     conn.eventMask = gpm::DOWN | gpm::UP | gpm::DRAG | gpm::MOVE;
-    conn.defaultMask = 0; // Disable cursor drawing by the server.
-    // Report keyboard modifiers except Shift, which terminal emulators
-    // usually reserve for selecting text. Here GPM will do the same.
+    conn.defaultMask = 0; // Отключаем рисование курсора сервером. Сообщаем модификаторы
+    // клавиатуры, кроме Shift, который эмуляторы обычно резервируют для
+    // выделения текста. GPM здесь делает то же самое.
     conn.minMod = 0;
     conn.maxMod = (ushort) ~(1 << KG_SHIFT);
 
@@ -134,7 +134,7 @@ bool GpmInput::readEvent(gpm::Event &gpmEvent) noexcept
             return ::read(handle, data, size);
         }))
         return false;
-    // Let coordinates begin at zero instead of one.
+    // Координаты начинаются с нуля, а не с единицы.
     --gpmEvent.x;
     --gpmEvent.y;
     return true;
@@ -161,7 +161,7 @@ bool GpmInput::getEvent(TEvent &ev) noexcept
     {
         fitEvent(gpmEvent);
         displayBuf.setCursorPosition(gpmEvent.x, gpmEvent.y);
-        // Do not show the cursor until we receive at least one mouse event.
+        // Не показываем курсор до получения хотя бы одного события мыши.
         displayBuf.setCursorVisibility(true);
 
         ev.what = evMouse;
@@ -193,6 +193,6 @@ bool GpmInput::getEvent(TEvent &ev) noexcept
     return false;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // HAVE_GPM

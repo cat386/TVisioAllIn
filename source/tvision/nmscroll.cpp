@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmscroll.cpp                              */
+/* файл — nmscroll.cpp */
 /*                                                            */
-/* defines the streamable name for class TScroller            */
+/* Определяет имя сериализуемого класса TScroller. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

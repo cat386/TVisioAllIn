@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tmulchkb.cpp                              */
+/* файл — tmulchkb.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*          TMultiCheckBox member functions                   */
+/* функции:  */
+/* Методы TMultiCheckBox */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

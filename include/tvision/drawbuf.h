@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   DRAWBUF.H                                                             */
 /*                                                                         */
-/*   defines the class TDrawBuffer, which provides the high-level          */
-/*   interface to the Screen Manager.                                      */
+/* Определяет класс TDrawBuffer, предоставляющий высокоуровневый */
+/* Интерфейс диспетчера экрана. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*

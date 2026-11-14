@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tstatusl.cpp                              */
+/* файл — tstatusl.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TStatusLine member functions              */
+/* функции:  */
+/* Методы TStatusLine */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -73,5 +73,5 @@ class JsonTableModel : public TableModel
         return data_;
     }
 };
-} // namespace tvision
+} // пространство имён tvision
 #endif

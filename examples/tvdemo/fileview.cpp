@@ -1,6 +1,6 @@
 /*---------------------------------------------------------*/
 /*                                                         */
-/*   Turbo Vision FileViewer Demo Support File             */
+/* Вспомогательный файл примера просмотра файлов Turbo Vision. */
 /*                                                         */
 /*---------------------------------------------------------*/
 /*
@@ -106,7 +106,7 @@ void TFileViewer::readFile( const char *fName )
              )
             {
             size_t i = 0;
-            while ( !fileToView.eof() && c != '\n' && c != '\r' ) // read a whole line
+            while ( !fileToView.eof() && c != '\n' && c != '\r' ) // Читаем целую строку.
                 {
                 if (i == lineSize)
                     line = (char *) realloc(line, (lineSize *= 2));
@@ -115,7 +115,7 @@ void TFileViewer::readFile( const char *fName )
                 }
             line[i] = '\0';
             if ( c == '\r' && fileToView.peek() == '\n')
-                fileToView.get( c ); // grab trailing newline on CRLF
+                fileToView.get( c ); // Захватываем завершающий перевод строки в CRLF.
             limit.x = max( limit.x, strwidth( line ) );
             fileLines->insert( newStr( line ) );
             }

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       thstview.cpp                              */
+/* файл — thstview.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  THistoryViewer member functions           */
+/* функции:  */
+/* Методы THistoryViewer */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

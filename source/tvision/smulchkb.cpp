@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       smulchkb.cpp                              */
+/* файл — smulchkb.cpp */
 /*                                                            */
-/* Registeration object for the class TMultiCheckBoxes        */
+/* Объект регистрации класса TMultiCheckBoxes. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

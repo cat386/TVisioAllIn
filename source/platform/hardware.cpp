@@ -44,7 +44,7 @@ void THardwareInfo::screenWrite( ushort x, ushort y, TScreenCell *buf, DWORD len
 }
 TScreenCell *THardwareInfo::allocateScreenBuffer() noexcept { return platf->reloadScreenInfo(); }
 void THardwareInfo::freeScreenBuffer(TScreenCell *) noexcept { platf->freeScreenBuffer(); }
-// Turbo Vision only checks whether this is non-zero.
+// Turbo Vision проверяет только отличие от нуля.
 DWORD THardwareInfo::getButtonCount() noexcept { return 2; }
 void THardwareInfo::cursorOn() noexcept {}
 void THardwareInfo::cursorOff() noexcept {}
@@ -96,7 +96,7 @@ BOOL THardwareInfo::getKeyEvent( TEvent& event ) noexcept
 
 void THardwareInfo::readEvents() noexcept
 {
-    // Do not read any more events until the queue is empty.
+    // Не читаем новые события, пока очередь не опустеет.
     if (!eventCount)
         while (eventCount < eventQSize && platf->getEvent(eventQ[eventCount]))
             ++eventCount;
@@ -106,8 +106,8 @@ void THardwareInfo::waitForEvents( int timeoutMs ) noexcept
 {
     if (!eventCount)
     {
-        // Flush the screen once for every time all events have been processed,
-        // only when blocking for events.
+        // Обновляем экран после обработки всех событий, только при блокирующем
+        // ожидании новых.
         flushScreen();
         platf->waitForEvents(timeoutMs);
     }
@@ -120,8 +120,8 @@ void THardwareInfo::interruptEventWait() noexcept
 
 uint64_t THardwareInfo::getTickCountMs() noexcept
 {
-    // This effectively gives a system time reference in milliseconds.
-    // steady_clock is best suited for measuring intervals.
+    // Получаем системную временную отметку в миллисекундах. steady_clock
+    // лучше всего подходит для измерения интервалов.
     return std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::steady_clock::now().time_since_epoch()
     ).count();

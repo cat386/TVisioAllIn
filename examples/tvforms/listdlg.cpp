@@ -1,8 +1,8 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Listdlg.cpp: Support source file for TVFORMS demo   */
+/* Listdlg.cpp — вспомогательный исходный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -131,10 +131,10 @@ TListDialog::TListDialog( char *rezName, char *title) :
     short listWd;
     short buttonX;
 
-    // Read data off resource stream
+    // Читаем данные из потока ресурсов.
     if (openDataFile(fileName, formDataFile, ios::in) == True)
         {
-        // Get horizontal size of key field
+        // Получаем горизонтальный размер ключевого поля.
         f = (TForm *)formDataFile->get("FormDialog");
         if (f == NULL)
             {
@@ -142,7 +142,7 @@ TListDialog::TListDialog( char *rezName, char *title) :
             return;
             }
 
-            // Base listbox width on key width. Grow entire dialog if required
+            // Ширина списка определяется шириной ключа. При необходимости увеличиваем весь диалог.
         if (f->keyWidth > defaultListWd)
             {
             listWd = f->keyWidth;
@@ -151,34 +151,34 @@ TListDialog::TListDialog( char *rezName, char *title) :
         else
             listWd = defaultListWd;
 
-        // Move to upper right corner of desktop
-        TRect r (TProgram::deskTop->getExtent());   // Desktop coordinates
+        // Перемещаем в правый верхний угол рабочего стола.
+        TRect r (TProgram::deskTop->getExtent());   // Координаты рабочего стола.
         moveTo((short)(r.b.x - size.x), 1);
 
         destroy(f);
 
-        // Read data collection into memory
+        // Читаем коллекцию данных в память.
         dataCollection = (TDataCollection *)formDataFile->get("FormData");
         if (dataCollection != NULL)
             {
-            // Loaded successfully: build ListDialog dialog
+            // Успешно загружено: создаём диалог ListDialog.
 
-            // Scrollbar
+            // Полоса прокрутки.
             sb = new TScrollBar( TRect(listX + listWd, listY,
                      listX + listWd + 1, listY + listHt));
             insert(sb);
 
-            // List box
+            // Список.
             list = new TListKeyBox( TRect(listX, listY, listX + listWd,
                        listY + listHt), 1, sb);
             list->newList(dataCollection);
             insert(list);
 
-            // Label
+            // Метка.
             insert(new TLabel ( TRect(listX, listY - 1,
                        listX + 10, listY), "~K~eys", list));
 
-            // Buttons
+            // Кнопки.
             buttonX = listX + listWd + 2;
             y = buttonY;
 
@@ -199,7 +199,7 @@ TListDialog::TListDialog( char *rezName, char *title) :
             insert(new TButton (TRect(buttonX, y, buttonX + buttonWd,
                        y + 2), "~S~ave", cmListSave, bfNormal));
 
-            selectNext(False);      // Select first field
+            selectNext(False);      // Выбираем первое поле.
             isValid = True;
             }
         }
@@ -219,7 +219,7 @@ void TListDialog::close(void)
 {
     if (valid(cmClose))
         {
-        // Stop desktop video update in case there are scores of attached forms 
+        // При большом числе открытых форм приостанавливаем обновление экрана рабочего стола.
         TProgram::deskTop->lock();
         message(TProgram::deskTop, evBroadcast, cmCloseForm, this);
         TProgram::deskTop->unlock();
@@ -229,7 +229,7 @@ void TListDialog::close(void)
 
 TForm *TListDialog::editingForm()
 {
-    // Return pointer to the form that is editing the current selection
+    // Возвращаем указатель на форму, редактирующую текущий выбранный элемент.
 
     return (TForm *)message(TProgram::deskTop, evBroadcast, cmEditingForm,
                             dataCollection->at(list->focused));
@@ -241,11 +241,11 @@ void TListDialog::formOpen(Boolean newForm)
 
     if (!newForm)
         {
-        // Empty collection?
+        // Коллекция пуста?
         if (dataCollection->getCount() == 0)
             return;
 
-        // If selection is being edited, then bring its form to top
+        // Если выбранный элемент редактируется, поднимаем его форму наверх.
         f = editingForm();
         if (f != NULL)
             {
@@ -254,25 +254,25 @@ void TListDialog::formOpen(Boolean newForm)
             }
         }
 
-    // Selection is not being edited: open new form from the resource file
+    // Элемент не редактируется: открываем новую форму из файла ресурсов.
     f = (TForm *) formDataFile->get("FormDialog");
     if (f == NULL)
         messageBox("Error opening form.", mfError | mfOKButton);
     else
         {
-        f->listDialog = this;                // Form points back to List
+        f->listDialog = this;                // Форма ссылается обратно на список.
         if (newForm)
-            f->prevData = NULL;               // Adding new form
+            f->prevData = NULL;               // Добавляем новую форму.
         else
             {
-            // Edit data from collection
+            // Редактируем данные коллекции.
             f->prevData = dataCollection->at(list->focused);
             f->setData(f->prevData);
             }
         if (TApplication::application->validView(f) != NULL)
             {
             stackOnPrev(f);
-            TProgram::deskTop->insert(f);      // Insert & select
+            TProgram::deskTop->insert(f);      // Вставляем и выбираем.
             }
         }
 }
@@ -281,11 +281,11 @@ void TListDialog::deleteSelection()
 {
     TForm *f;
 
-    // Empty collection?
+    // Коллекция пуста?
     if (dataCollection->getCount() == 0)
         return;
 
-    // Don't allow delete of data already being edited
+    // Запрещаем удалять данные, которые уже редактируются.
     f = editingForm();
     if (f != NULL)
         {
@@ -295,7 +295,7 @@ void TListDialog::deleteSelection()
         return;
         }
 
-    // Confirm delete 
+    // Подтверждаем удаление.
     if (messageBox("Are you sure you want to delete this item?",
                     mfWarning | mfYesNoCancel) == cmYes)
         {
@@ -353,18 +353,18 @@ void TListDialog::handleEvent(TEvent& event)
             break;
         case evBroadcast:
             switch (event.message.command)
-                {  // Respond to broadcast from TSortedListBox 
+                {  // Обрабатываем широковещательное сообщение от TSortedListBox.
                 case cmListItemSelected: 
                     formOpen(False);
                     break;
 
-                // Keep file from being edited simultaneously by 2 lists
+                // Запрещаем одновременное редактирование файла двумя списками.
                 case cmEditingFile:
                     if (strcmp(fileName, (char *)event.message.infoPtr) == 0)
                         clearEvent(event);
                     break;
 
-                // Respond to search for topmost list dialog
+                // Отвечаем на поиск верхнего диалога списка.
                 case cmTopList:
                     clearEvent(event);
                     break;
@@ -401,21 +401,21 @@ Boolean TListDialog::saveList()
     char bufStr[MAXPATH];
     short ccode;
 
-    // Empty collection? Unedited?
+    // Коллекция пуста? Нет изменений?
     if ( (dataCollection->getCount() == 0) || (!modified) )
         {
         return True;
         }
 
-    //saveList = False;
-    // Read form definition out of original form file
+    // saveList = False; читаем определение формы из исходного файла форм.
+    //
     form = (TForm *)formDataFile->get("FormDialog");
     if (form == NULL)
         messageBox("Cannot find original file. Data not saved.",
                     mfError | mfOKButton);
     else
         {
-        // Create new data file
+        // Создаём новый файл данных.
         fnsplit(fileName, drive, d, n, e);
         fnmerge(bufStr, drive, d, n, ".$$$");
         if (openDataFile(bufStr, newDataFile, ios::out) == False)
@@ -423,36 +423,36 @@ Boolean TListDialog::saveList()
                         mfError | mfOKButton);
         else
             {
-            // Create new from form and collection in memory
+            // Создаём новый файл по форме и коллекции в памяти.
             newDataFile->put(form, "FormDialog");
             newDataFile->put(dataCollection, "FormData");
             newDataFile->flush();
             destroy(newDataFile);
 
-            // Close original file, rename to .BAK
+            // Закрываем исходный файл и переименовываем его в .BAK.
             destroy (formDataFile);
             formDataFile = NULL;
             fnmerge(bufStr, drive, d, n, ".bak");
             if (fileExists(bufStr))
                 ::remove(bufStr);
             ccode = rename(fileName, bufStr);
-            // Error trying to erase old .BAK or rename original to .BAK? 
+            // Ошибка удаления старого .BAK или переименования исходного файла в .BAK?
             if (ccode)
                 {
                 messageBox("Cannot create .BAK file. Data not saved.",
                             mfError | mfOKButton);
 
-                //Try to re-open original. New data will still be in memory
+                // Пытаемся вновь открыть исходный файл. Новые данные остаются в памяти.
                 if (openDataFile(fileName, formDataFile, ios::in) == False)
                     {
                     messageBox("Cannot re-open original file.",
                                 mfError | mfOKButton);
-                    destroy(this);        // Cannot proceed. Free data and close window }
+                    destroy(this);        // Продолжение невозможно. Освобождаем данные и закрываем окно. }
                     }
                 }
             else
                 {
-                // Rename temp file to original file and re-open 
+                // Переименовываем временный файл в исходный и открываем заново.
                 fnmerge(bufStr, drive, d, n, ".$$$");
                 rename(bufStr, fileName);
                 openDataFile(fileName, formDataFile, ios::in);
@@ -472,11 +472,11 @@ Boolean TListDialog::saveForm(TDialog *f)
     ccIndex i;
     void *p;
 
-    // Validate data before updating collection
+    // Проверяем данные перед обновлением коллекции.
     if (!f->valid(cmFormSave))
       return False;
 
-    // Extract data from form. Don't use safety pool.
+    // Получаем данные из формы, не используя резервный пул памяти.
     p = malloc(dataCollection->itemSize);
     if (p == NULL)
         {
@@ -486,7 +486,7 @@ Boolean TListDialog::saveForm(TDialog *f)
 
     memset(p, 0, dataCollection->itemSize);
     f->getData(p);
-    // If no duplicates, make sure not attempting to add duplicate key
+    // Если дубликаты запрещены, проверяем, что добавляемый ключ уникален.
     if ( (!(dataCollection->duplicates) && dataCollection->search(dataCollection->keyOf(p), i)) )
         if ( (((TForm*)f)->prevData == NULL) || (((TForm *)f)->prevData != dataCollection->at(i)) )
             {
@@ -497,13 +497,13 @@ Boolean TListDialog::saveForm(TDialog *f)
             return False;
             }
 
-    // Free previous data.
+    // Освобождаем прежние данные.
     if (((TForm *)f)->prevData != NULL)
         dataCollection->free(((TForm*)f)->prevData);
 
-    // TDataCollection.Insert may fail because it doesn't use
-    //  the safety pool. Check status field after insert and cleanup
-    //  if necessary.
+    // TDataCollection.Insert может завершиться ошибкой, поскольку не
+    // использует резервный пул. После вставки проверяем поле status и при
+    // необходимости освобождаем данные.
 
     dataCollection->insert(p);
     if (dataCollection->status != 0)
@@ -513,10 +513,10 @@ Boolean TListDialog::saveForm(TDialog *f)
         return False;
         }
 
-    // Success: store off original data pointer
+    // Успешно: сохраняем указатель на исходные данные.
     ((TForm *)f)->prevData = p;
 
-    // Redraw list
+    // Перерисовываем список.
     list->setRange(dataCollection->getCount());
     list->drawView();
 
@@ -528,22 +528,22 @@ void TListDialog::stackOnPrev(TDialog *f)
 {
     TForm *topForm;
 
-    // Stack on top topmost form or on top list if first form
+    // Располагаем над верхней формой либо над списком, если форма первая.
     topForm = (TForm *)message(owner, evBroadcast, cmTopForm, this);
     if (topForm != NULL)
-    // Stack on top previous topmost form
+    // Располагаем над предыдущей верхней формой.
         f->moveTo(topForm->origin.x + 1, topForm->origin.y + 1);
     else
         {
-        // Stack right or left of ListDialog
+        // Располагаем справа или слева от ListDialog.
         if (origin.x > f->size.x)
             f->moveTo(0, origin.y);
         else
             f->moveTo(origin.x + size.x + 1, origin.y);
         }
 
-    // Visible on desktop? Make sure at least half of form is visible
-    TRect r = owner->getExtent();                      // Desktop coordinates
+    // Видна на рабочем столе? Обеспечиваем видимость хотя бы половины формы.
+    TRect r = owner->getExtent();                      // Координаты рабочего стола.
     if (f->origin.x + size.x / 2 > r.b.x) 
         f->moveTo(0, 1);
     if (f->origin.y + size.y / 2 > r.b.y)
@@ -567,13 +567,13 @@ Boolean TListDialog::valid(ushort command)
         case cmQuit:
         case cmClose:
 
-            // Any forms open that cannot close?
+            // Есть открытые формы, которые нельзя закрыть?
             if (message(TProgram::deskTop, evBroadcast, cmCanCloseForm, this) == NULL)
                 ok = True;
             else
                 ok = False;
 
-            // Any data modified?
+            // Есть изменённые данные?
             if (ok && modified)
                 {
                 select();
@@ -585,10 +585,10 @@ Boolean TListDialog::valid(ushort command)
                         ok = saveList();
                         break;
                     case cmNo:
-                        modified = False;       // abandon changes
+                        modified = False;       // Отказываемся от изменений.
                         break;
                     default:
-                        ok = False;             // cancel close request
+                        ok = False;             // Отменяем запрос закрытия.
                         break;
                     }
                 }

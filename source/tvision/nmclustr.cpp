@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmclustr.cpp                              */
+/* файл — nmclustr.cpp */
 /*                                                            */
-/* defines the streamable name for class TCluster             */
+/* Определяет имя сериализуемого класса TCluster. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

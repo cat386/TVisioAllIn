@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmlstvwr.cpp                              */
+/* файл — nmlstvwr.cpp */
 /*                                                            */
-/* defines the streamable name for class TListViewer          */
+/* Определяет имя сериализуемого класса TListViewer. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

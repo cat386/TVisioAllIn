@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmmnubar.cpp                              */
+/* файл — nmmnubar.cpp */
 /*                                                            */
-/* defines the streamable name for class TMenuBar             */
+/* Определяет имя сериализуемого класса TMenuBar. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

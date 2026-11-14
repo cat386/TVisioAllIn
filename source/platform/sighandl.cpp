@@ -42,7 +42,7 @@ void SignalHandler::disable() noexcept
             auto &handlerInfo = getHandlerInfo(signo);
             struct sigaction sa = {};
             sigaction(signo, nullptr, &sa);
-            // Restore the previous handler only if ours is still installed.
+            // Восстанавливаем прежний обработчик, только если всё ещё установлен наш.
             if (sa == makeHandlerAction())
                 sigaction(signo, &handlerInfo.action, nullptr);
             handlerInfo.action = makeDefaultAction();
@@ -71,43 +71,43 @@ SignalHandler::HandlerInfo &SignalHandler::getHandlerInfo(int signo) noexcept
 
 void SignalHandler::handleSignal(int signo, siginfo_t *info, void *context)
 {
-    // In a multi-threaded application the signal handler may be changed from
-    // another thread while this one is running, but there's nothing we can do
-    // about it.
+    // В многопоточном приложении другой поток может изменить обработчик
+    // сигнала, пока этот выполняется; повлиять на это невозможно.
+    //
     auto &handlerInfo = getHandlerInfo(signo);
     struct sigaction currentAction {};
     SignalHandlerCallback *callback;
     if ((callback = SignalHandler::callback) && handlerInfo.running.exchange(true) == false)
     {
         struct sigaction nextAction = handlerInfo.action;
-        // Uninstall the current action, just in case this signal gets raised
-        // again while invoking the callback.
+        // Снимаем текущее действие на случай повторного сигнала во время
+        // обратного вызова.
         sigaction(signo, nullptr, &currentAction);
-        // Invoke the callback, which should be signal-safe in theory.
+        // Вызываем обратный вызов, который теоретически должен быть безопасен для сигналов.
         callback(true);
-        // Install and invoke the action that was in place when we installed
-        // our handler.
+        // Устанавливаем и вызываем действие, действовавшее перед установкой
+        // нашего обработчика.
         sigaction(signo, &nextAction, nullptr);
         if (invokeHandlerOrDefault(signo, nextAction, info, context))
-            // In some cases it is necessary to exit this handler.
+            // Иногда необходимо выйти из этого обработчика.
             return;
-        // If the process didn't get killed, get ready to resume normal process
-        // execution.
+        // Если процесс не завершён, готовимся возобновить обычное выполнение.
+        //
         callback(false);
-        // Reinstall the action that was in place when this handler was invoked.
+        // Восстанавливаем действие, установленное на момент вызова этого обработчика.
         sigaction(signo, &currentAction, nullptr);
         handlerInfo.running = false;
     }
     else
     {
-        // In the unexpected case where our handler was invoked even though
-        // it is already running or no callback was specified, just invoke the
-        // default handler.
+        // Если обработчик неожиданно вызван повторно либо обратный вызов не
+        // задан, вызываем обработчик по умолчанию.
+        //
         struct sigaction sa = makeDefaultAction();
         sigaction(signo, &sa, &currentAction);
         if (invokeDefault(signo, info))
             return;
-        // Reinstall the action that was in place when this handler was invoked.
+        // Восстанавливаем действие, установленное на момент вызова этого обработчика.
         sigaction(signo, &currentAction, nullptr);
     }
 }
@@ -122,36 +122,36 @@ static inline bool isCustomHandler(T &&handler)
 bool SignalHandler::invokeHandlerOrDefault( int signo, const struct sigaction &action,
                                             siginfo_t *info, void *context ) noexcept
 {
-    // If the handler is a custom one, invoke it directly.
+    // Пользовательский обработчик вызываем напрямую.
     if ((action.sa_flags & SA_SIGINFO) && isCustomHandler(action.sa_sigaction))
         action.sa_sigaction(signo, info, context);
     else if (!(action.sa_flags & SA_SIGINFO) && isCustomHandler(action.sa_handler))
         action.sa_handler(signo);
     else
-        // Run default handler by re-raising the signal.
+        // Запускаем обработчик по умолчанию повторной отправкой сигнала.
         return invokeDefault(signo, info);
     return false;
 }
 
 bool SignalHandler::invokeDefault(int signo, siginfo_t *info) noexcept
 {
-    // Allow synchronous signals sent by the kernel to be raised again by exiting
-    // the handler. This will preserve the original stack trace, si_addr, etc.
+    // Выходим из обработчика, позволяя ядру повторно породить синхронный
+    // сигнал. Это сохраняет исходный стек, si_addr и другие данные.
     if ( (signo == SIGILL || signo == SIGBUS || signo == SIGFPE || signo == SIGSEGV)
          && info->si_code > 0 )
         return true;
-    // Otherwise, raise the signal manually.
+    // Иначе отправляем сигнал вручную.
     sigset_t mask, oldMask;
     sigemptyset(&mask);
-    // Unblock this signal.
+    // Разблокируем этот сигнал.
     sigaddset(&mask, signo);
     sigprocmask(SIG_UNBLOCK, &mask, &oldMask);
     raise(signo);
-    // If the process didn't get killed, restore the original mask.
+    // Если процесс не завершён, восстанавливаем исходную маску.
     sigprocmask(SIG_SETMASK, &oldMask, nullptr);
     return false;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tcluster.cpp                              */
+/* файл — tcluster.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TCluster member functions                 */
+/* функции:  */
+/* Методы TCluster */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -71,8 +71,8 @@ TCluster::~TCluster()
 
 ushort TCluster::dataSize()
 {
-    // value is now a long, but for compatibility with earlier TV,
-    // return size of short; TMultiCheckBoxes returns sizeof(uint32_t).
+    // Теперь value имеет тип long, но для совместимости с ранней TV
+    // возвращаем размер short. TMultiCheckBoxes возвращает sizeof(uint32_t).
 
     return sizeof(ushort);
 }

@@ -1,5 +1,5 @@
+// TEST.CPP — основной тестовый модуль примера Turbo Vision.
 //
-// TEST.CPP - Main Test module for Turbo Vision example program.
 //
 
 #define Uses_TKeys
@@ -15,13 +15,13 @@
 #define Uses_TApplication
 #define Uses_MsgBox
 #include <tv.h>
-#include "cmds.h"       // User defined command set for this
-                        // application
-#include "test.h"       // Application class definition
-#include "palette.h"    // TTestWindow class definition
+#include "cmds.h"       // Пользовательский набор команд приложения.
+                        //
+#include "test.h"       // Определение класса приложения.
+#include "palette.h"    // Определение класса TTestWindow.
 
+// TTestApp — конструктор.
 //
-// TTestApp - Constructor.
 //
 
 #define cpTestAppC  "\x3E\x2D\x72\x5F\x68\x4E"
@@ -33,9 +33,9 @@ TTestApp::TTestApp() :
 {
 }
 
+// initMenuBar инициализирует строку меню; вызывается конструктором
+// виртуальной базы TProgInit.
 //
-// initMenuBar - Initialize the menu bar. It will be called by
-// the virtual base TProgInit constructor.
 //
 
 TMenuBar *TTestApp::initMenuBar( TRect bounds )
@@ -49,9 +49,9 @@ TMenuBar *TTestApp::initMenuBar( TRect bounds )
     return( mainMenu );
 }
 
+// handleEvent обрабатывает выбор пунктов меню и строки состояния.
 //
-// handleEvent - Need to handle the event for the menu and status
-// line choices
+//
 //
 
 void TTestApp::handleEvent(TEvent& event)
@@ -59,32 +59,32 @@ void TTestApp::handleEvent(TEvent& event)
     TApplication::handleEvent(event);
     switch(event.what)
     {
-    case evCommand:             // handle COMMAND events.
+    case evCommand:             // Обрабатываем события команд.
         switch(event.message.command)
         {
-        case cmAbout:           // Bring up the dialog box.
+        case cmAbout:           // Открываем диалоговое окно.
             aboutDlg();
             break;
-        case cmPaletteView:     // Bring up palette example.
+        case cmPaletteView:     // Открываем пример палитры.
             paletteView();
             break;
-        default:                // these events not handled.
+        default:                // Эти события не обработаны.
             return;
         }
         break;
-    default:                    // these events not handled.
+    default:                    // Эти события не обработаны.
         return;
     }
-    clearEvent(event);          // Clear the events we did
-                                // handle.
+    clearEvent(event);          // Сбрасываем обработанные события.
+                                //
 }
 
+// getPalette определяет новую системную палитру. Системная палитра
+// должна поддерживать три типа отображения: цветное, чёрно-белое и
+// монохромное. Объединение строк в Borland C++ присоединяет расширение к
+// стандартной системной палитре.
 //
-// getPalette: define a new system palette.  Notice that the
-// system palette must define palettes for three different types
-// of displays: color, BW, and mono.  Also, we are using Borland
-// C++ string concatenation in this function to join the system
-// default palette to our extension.
+//
 //
 
 TPalette& TTestApp::getPalette() const
@@ -102,16 +102,16 @@ TPalette& TTestApp::getPalette() const
         &newBlackWhite,
         &newMonochrome
         };
-    return *(palettes[appPalette]); // 'appPalette' is a member
-                                    // variable that
-                                    // indicates which palette
-                                    // (color, BW,
-                                    // Mono) is being used.
+    return *(palettes[appPalette]); // Поле 'appPalette' указывает, какая палитра используется: цветная,
+                                    // чёрно-белая или монохромная.
+                                    //
+                                    //
+                                    //
 }
 
+// aboutDlg создаёт и выполняет диалог «О программе».
 //
-// aboutDlg - Creates a about dialog box and execute the dialog
-//             box.
+//
 //
 
 void TTestApp::aboutDlg()
@@ -131,12 +131,12 @@ void TTestApp::aboutDlg()
             new TButton(TRect(18,10,29,12), "OK", cmOK,
                          bfDefault)
             );
-        aboutDlgBox->options |= ofCentered;     // Centered on
-                                                // the screen
-        execView( aboutDlgBox );                // Bring up the
-                                                // box as modal
-        destroy( aboutDlgBox );                 // Destroy the
-                                                // box
+        aboutDlgBox->options |= ofCentered;     // По центру экрана.
+                                                //
+        execView( aboutDlgBox );                // Открываем окно в модальном режиме.
+                                                //
+        destroy( aboutDlgBox );                 // Уничтожаем окно.
+                                                //
     }
 }
 

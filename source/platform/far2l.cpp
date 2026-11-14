@@ -12,7 +12,7 @@
 namespace tvision
 {
 
-// Request IDs
+// Идентификаторы запросов.
 const char
     f2lNoAnswer = '\0',
     f2lClipGetData = '\xA0';
@@ -25,7 +25,7 @@ static TStringView f2lClientId =
 );
 
 ParseResult parseFar2lInput(GetChBuf &buf, TEvent &ev, InputState &state) noexcept
-// Pre: "\x1B_f2l" has just been read.
+// Предусловие: только что прочитано "\x1B_f2l".
 {
     enum { k = 32 };
     char s[4*k];
@@ -50,8 +50,8 @@ ParseResult parseFar2lInput(GetChBuf &buf, TEvent &ev, InputState &state) noexce
             memcpy(&unicode, &out[10], sizeof(unicode));
 
 #ifdef TV_BIG_ENDIAN
-            // The protocol states that "all integer values are in
-            // little-endian format", so convert them.
+            // Протокол требует порядок little-endian для всех целых значений,
+            // поэтому преобразуем их.
             reverseBytes(kev.wRepeatCount);
             reverseBytes(kev.wVirtualKeyCode);
             reverseBytes(kev.wVirtualScanCode);
@@ -70,7 +70,7 @@ ParseResult parseFar2lInput(GetChBuf &buf, TEvent &ev, InputState &state) noexce
 #ifdef _WIN32
             if (unicode > 0xFFFF && kev.uChar.UnicodeChar != 0)
             {
-                // Feed UTF-16 surrogates through the existing text converter.
+                // Передаём суррогаты UTF-16 через имеющийся преобразователь текста.
                 uint32_t scalar = unicode - 0x10000;
                 kev.uChar.UnicodeChar = (wchar_t) (0xD800 + (scalar >> 10));
                 getWin32Key(kev, ev, state);
@@ -109,7 +109,7 @@ ParseResult parseFar2lInput(GetChBuf &buf, TEvent &ev, InputState &state) noexce
 }
 
 ParseResult parseFar2lAnswer(GetChBuf &buf, TEvent &, InputState &state) noexcept
-// Pre: "\x1B_far2l" has just been read.
+// Предусловие: только что прочитано "\x1B_far2l".
 {
     ParseResult res = Ignored;
     if (char *s = TermIO::readUntilBelOrSt(buf))
@@ -130,7 +130,7 @@ ParseResult parseFar2lAnswer(GetChBuf &buf, TEvent &, InputState &state) noexcep
                 if (dataSize < UINT_MAX - 5 && decoded.size() >= 5 + dataSize)
                 {
                     TStringView text = decoded.substr(decoded.size() - 5 - dataSize, dataSize);
-                    // Discard null terminator.
+                    // Отбрасываем завершающий нулевой символ.
                     if (dataSize > 0 && text.back() == '\0')
                         text = text.substr(0, text.size() - 1);
                     state.putPaste(text);
@@ -273,4 +273,4 @@ bool requestFar2lClipboard(ConsoleCtl &con, InputState &state) noexcept
     return false;
 }
 
-} // namespace tvision
+} // пространство имён tvision

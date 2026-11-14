@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nminputli.cpp                             */
+/* файл — nminputli.cpp */
 /*                                                            */
-/* defines the streamable name for class TInputLine           */
+/* Определяет имя сериализуемого класса TInputLine. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

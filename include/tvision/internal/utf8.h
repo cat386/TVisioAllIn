@@ -21,7 +21,7 @@ inline constexpr uint Utf8BytesLeft(char first_byte) noexcept
 
 inline constexpr uint32_t utf8To32(TStringView s) noexcept
 {
-    // Precondition: s is a valid UTF-8 sequence.
+    // Предусловие: s содержит корректную последовательность UTF-8.
     switch (s.size()) {
         case 1:
             return s[0];
@@ -76,8 +76,8 @@ inline size_t utf32To8(uint32_t u32, char u8[4]) noexcept
 }
 
 inline size_t utf16To8(uint16_t u16[2], char u8[4])
-// Pre: 'u16' contains a valid UTF-16 sequence. If the character consists of a
-// single code unit, then 'u16[1] == 0'.
+// Предусловие: u16 содержит корректную последовательность UTF-16. Если
+// символ занимает одну кодовую единицу, u16[1] == 0.
 {
     uint32_t u32;
     if (u16[1] == 0)
@@ -94,7 +94,7 @@ inline int utf32To16(uint32_t u32, uint16_t u16[2]) noexcept
         u16[0] = uint16_t(u32);
         return 1;
     }
-    else if (u32 < 0x10FFFF) // Two surrogates.
+    else if (u32 < 0x10FFFF) // Два суррогата.
     {
         u16[0] = uint16_t(((u32 - 0x10000) >> 10) + 0xD800);
         u16[1] = uint16_t(((u32 - 0x10000) & 0x3FF) + 0xDC00);
@@ -103,10 +103,10 @@ inline int utf32To16(uint32_t u32, uint16_t u16[2]) noexcept
     return -1;
 }
 
-// Returns the length of the converted text.
-// Pre: the capacity of 'output' is enough to hold the result.
+// Возвращает длину преобразованного текста. Предусловие: ёмкости output
+// достаточно для результата.
 size_t utf16To8(TSpan<const uint16_t> input, char *output) noexcept;
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // TVISION_UTF8_H

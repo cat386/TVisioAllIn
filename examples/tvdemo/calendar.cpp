@@ -1,6 +1,6 @@
 /*---------------------------------------------------------*/
 /*                                                         */
-/*   Calendar.cpp:  TCalenderWindow member functions.      */
+/* Calendar.cpp — методы TCalenderWindow. */
 /*                                                         */
 /*---------------------------------------------------------*/
 /*
@@ -45,8 +45,8 @@ static unsigned char daysInMonth[] = {
 };
 
 
+// Методы TCalendarView
 //
-// TCalendarView functions
 //
 
 const char * const TCalendarView::name = "TCalendarView";
@@ -86,11 +86,11 @@ TCalendarView::TCalendarView(TRect& r) : TView( r )
 
     time_t timestamp = time(0);
     struct tm calendar = *localtime(&timestamp);
-    // tm_year: "years since 1900"
+    // tm_year: число лет с 1900 года.
     year = curYear = calendar.tm_year + 1900;
-    // tm_mon: "months since January (0 to 11)"
+    // tm_mon: число месяцев с января, от 0 до 11.
     month = curMonth = calendar.tm_mon + 1;
-    // tm_mday: "day of the month (1 to 31)"
+    // tm_mday: день месяца, от 1 до 31.
     curDay = calendar.tm_mday;
 
     drawView();
@@ -232,8 +232,8 @@ void TCalendarView::handleEvent(TEvent& event)
 }
 
 
+// Методы TCalendarWindow
 //
-// TCalendarWindow functions
 //
 
 const char * const TCalendarWindow::name = "TCalendarWindow";

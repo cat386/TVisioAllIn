@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tscreen.cpp                               */
+/* файл — tscreen.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TScreen member functions                  */
+/* функции:  */
+/* Методы TScreen */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -276,7 +276,7 @@ ushort TScreen::fixCrtMode( ushort mode ) noexcept
         return mode;
         }
 #endif
-    if( (mode & 0xFF) == smMono )       // Strip smFont8x8 if necessary.
+    if( (mode & 0xFF) == smMono )       // При необходимости сбрасываем smFont8x8.
         return smMono;
 
     if( (mode & 0xFF) != smCO80 && (mode & 0xFF) != smBW80 )

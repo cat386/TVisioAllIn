@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sstrlst.cpp                               */
+/* файл — sstrlst.cpp */
 /*                                                            */
-/* Registeration object for the class TStringList             */
+/* Объект регистрации класса TStringList. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sstatict.cpp                              */
+/* файл — sstatict.cpp */
 /*                                                            */
-/* Registeration object for the class TStaticText             */
+/* Объект регистрации класса TStaticText. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

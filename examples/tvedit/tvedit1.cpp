@@ -61,8 +61,8 @@ TEditorApp::TEditorApp( int argc, char **argv ) :
 
     TEditor::editorDialog = doEditDialog;
 
-    while (--argc > 0)                              // Open files specified
-        openEditor(*++argv, True);                  // on command line.
+    while (--argc > 0)                              // Открываем указанные файлы.
+        openEditor(*++argv, True);                  // в командной строке.
     cascade();
 }
 

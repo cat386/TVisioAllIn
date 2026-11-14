@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sdircoll.cpp                              */
+/* файл — sdircoll.cpp */
 /*                                                            */
-/* Registeration object for the class TDirCollection          */
+/* Объект регистрации класса TDirCollection. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

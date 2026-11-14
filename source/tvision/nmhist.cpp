@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmhist.cpp                                */
+/* файл — nmhist.cpp */
 /*                                                            */
-/* defines the streamable name for class THistory             */
+/* Определяет имя сериализуемого класса THistory. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

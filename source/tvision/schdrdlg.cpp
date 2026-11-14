@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       schdrdlg.cpp                              */
+/* файл — schdrdlg.cpp */
 /*                                                            */
-/* Registeration object for the class TChDirDialog            */
+/* Объект регистрации класса TChDirDialog. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   TSTRVIEW.H                                                            */
 /*                                                                         */
-/*   Defines the class TStringView and its member functions.               */
+/* Определяет класс TStringView и его методы. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 
@@ -22,20 +22,20 @@
 
 /*-------------------------------------------------------------------------*/
 /*                                                                         */
-/*  class TStringView                                                      */
+/* класс TStringView */
 /*                                                                         */
-/*  Represents a read-only view over a contiguous sequence of characters,  */
-/*  similar to std::string_view. It is used throughout Turbo Vision's API  */
-/*  to pass around text without copying or owning it.                      */
+/* Представляет доступную только для чтения непрерывную последовательность символов */
+/* подобно std::string_view. Используется в API Turbo Vision */
+/* для передачи текста без копирования и владения им. */
 /*                                                                         */
-/*  If std::string_view is available to you, you can continue to use it    */
-/*  in your own code: TStringView is intercompatible with                  */
-/*  std::string_view, std::string and TSpan<const char>, converting to     */
-/*  and from them implicitly where possible.                               */
+/* Если std::string_view доступен, его можно продолжать использовать */
+/* в своём коде: TStringView совместим со */
+/* std::string_view, std::string и TSpan<const char> и по возможности */
+/* неявно преобразуется в них и обратно. */
 /*                                                                         */
-/*  Unlike std::string_view, TStringView can be constructed from a null    */
-/*  pointer, in which case it results in an empty view. Turbo Vision       */
-/*  originally used 'const char *' parameters everywhere instead.          */
+/* В отличие от std::string_view, TStringView можно создать из нулевого */
+/* указателя; тогда представление будет пустым. Изначально Turbo Vision */
+/* повсюду использовал вместо этого параметры const char *. */
 /*                                                                         */
 /*-------------------------------------------------------------------------*/
 
@@ -312,7 +312,7 @@ namespace std {
     template<>
     struct hash<TStringView> : public hash<std::string> {};
 #endif
-} // namespace std
+} // пространство имён std
 
 #endif // TVISION_NO_STL && __cplusplus >= 201103L
 

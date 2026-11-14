@@ -2,8 +2,8 @@
 /*                                                                         */
 /*   MENUS.H                                                               */
 /*                                                                         */
-/*   defines the classes TMenuItem, TMenu, TMenuView, TSubMenu,            */
-/*   TMenuBar, TMenuBox, TStatusItem, TStatusDef, and TStatusLine          */
+/* Определяет классы TMenuItem, TMenu, TMenuView, TSubMenu, */
+/* TMenuBar, TMenuBox, TStatusItem, TStatusDef и TStatusLine. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -122,15 +122,15 @@ public:
 #endif  // Uses_TMenu
 
 /* ---------------------------------------------------------------------- */
-/*      class TMenuView                                                   */
+/* класс TMenuView */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Disabled text                                               */
-/*        3 = Shortcut text                                               */
-/*        4 = Normal selection                                            */
-/*        5 = Disabled selection                                          */
-/*        6 = Shortcut selection                                          */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Недоступный текст */
+/* 3 = Текст горячей буквы */
+/* 4 = Обычное выделение */
+/* 5 = Недоступное выделение */
+/* 6 = Выделенная горячая буква */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TMenuView ) && !defined( __TMenuView )
@@ -234,15 +234,15 @@ inline TMenuView::TMenuView( const TRect& bounds ) noexcept :
 #endif  // Uses_TMenuView
 
 /* ---------------------------------------------------------------------- */
-/*      class TMenuBar                                                    */
+/* класс TMenuBar */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Disabled text                                               */
-/*        3 = Shortcut text                                               */
-/*        4 = Normal selection                                            */
-/*        5 = Disabled selection                                          */
-/*        6 = Shortcut selection                                          */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Недоступный текст */
+/* 3 = Текст горячей буквы */
+/* 4 = Обычное выделение */
+/* 5 = Недоступное выделение */
+/* 6 = Выделенная горячая буква */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TMenuBar ) && !defined( __TMenuBar )
@@ -292,15 +292,15 @@ inline opstream& operator << ( opstream& os, TMenuBar* cl )
 #endif  // Uses_TMenuBar
 
 /* ---------------------------------------------------------------------- */
-/*      class TMenuBox                                                    */
+/* класс TMenuBox */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Disabled text                                               */
-/*        3 = Shortcut text                                               */
-/*        4 = Normal selection                                            */
-/*        5 = Disabled selection                                          */
-/*        6 = Shortcut selection                                          */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Недоступный текст */
+/* 3 = Текст горячей буквы */
+/* 4 = Обычное выделение */
+/* 5 = Недоступное выделение */
+/* 6 = Выделенная горячая буква */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TMenuBox ) && !defined( __TMenuBox )
@@ -359,15 +359,15 @@ inline opstream& operator << ( opstream& os, TMenuBox* cl )
 #define __TMenuPopup
 
 /* ---------------------------------------------------------------------- */
-/*      class TMenuPopup                                                  */
+/* класс TMenuPopup */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Disabled text                                               */
-/*        3 = Shortcut text                                               */
-/*        4 = Normal selection                                            */
-/*        5 = Disabled selection                                          */
-/*        6 = Shortcut selection                                          */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Недоступный текст */
+/* 3 = Текст горячей буквы */
+/* 4 = Обычное выделение */
+/* 5 = Недоступное выделение */
+/* 6 = Выделенная горячая буква */
 /* ---------------------------------------------------------------------- */
 
 class TMenuPopup : public TMenuBox
@@ -467,15 +467,15 @@ inline TStatusDef::TStatusDef( ushort aMin,
 #endif  // Uses_TStatusDef
 
 /* ---------------------------------------------------------------------- */
-/*      class TStatusLine                                                 */
+/* класс TStatusLine */
 /*                                                                        */
-/*      Palette layout                                                    */
-/*        1 = Normal text                                                 */
-/*        2 = Disabled text                                               */
-/*        3 = Shortcut text                                               */
-/*        4 = Normal selection                                            */
-/*        5 = Disabled selection                                          */
-/*        6 = Shortcut selection                                          */
+/* Структура палитры */
+/* 1 = Обычный текст */
+/* 2 = Недоступный текст */
+/* 3 = Текст горячей буквы */
+/* 4 = Обычное выделение */
+/* 5 = Недоступное выделение */
+/* 6 = Выделенная горячая буква */
 /* ---------------------------------------------------------------------- */
 
 #if defined( Uses_TStatusLine ) && !defined( __TStatusLine )

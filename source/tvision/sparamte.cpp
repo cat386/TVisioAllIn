@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sparamte.cpp                              */
+/* файл — sparamte.cpp */
 /*                                                            */
-/* Registeration object for the class TParamText              */
+/* Объект регистрации класса TParamText. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

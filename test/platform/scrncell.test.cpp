@@ -13,8 +13,8 @@
 
 TEST(Scrncell, StructsShouldHaveTheExpectedTrivialityAlignmentAndSize)
 {
-    // Use 'alignof(type)' rather than hardcoding the alignment values,
-    // given that they may vary among systems.
+    // Используем alignof(type) вместо фиксированных значений выравнивания,
+    // зависящих от системы.
     check_trivial_construct_copy_size_align(TColorAttr, 8, alignof(uint64_t));
     check_trivial_construct_copy_size_align(TScreenCharacter, 16, alignof(uint8_t));
     check_trivial_construct_copy_size_align(TScreenCell, 24, alignof(uint64_t));
@@ -51,7 +51,7 @@ TEST(TScreenCharacter, InitWithMultiByteCharStringView) {
 
 TEST(TScreenCharacter, InitWithMultiByteCharStringViewWide) {
     TScreenCharacter ch;
-    ch.initWithMultiByteChar("\xE4\xB8\xAD", true); // '中', double-width
+    ch.initWithMultiByteChar("\xE4\xB8\xAD", true); // '中', двойная ширина.
 
     EXPECT_EQ(ch.getText(), TStringView("\xE4\xB8\xAD", 3));
     EXPECT_EQ(ch.isWide(), true);
@@ -77,7 +77,7 @@ TEST(TScreenCharacter, InitWithMultiByteCharUInt32) {
 
 TEST(TScreenCharacter, InitAsWideCharTrailResetsState) {
     TScreenCharacter ch;
-    ch.initWithMultiByteChar("\xE4\xB8\xAD", true); // Wide char
+    ch.initWithMultiByteChar("\xE4\xB8\xAD", true); // Широкий символ.
     ch.initAsWideCharTrail();
 
     EXPECT_EQ(ch.isWideCharTrail(), true);
@@ -86,7 +86,7 @@ TEST(TScreenCharacter, InitAsWideCharTrailResetsState) {
 
 TEST(TScreenCharacter, AppendZeroWidthChar) {
     TScreenCharacter ch('a');
-    ch.appendZeroWidthChar("\xCC\x80"); // Combining grave U+0300
+    ch.appendZeroWidthChar("\xCC\x80"); // Комбинируемый гравис U+0300.
 
     EXPECT_EQ(ch.getText(), TStringView("a\xCC\x80", 3));
     EXPECT_EQ(ch.isWide(), false);
@@ -101,12 +101,12 @@ TEST(TScreenCharacter, AppendZeroWidthCharPromotesNullToSpace) {
 
 TEST(TScreenCharacter, AppendZeroWidthCharNoEffectAfterOverflow) {
     TScreenCharacter ch;
-    ch.initWithMultiByteChar("\xF0\x9F\x98\x80"); // '😀', 4 bytes
-    ch.appendZeroWidthChar("\xF3\xA0\x84\x80");   // +4 = 8 bytes
-    ch.appendZeroWidthChar("\xF3\xA0\x84\x80");   // +4 = 12 bytes
-    ch.appendZeroWidthChar("\xCC\x80");            // +2 = 14 bytes; next would overflow
-    ch.appendZeroWidthChar("\xCC\x80");            // overflow: sets fOverflow, ignored
-    ch.appendZeroWidthChar("\x2E");                // also ignored: fOverflow is set
+    ch.initWithMultiByteChar("\xF0\x9F\x98\x80"); // '😀', четыре байта.
+    ch.appendZeroWidthChar("\xF3\xA0\x84\x80");   // +4 = 8 байт.
+    ch.appendZeroWidthChar("\xF3\xA0\x84\x80");   // +4 = 12 байт.
+    ch.appendZeroWidthChar("\xCC\x80");            // +2 = 14 байт; следующий символ вызвал бы переполнение.
+    ch.appendZeroWidthChar("\xCC\x80");            // Переполнение: устанавливает fOverflow и игнорируется.
+    ch.appendZeroWidthChar("\x2E");                // Также игнорируется: fOverflow уже установлен.
 
     EXPECT_EQ(ch.getText().size(), 14U);
 }
@@ -123,7 +123,7 @@ TEST(TScreenCell, ConstructorWithCharAndAttr) {
 }
 
 TEST(TScreenCell, ConstructorFromBIOS) {
-    constexpr TScreenCell cell(0x1F41); // char = 0x41 ('A'), attr = 0x1F
+    constexpr TScreenCell cell(0x1F41); // Символ = 0x41 ('A'), атрибут = 0x1F.
 
     EXPECT_EQ(cell.character.getText(), TStringView("A", 1));
     EXPECT_EQ(cell.attribute, TColorAttr(0x1F));

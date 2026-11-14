@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tstatict.cpp                              */
+/* файл — tstatict.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TStaticText member functions              */
+/* функции:  */
+/* Методы TStaticText */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -53,7 +53,7 @@ void TStaticText::draw()
     color = getColor(1);
     getText(buf);
     s = buf;
-    // If possible, read directly from 'text' to prevent truncation.
+    // По возможности читаем прямо из text, избегая усечения.
     if (s == TStringView(text).substr(0, s.size()))
         s = text;
     l = (int) s.size();

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       fmtstr.cpp                                */
+/* файл — fmtstr.cpp */
 /*                                                            */
-/* function(s)                                                */
+/* функции:  */
 /*            formatStr                                       */
 /*            vFormatStr                                      */
 /*------------------------------------------------------------*/
@@ -18,17 +18,17 @@
 /*                                                                        */
 /*  formatStr                                                             */
 /*                                                                        */
-/*  arguments:                                                            */
+/* Аргументы: */
 /*                                                                        */
-/*      format  - string with format specifiers                           */
+/* format — строка со спецификаторами формата. */
 /*                                                                        */
-/*      ...     - list of parameters                                      */
+/* ... — список параметров. */
 /*                                                                        */
-/*  returns:                                                              */
+/* Возвращает: */
 /*                                                                        */
-/*      A string formatted using vsnprintf, allocated dynamically.        */
-/*      If vsnprintf fails, returns a copy of 'format'.                   */
-/*      The returned string can be disposed of using 'delete[]'.          */
+/* Динамически выделенная строка, отформатированная vsnprintf. */
+/* При ошибке vsnprintf возвращает копию format. */
+/* Возвращённую строку можно освободить через delete[]. */
 /*                                                                        */
 /*------------------------------------------------------------------------*/
 

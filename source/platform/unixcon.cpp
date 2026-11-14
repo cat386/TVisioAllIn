@@ -23,8 +23,8 @@ inline UnixConsoleAdapter::UnixConsoleAdapter( DisplayAdapter &aDisplay,
     sigwinch(aSigwinch),
     input(aInput)
 {
-    // Ensure we don't miss a possible undetected screen size change (e.g. after
-    // recovering from SIGTSTP).
+    // Не пропускаем незамеченное изменение размера экрана, например после
+    // восстановления из SIGTSTP.
     if (sigwinch)
         sigwinch->signal();
 }
@@ -53,8 +53,8 @@ bool UnixConsoleAdapter::setClipboardText(TStringView text) noexcept
         return true;
     if (TermIO::setClipboardText(con, text, inputState))
         return true;
-    // On non-success, 'setClipboardText' prints an OSC sequence not all
-    // terminals can handle; redraw the screen in case it has been messed up.
+    // При неудаче setClipboardText выводит OSC, поддерживаемую не всеми
+    // терминалами. Перерисовываем экран на случай повреждения.
     displayBuf.redrawScreen(display);
     return false;
 }
@@ -68,6 +68,6 @@ bool UnixConsoleAdapter::requestClipboardText(void (&accept)(TStringView)) noexc
     return false;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX

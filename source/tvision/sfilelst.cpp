@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sfilelst.cpp                              */
+/* файл — sfilelst.cpp */
 /*                                                            */
-/* Registeration object for the class TFileList               */
+/* Объект регистрации класса TFileList. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -15,15 +15,15 @@
 #define Uses_TFileList
 #define Uses_TStreamableClass
 #include <tvision/tv.h>
-__link( RSortedListBox )            // In case the object below is moved
-                                    //   to another file.
+__link( RSortedListBox )            // На случай переноса объекта ниже в другой файл.
+                                    //
 
 TStreamableClass RFileList( TFileList::name,
                             TFileList::build,
                             __DELTA(TFileList)
                           );
 
-/* TSortedListBox registration. */
+/* Регистрация TSortedListBox. */
 __link( RListBox )
 
 TStreamableClass RSortedListBox( TSortedListBox::name,

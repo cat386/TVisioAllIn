@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tscrolle.cpp                              */
+/* файл — tscrolle.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TScroller member functions                */
+/* функции:  */
+/* Методы TScroller */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

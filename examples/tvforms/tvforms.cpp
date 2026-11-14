@@ -1,19 +1,19 @@
 /*---------------------------------------------------------------------*/
 /*                                                                     */
-/*   Turbo Vision Forms Demo main source file.                         */
+/* Основной исходный файл демонстрации форм Turbo Vision. */
 /*                                                                     */
 /*---------------------------------------------------------------------*/
 /*                                                                     */
-/* This Turbo Vision application uses forms to enter and edit data     */
-/* in a collection. Two data files, PHONENUM.F16 and PARTS.F16, are    */
-/* provided and can be loaded using this application's File|Open menu. */
-/* (PHONENUM.F32 and PARTS.F32 are used for the 32 bit version of      */
-/*  TVFORMS)                                                           */
+/* Это приложение Turbo Vision использует формы для ввода и редактирования данных */
+/* коллекции. Поставляются два файла данных: PHONENUM.F16 и PARTS.F16, которые */
+/* можно загрузить командой меню File|Open этого приложения. */
+/* В 32-битной версии TVFORMS используются PHONENUM.F32 и PARTS.F32. */
+/* TVFORMS. */
 /*                                                                     */
-/* The .F16 or .F32 files were created by GENFORMS.MAK, which compiles */
-/* and runs GENFORM.CPP. You can create additional data files by       */
-/* copying and modifying GENPARTS.H or GENPHONE.H and then             */
-/* incorporating your new header into GENFORM.CPP.                     */
+/* Файлы .F16 и .F32 созданы с помощью GENFORMS.MAK, который компилирует */
+/* и запускает GENFORM.CPP. Для дополнительных файлов данных можно */
+/* скопировать и изменить GENPARTS.H или GENPHONE.H, а затем */
+/* подключить новый заголовок к GENFORM.CPP. */
 /*                                                                     */
 /*---------------------------------------------------------------------*/
 /*
@@ -105,7 +105,7 @@ TFormApp::TFormApp() :
 {
     TEvent event;
 
-    // Display about box
+    // Показываем окно «О программе».
     event.what = evCommand;
     event.message.command = cmAboutBox;
     putEvent(event);
@@ -148,7 +148,7 @@ void TFormApp::openListDialog()
                 }
             else
                 {
-                // If listEditor exists, select it; otherwise, open new one
+                // Если listEditor существует, выбираем его; иначе открываем новый.
                 fnsplit(fileName, drive, dir, name, ext);
                 listEditor = (TDialog *)message(deskTop, evBroadcast, cmEditingFile, fileName);
                 if (listEditor == NULL)

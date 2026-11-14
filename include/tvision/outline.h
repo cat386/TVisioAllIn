@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   OUTLINE.H                                                             */
 /*                                                                         */
-/*   defines the classes TOutline, and TOutlineViewer.                     */
+/* Определяет классы TOutline и TOutlineViewer. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -61,13 +61,13 @@ inline TNode::~TNode() {
 }
 
 /* ------------------------------------------------------------------------*/
-/*      class TOutlineViewer                                               */
+/* класс TOutlineViewer */
 /*                                                                         */
-/*      Palette layout                                                     */
-/*        1 = Normal color                                                 */
-/*        2 = Focus color                                                  */
-/*        3 = Select color                                                 */
-/*        4 = Not expanded color                                           */
+/* Структура палитры */
+/* 1 = Обычный цвет */
+/* 2 = Цвет фокуса */
+/* 3 = Цвет выделения */
+/* 4 = Цвет нераскрытого узла */
 /* ------------------------------------------------------------------------*/
 
 class _FAR TRect;
@@ -75,7 +75,7 @@ class _FAR TScrollBar;
 class _FAR TOutlineViewer;
 struct _FAR TEvent;
 
-// Callback types for TOutlineViewer's traverse functions.
+// Типы обратных вызовов для функций обхода TOutlineViewer.
 
 typedef Boolean (*TOutlineVisitor)( TOutlineViewer*, TNode*,
                                     int, int, long, ushort, void* );
@@ -145,13 +145,13 @@ inline TOutlineViewer::TOutlineViewer( StreamableInit s) noexcept :
 #define __TOutline
 
 /* ------------------------------------------------------------------------*/
-/*      class TOutline                                                     */
+/* класс TOutline */
 /*                                                                         */
-/*      Palette layout                                                     */
-/*        1 = Normal color                                                 */
-/*        2 = Focus color                                                  */
-/*        3 = Select color                                                 */
-/*        4 = Not expanded color                                           */
+/* Структура палитры */
+/* 1 = Обычный цвет */
+/* 2 = Цвет фокуса */
+/* 3 = Цвет выделения */
+/* 4 = Цвет нераскрытого узла */
 /* ------------------------------------------------------------------------*/
 
 class _FAR TRect;

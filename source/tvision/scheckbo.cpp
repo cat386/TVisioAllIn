@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       scheckbo.cpp                              */
+/* файл — scheckbo.cpp */
 /*                                                            */
-/* Registeration object for the class TCheckBoxes             */
+/* Объект регистрации класса TCheckBoxes. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

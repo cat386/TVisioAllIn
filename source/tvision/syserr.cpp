@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       syserr.cpp                                */
+/* файл — syserr.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*          TSystemError member functions                     */
+/* функции:  */
+/* Методы TSystemError */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -85,7 +85,7 @@ TSystemError::~TSystemError()
 #endif
 }
 
-#if defined( __FLAT__ )             // 16-bit version is in SYSINT.ASM
+#if defined( __FLAT__ )             // 16-битная версия находится в SYSINT.ASM.
 void TSystemError::resume() noexcept
 {
     THardwareInfo::setCtrlBrkHandler( TRUE );
@@ -108,16 +108,16 @@ ushort TSystemError::selectKey()
     int ch;
 
     do {
-        // This technique is ok in 16-bit only!! Caching of events by the
-        //   32-bit event code will cause an infinite loop if a mouse event
-        //   occurs before the key stroke we're looking for.  However, this
-        //   code is not present in the 32-bit version :-).
+        // Приём пригоден только для 16 бит! Кэширование событий 32-битным кодом
+        // приведёт к бесконечному циклу, если событие мыши предшествует нужной
+        // клавише. Впрочем, в 32-битной версии этого кода нет.
+        //
         key.getKeyEvent();
         if( key.what == evNothing )
-            continue;               // Haven't got a key event yet...
+            continue;               // Событие клавиатуры ещё не получено.
 
         ch = key.keyDown.keyCode & 0xFF;
-        if( ch == 13 || ch == 27 )  // Leave loop only if it's an ESC or RETURN
+        if( ch == 13 || ch == 27 )  // Выходим из цикла только по Esc или Enter.
             break;
     } while( 1 );
 
@@ -132,10 +132,10 @@ short TSystemError::sysErr( short errorCode, uchar drive )
     char s[ 63 ];
     TDrawBuffer b;
 
-    /* There are 22 documented device errors, all of which have their
-     * own strings in errorString[].  However, just in case we run into
-     * something weird this will prevent a crash.
-     */
+    /*
+ * Документированы 22 ошибки устройств, каждой соответствует строка
+ * errorString[]. Эта проверка предотвращает сбой при неожиданном значении.
+ */
     if( errorCode < (sizeof(errorString) / sizeof(errorString[0])) )
         sprintf( s, errorString[ errorCode ], drive + 'A' );
     else

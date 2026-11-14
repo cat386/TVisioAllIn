@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   TEXTVIEW.H                                                            */
 /*                                                                         */
-/*   defines the classes TTextDevice and TTerminal                         */
+/* Определяет классы TTextDevice и TTerminal. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*

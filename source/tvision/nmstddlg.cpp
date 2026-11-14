@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       nmstddlg.cpp                              */
+/* файл — nmstddlg.cpp */
 /*                                                            */
-/* defines the streamable names for classes                   */
-/*   TFileInputLine, TSortedListBox, TFileInfoPane            */
+/* Определяет имена сериализуемых классов: */
+/* TFileInputLine, TSortedListBox, TFileInfoPane. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

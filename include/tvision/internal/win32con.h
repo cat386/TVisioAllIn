@@ -65,7 +65,7 @@ class Win32Input final : public InputAdapter
 
 public:
 
-    // The lifetime of 'con' must exceed that of 'this'.
+    // con должен существовать дольше this.
     Win32Input(ConsoleCtl &aCon) noexcept;
 
     bool getEvent(TEvent &ev) noexcept override;
@@ -75,7 +75,7 @@ class Win32Display final : public DisplayAdapter
 {
 public:
 
-    // The lifetime of 'con' must exceed that of 'this'.
+    // con должен существовать дольше this.
     Win32Display(ConsoleCtl &con, bool isLegacyConsole) noexcept;
     ~Win32Display();
 
@@ -107,6 +107,6 @@ private:
 
 #endif // _WIN32
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // WIN32CON_H

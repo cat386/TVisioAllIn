@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       nmoutlin.cpp                              */
+/* файл — nmoutlin.cpp */
 /*                                                            */
-/* defines the streamable name for TOutline class             */
+/* Определяет имя сериализуемого класса TOutline. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

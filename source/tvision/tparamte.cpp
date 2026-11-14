@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tparamte.cpp                              */
+/* файл — tparamte.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TParamText member functions               */
+/* функции:  */
+/* Методы TParamText */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

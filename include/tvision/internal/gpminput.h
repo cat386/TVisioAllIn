@@ -16,18 +16,18 @@ namespace tvision
 
 class DisplayBuffer;
 
-// Client of the GPM (General Purpose Mouse) server, which provides mouse
-// support in the Linux console.
+// Клиент сервера GPM (General Purpose Mouse), обеспечивающего поддержку
+// мыши в консоли Linux. Реализация клиентской части протокола автономна
+// и не требует связывания с libgpm. Протокол прост: клиент подключается
+// к Unix-сокету /dev/gpmctl, отправляет структуру Gpm_Connect и затем
+// получает структуры Gpm_Event.
 //
-// This is a self-contained implementation of the client side of the GPM
-// protocol, so that linking to 'libgpm' is not required. The protocol is
-// simple: the client connects to the Unix socket '/dev/gpmctl', sends a
-// 'Gpm_Connect' structure and then receives 'Gpm_Event' structures.
+//
 
 namespace gpm
 {
 
-// These definitions are binary-compatible with those in <gpm.h>.
+// Эти определения двоично совместимы с определениями из <gpm.h>.
 
 struct Connect
 {
@@ -42,9 +42,9 @@ struct Event
     unsigned char buttons, modifiers;
     unsigned short vc;
     short dx, dy, x, y;
-    int type; // enum Gpm_Etype.
+    int type; // Перечисление Gpm_Etype.
     int clicks;
-    int margin; // enum Gpm_Margin.
+    int margin; // Перечисление Gpm_Margin.
     short wdx, wdy;
 };
 
@@ -69,7 +69,7 @@ enum : int
     UP = 8,
 };
 
-} // namespace gpm
+} // пространство имён gpm
 
 class GpmInput final : public InputAdapter
 {
@@ -80,22 +80,22 @@ class GpmInput final : public InputAdapter
     GpmInput(int fd, DisplayBuffer &) noexcept;
     void fitEvent(gpm::Event &) noexcept;
 
-    // Opens a connection to the GPM server and returns its file descriptor,
-    // or -1 on failure. Equivalent to 'Gpm_Open'.
+    // Открывает соединение с сервером GPM и возвращает файловый дескриптор
+    // либо -1 при ошибке. Эквивалент Gpm_Open.
     static int open(gpm::Connect &) noexcept;
-    // Reads an event. Equivalent to 'Gpm_GetEvent' with 'gpm_zerobased = 1'.
+    // Читает событие. Эквивалент Gpm_GetEvent с gpm_zerobased = 1.
     bool readEvent(gpm::Event &) noexcept;
 
 public:
 
-    // Pre: The lifetime of 'displayBuf' must exceed that of the returned object.
+    // Предусловие: displayBuf должен существовать дольше возвращаемого объекта.
     static GpmInput *create(DisplayBuffer &displayBuf) noexcept;
     ~GpmInput();
 
     bool getEvent(TEvent &ev) noexcept override;
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #else
 
@@ -108,7 +108,7 @@ public:
     static GpmInput *create(DisplayBuffer &) noexcept { return nullptr; }
 };
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // HAVE_GPM
 

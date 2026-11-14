@@ -1,8 +1,8 @@
 /*------------------------------------------------------------*/
-/* filename -       tcmdset.cpp                               */
+/* файл — tcmdset.cpp */
 /*                                                            */
-/* function(s)                                                */
-/*                  TCommandSet member functions              */
+/* функции:  */
+/* Методы TCommandSet */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

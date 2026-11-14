@@ -2,7 +2,7 @@
 /*                                                                         */
 /*   TKEYS.H                                                               */
 /*                                                                         */
-/*   defines constants for all control key combinations                    */
+/* Определяет константы всех сочетаний управляющих клавиш. */
 /*                                                                         */
 /* ------------------------------------------------------------------------*/
 /*
@@ -20,29 +20,29 @@
 #include <tvision/compat/windows/windows.h>
 #endif
 
-//// Key codes
+// Коды клавиш. Эти константы служат для горячих клавиш меню и проверки
+// поля keyCode события evKeyDown. Не все сочетания доступны на всех
+// платформах. В 16-битном режиме не сообщаются дополнительные
+// расширенные коды, а также системные сочетания, например Alt+F4 для
+// закрытия окна в графической среде. В Unix поддержка зависит от
+// эмулятора терминала. Ctrl+H, Ctrl+I, Ctrl+J и Ctrl+M, вероятнее всего,
+// недоступны: обычно они означают Backspace, Tab и Enter. Константы
+// охватывают не все сочетания Shift, Ctrl и Alt; для остальных
+// используйте класс TKey ниже.
 //
-// The following constants can be used to define menu hotkeys and to
-// examine the 'keyCode' field of 'evKeyDown' event records.
 //
-// Not all key combinations can be used in all platforms. In particular:
 //
-// * In 16-bit mode, keystrokes corresponding to the 'additional extended
-//   key codes' are not reported.
 //
-// * Keystrokes corresponding to system shortcuts (e.g. Alt+F4 for 'close
-//   window' in graphical environments) are not reported either.
 //
-// * In Unix, support for key combinations varies among terminal emulators.
-//   Ctrl+H, Ctrl+I, Ctrl+J and Ctrl+M are not likely to work since they
-//   usually represent Backspace, Tab and Enter.
 //
-// These constants do not cover all possible combinations of the Shift, Ctrl
-// and Alt modifiers. For that purpose, see the TKey class below.
+//
+//
+//
+//
 
 const ushort
 
-// Control keys
+// Управляющие клавиши.
 
     kbCtrlA     = 0x0001,   kbCtrlB     = 0x0002,   kbCtrlC     = 0x0003,
     kbCtrlD     = 0x0004,   kbCtrlE     = 0x0005,   kbCtrlF     = 0x0006,
@@ -54,7 +54,7 @@ const ushort
     kbCtrlV     = 0x0016,   kbCtrlW     = 0x0017,   kbCtrlX     = 0x0018,
     kbCtrlY     = 0x0019,   kbCtrlZ     = 0x001a,
 
-// Extended key codes
+// Расширенные коды клавиш.
 
     kbEsc       = 0x011b,   kbAltSpace  = 0x0200,   kbCtrlIns   = 0x0400,
     kbShiftIns  = 0x0500,   kbCtrlDel   = 0x0600,   kbShiftDel  = 0x0700,
@@ -94,7 +94,7 @@ const ushort
     kbAlt0      = 0x8100,   kbAltMinus  = 0x8200,   kbAltEqual  = 0x8300,
     kbCtrlPgUp  = 0x8400,   kbNoKey     = 0x0000,
 
-// Additional extended key codes
+// Дополнительные расширенные коды клавиш.
 
     kbAltEsc    = 0x0100,   kbAltBack   = 0x0e00,   kbF11       = 0x8500,
     kbF12       = 0x8600,   kbShiftF11  = 0x8700,   kbShiftF12  = 0x8800,
@@ -106,17 +106,17 @@ const ushort
     kbAltIns    = 0xa200,   kbAltDel    = 0xa300,   kbAltTab    = 0xa500,
     kbAltEnter  = 0xa600,
 
-//// Keyboard state and shift masks
+// Состояние клавиатуры и маски модификаторов. Эти константы
+// предназначены для проверки controlKeyState события evKeyDown.
+// Различение левого и правого Shift доступно только в 16-битном режиме;
+// левых и правых Ctrl и Alt — только в 32-битном DPMI и Windows. Флаги
+// kbScrollState, kbNumState, kbCapsState и kbEnhanced сообщаются только
+// в DOS и Windows.
 //
-// The following constants can be used when examining the 'controlKeyState'
-// field of an 'evKeyDown' event record.
 //
-// Distinguishing between the left and right Shift keys is only supported in
-// 16-bit mode, while distinguishing between the left and right Ctrl and Alt
-// keys is only supported in 32-bit DPMI and on Windows.
 //
-// The kbScrollState, kbNumState, kbCapsState and kbEnhanced flags are only
-// reported on DOS and Windows.
+//
+//
 
 #if !defined( __FLAT__ )
     kbLeftShift   = 0x0001,
@@ -147,7 +147,7 @@ const ushort
     kbNumState    = NUMLOCK_ON,
     kbCapsState   = CAPSLOCK_ON,
     kbEnhanced    = ENHANCED_KEY,
-    kbInsState    = 0x200,  // Ensure this doesn't overlap above values
+    kbInsState    = 0x200,  // Проверяем отсутствие пересечения с предыдущими значениями.
     kbPaste       = 0x400;
 #endif
 
@@ -156,23 +156,23 @@ const ushort
 #if !defined( __TKey )
 #define __TKey
 
-//// TKey
+// TKey задаёт новые сочетания с помощью кода клавиши и маски
+// модификаторов. Их можно использовать как горячие клавиши меню и для
+// проверки событий evKeyDown. Учитываются только Shift, Ctrl и Alt, без
+// различения левых и правых клавиш. Некоторые константы кодов уже
+// подразумевают модификатор, поэтому одно сочетание можно задать
+// несколькими способами. TKey обеспечивает равенство таких вариантов.
+// Примеры: assert(kbCtrlA == TKey('A', kbCtrlShift));
+// assert(TKey(kbCtrlTab, kbShift) == TKey(kbTab, kbShift |
+// kbCtrlShift)); assert(TKey(kbAltDel, kbCtrlShift) == TKey(kbCtrlDel,
+// kbAltShift));
 //
-// This class provides the ability to define new key combinations by
-// specifying a key code and a mask of key modifiers. These key combinations
-// can then be used to define menu hotkeys and examine 'evKeyDown' event
-// records.
 //
-// The only modifiers taken into account are Shift, Ctrl and Alt, making no
-// distinction between the left and right key on platforms that support it.
 //
-// Given that some key code constants already imply the presence of a key
-// modifier, there are key combinations which can be defined in multiple
-// ways. TKey ensures equality between all of them. For example:
 //
-//     assert(kbCtrlA == TKey('A', kbCtrlShift));
-//     assert(TKey(kbCtrlTab, kbShift) == TKey(kbTab, kbShift | kbCtrlShift));
-//     assert(TKey(kbAltDel, kbCtrlShift) == TKey(kbCtrlDel, kbAltShift));
+//
+//
+//
 
 class TKey
 {

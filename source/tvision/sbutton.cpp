@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       sbutton.cpp                               */
+/* файл — sbutton.cpp */
 /*                                                            */
-/* Registeration object for the class TButton                 */
+/* Объект регистрации класса TButton. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

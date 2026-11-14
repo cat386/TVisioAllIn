@@ -1,7 +1,7 @@
 /*------------------------------------------------------------*/
-/* filename -       editstat.cpp                              */
+/* файл — editstat.cpp */
 /*                                                            */
-/* defines the static members of class TEditor                */
+/* Определяет статические члены класса TEditor. */
 /*------------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0

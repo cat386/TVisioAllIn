@@ -1,8 +1,8 @@
 /*-------------------------------------------------------*/
 /*                                                       */
-/*   Turbo Vision Forms Demo                             */
+/* Демонстрация форм Turbo Vision. */
 /*                                                       */
-/*   Formcmds.h: Support header file for TVFORMS Demo    */
+/* Formcmds.h — вспомогательный заголовочный файл примера TVFORMS. */
 /*-------------------------------------------------------*/
 /*
  *      Turbo Vision - Version 2.0
@@ -15,15 +15,15 @@
 #if !defined(__FORMCMDS_H )
 #define __FORMCMDS_H
 
-// Misc UI commands
+// Прочие команды интерфейса.
 
 const ushort
    cmAboutBox    = 2000,
    cmChgDir      = 2001,
    cmVideoMode   = 2002;
 
-// List & form-oriented commands
-// (Cannot be disabled)
+// Команды списков и форм, которые нельзя отключить.
+//
 
 const ushort
    cmListOpen    = 3000,
@@ -33,7 +33,7 @@ const ushort
    cmFormSave    = 3004,
    cmFormDel     = 3005;
 
-// Broadcast commands
+// Широковещательные команды.
 
 const ushort
    cmTopForm      = 3050,
@@ -44,7 +44,7 @@ const ushort
    cmTopList      = 3055,
    cmEditingFile  = 3056;
 
-// History list IDs 
+// Идентификаторы списков истории.
 
 const ushort
    hlChangeDir   = 1,

@@ -22,7 +22,7 @@ void ConsoleCtl::destroyInstance() noexcept
     instance = nullptr;
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #ifdef _TV_UNIX
 
@@ -45,7 +45,7 @@ ConsoleCtl::ConsoleCtl() noexcept
         ownsFiles = true;
         fds[0] = fileno(files[0]);
         fds[1] = fileno(files[1]);
-        // Subprocesses must not inherit these file descriptors.
+        // Дочерние процессы не должны наследовать эти файловые дескрипторы.
         for (int fd : fds)
             fcntl(fd, F_SETFD, FD_CLOEXEC);
     }
@@ -123,8 +123,8 @@ TPoint ConsoleCtl::getFontSize() const noexcept
 
 bool ConsoleCtl::isLinuxConsole() const noexcept
 {
-    // This is the same function used to get the Shift/Ctrl/Alt modifiers
-    // on the console. It only succeeds if a console file descriptor is used.
+    // Та же функция используется для получения модификаторов Shift/Ctrl/Alt
+    // консоли. Работает только с файловым дескриптором консоли.
     for (int fd : fds)
     {
         char subcode = 6;
@@ -136,7 +136,7 @@ bool ConsoleCtl::isLinuxConsole() const noexcept
 
 #endif // __linux__
 
-} // namespace tvision
+} // пространство имён tvision
 
 #elif defined(_WIN32)
 
@@ -167,39 +167,39 @@ static COORD windowSize(SMALL_RECT srWindow)
 
 ConsoleCtl::ConsoleCtl() noexcept
 {
-    // The console can be accessed in two ways: through GetStdHandle() or through
-    // CreateFile(). GetStdHandle() will be unable to return a console handle
-    // if standard handles have been redirected.
+    // Доступ к консоли возможен через GetStdHandle() и CreateFile(). При
+    // перенаправленных стандартных дескрипторах GetStdHandle() не вернёт
+    // консольный дескриптор. Кроме того, нужно создавать консоль, если
+    // пользователь её не видит. Это бывает при аварии консоли, когда все
+    // операции с её дескрипторами завершаются ошибкой, либо когда консоль
+    // существует, но её невозможно показать даже через GetConsoleWindow() и
+    // ShowWindow(SW_SHOW). Второй случай возникает в Git Bash без поддержки
+    // псевдоконсоли: стандартные дескрипторы не относятся к консоли, но
+    // полученные CreateFile() продолжают работать. Поэтому проверяем,
+    // является ли консольным хотя бы один стандартный дескриптор; иначе
+    // выделяем новую консоль. Это также создаст консоль при перенаправлении
+    // всех трёх стандартных потоков, но такой случай редок. CreateFile() не
+    // зависит от перенаправления, однако некоторые эмуляторы, например
+    // ConEmu, неожиданно ведут себя с открытыми этим способом экранными
+    // буферами. Поэтому по возможности используем стандартные дескрипторы.
+    // Дескрипторы CreateFile() нужно закрывать, а GetStdHandle() — нельзя,
+    // поэтому храним этот признак для каждого дескриптора. Также запоминаем,
+    // выделили ли мы консоль, чтобы затем освободить её; иначе возможны
+    // странные эффекты.
     //
-    // Additionally, we want to spawn a new console when none is visible to the user.
-    // This might happen under two circumstances:
     //
-    // 1. The console crashed. This is easy to detect because all console operations
-    //    fail on the console handles.
-    // 2. The console exists somehow but cannot be made visible, not even by doing
-    //    GetConsoleWindow() and then ShowWindow(SW_SHOW). This is what happens
-    //    under Git Bash without pseudoconsole support. In this case, none of the
-    //    standard handles is a console, yet the handles returned by CreateFile()
-    //    still work.
     //
-    // So, in order to find out if a console needs to be allocated, we
-    // check whether at least one of the standard handles is a console. If none
-    // of them is, we allocate a new console. Yes, this will always spawn a
-    // console if all three standard handles are redirected, but this is not
-    // a common use case.
     //
-    // Then comes the question of whether to access the console through GetStdHandle()
-    // or through CreateFile(). CreateFile() has the advantage of not being affected
-    // by standard handle redirection. However, I have found that some terminal
-    // emulators (i.e. ConEmu) behave unexpectedly when using screen buffers
-    // opened with CreateFile(). So we will use the standard handles whenever possible.
     //
-    // It is worth mentioning that the handles returned by CreateFile() have to be
-    // closed, but the ones returned by GetStdHandle() must not. So we have to remember
-    // this information for each console handle.
     //
-    // We also need to remember whether we allocated a console or not, so that
-    // we can free it when tearing down. If we don't, weird things may happen.
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
 
     static constexpr struct { DWORD std; int index; } channels[] =
     {
@@ -258,9 +258,9 @@ ConsoleCtl::ConsoleCtl() noexcept
     {
         CONSOLE_SCREEN_BUFFER_INFO sbInfo {};
         GetConsoleScreenBufferInfo(cn[startupOutput].handle, &sbInfo);
-        // Force the screen buffer size to match the window size.
-        // The Console API guarantees this, but some implementations
-        // are not compliant (e.g. Wine).
+        // Приводим размер экранного буфера к размеру окна. API консоли
+        // гарантирует это, но некоторые реализации, например Wine, нарушают
+        // условие.
         sbInfo.dwSize = windowSize(sbInfo.srWindow);
         SetConsoleScreenBufferSize(cn[activeOutput].handle, sbInfo.dwSize);
     }
@@ -283,22 +283,22 @@ ConsoleCtl::~ConsoleCtl()
     COORD activeWindowSize = windowSize(activeSbInfo.srWindow);
     COORD startupWindowSize = windowSize(startupSbInfo.srWindow);
 
-    // Preserve the current window size.
+    // Сохраняем текущий размер окна.
     if ( activeWindowSize.X != startupWindowSize.X ||
          activeWindowSize.Y != startupWindowSize.Y )
     {
-        // The buffer is not allowed to be smaller than the window, so enlarge
-        // it if necessary. But do not shrink it in the opposite case, to avoid
-        // loss of data.
+        // Буфер не может быть меньше окна, поэтому при необходимости увеличиваем
+        // его. В обратном случае не уменьшаем, чтобы не потерять данные.
+        //
         COORD dwSize = startupSbInfo.dwSize;
         if (dwSize.X < activeWindowSize.X)
             dwSize.X = activeWindowSize.X;
         if (dwSize.Y < activeWindowSize.Y)
             dwSize.Y = activeWindowSize.Y;
         SetConsoleScreenBufferSize(cn[startupOutput].handle, dwSize);
-        // Get the updated cursor position, in case it changed after the resize.
+        // Получаем обновлённую позицию курсора: она могла измениться после смены размера.
         GetConsoleScreenBufferInfo(cn[startupOutput].handle, &startupSbInfo);
-        // Make sure the cursor is visible. If possible, show it in the bottom row.
+        // Обеспечиваем видимость курсора, по возможности в нижней строке.
         SMALL_RECT srWindow = startupSbInfo.srWindow;
         COORD dwCursorPosition = startupSbInfo.dwCursorPosition;
         srWindow.Right = max(dwCursorPosition.X, activeWindowSize.X - 1);
@@ -318,8 +318,8 @@ ConsoleCtl::~ConsoleCtl()
 
 void ConsoleCtl::write(const char *data, size_t bytes) const noexcept
 {
-    // Writing 0 bytes causes the cursor to become invisible for a short time
-    // in old versions of the Windows console.
+    // Запись нуля байтов ненадолго скрывает курсор в старых версиях консоли
+    // Windows.
     if (bytes != 0)
         WriteConsoleA(out(), data, bytes, nullptr, nullptr);
 }
@@ -347,6 +347,6 @@ TPoint ConsoleCtl::getFontSize() const noexcept
     return {0, 0};
 }
 
-} // namespace tvision
+} // пространство имён tvision
 
 #endif // _TV_UNIX
