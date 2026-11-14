@@ -52,6 +52,9 @@ enum : ushort
     Definition,
     References,
     Clangd,
+    CodeEditor,
+    FormDesigner,
+    NewSource,
     Help
 };
 
@@ -315,13 +318,17 @@ class SourceEditor : public BufferEditor
 
 class SourceWindow : public TWindow
 {
+    std::string titleText_;
+
   public:
     fs::path path;
     SourceEditor *editor;
     bool closed = false;
     SourceWindow(TRect bounds, fs::path file)
         : TWindowInit(&SourceWindow::initFrame),
-          TWindow(bounds, utf8(file.filename()).c_str(), wnNoNumber), path(std::move(file))
+          TWindow(bounds, file.empty() ? "Без имени.cpp" : utf8(file.filename()).c_str(),
+                  wnNoNumber),
+          titleText_(file.empty() ? "Без имени.cpp" : utf8(file.filename())), path(std::move(file))
     {
         auto *h = standardScrollBar(sbHorizontal | sbHandleKeyboard),
              *v = standardScrollBar(sbVertical | sbHandleKeyboard);
@@ -333,24 +340,48 @@ class SourceWindow : public TWindow
         if (fs::exists(path))
             replaceEditorText(*editor, readFile(path));
         editor->modified = False;
+        editor->setSelect(0, 0, False);
+        editor->trackCursor(False);
         editor->select();
     }
-    void save()
+    const char *getTitle(short) override
     {
-        writeFile(path, editorText(*editor));
+        return titleText_.c_str();
+    }
+    bool save()
+    {
+        if (path.empty())
+        {
+            std::string value = "main.cpp";
+            if (!ask("Сохранить исходник", "Путь к файлу:", value) || value.empty())
+                return false;
+            auto target = fs::absolute(pathFromUtf8(value)).lexically_normal();
+            if (fs::exists(target) &&
+                messageBox("Перезаписать существующий файл?",
+                           mfConfirmation | mfYesButton | mfNoButton) != cmYes)
+                return false;
+            writeFile(target, editorText(*editor));
+            path = target;
+            titleText_ = utf8(path.filename());
+        }
+        else
+            writeFile(path, editorText(*editor));
         editor->modified = False;
         editor->update(ufUpdate);
+        if (frame)
+            frame->drawView();
+        return true;
     }
     bool allowClose()
     {
         if (!editor->modified)
             return true;
-        auto result = messageBox(("Сохранить " + utf8(path.filename()) + "?").c_str(),
+        auto result = messageBox(("Сохранить " + titleText_ + "?").c_str(),
                                  mfConfirmation | mfYesButton | mfNoButton | mfCancelButton);
         if (result == cmCancel)
             return false;
         if (result == cmYes)
-            save();
+            return save();
         return true;
     }
     // Окно остаётся собственностью приложения: указатели на редакторы не висят после закрытия.
@@ -360,6 +391,29 @@ class SourceWindow : public TWindow
         {
             hide();
             closed = true;
+        }
+    }
+};
+
+class ProjectFiles : public tvision::TTreeView
+{
+  public:
+    using tvision::TTreeView::TTreeView;
+    std::function<void(const std::string &)> activate;
+    void handleEvent(TEvent &event) override
+    {
+        bool open = event.what == evMouseDown && (event.mouse.eventFlags & meDoubleClick) &&
+                    mouseInView(event.mouse.where);
+        TTreeView::handleEvent(event);
+        if (open && activate)
+        {
+            auto *selected = current();
+            if (selected && !selected->data.empty())
+            {
+                auto path = selected->data;
+                activate(path);
+                clearEvent(event);
+            }
         }
     }
 };
@@ -577,10 +631,10 @@ Application studioMenus()
          "",
          0,
          false,
-         {item("Новый проект...", NewProject), item("Открыть проект...", OpenProject, "Ctrl+O"),
-          item("Импорт C++ / CMake...", Import), item("Открыть исходник...", OpenFile),
-          item("Сохранить", Save, "F2"), item("Сохранить всё", SaveAll, "Ctrl+S"),
-          item("Выход", cmQuit, "Alt+X")}},
+         {item("Новый проект...", NewProject), item("Новый исходник", NewSource, "Ctrl+N"),
+          item("Открыть проект...", OpenProject, "Ctrl+O"), item("Импорт C++ / CMake...", Import),
+          item("Открыть исходник...", OpenFile), item("Сохранить", Save, "F2"),
+          item("Сохранить всё", SaveAll, "Ctrl+S"), item("Выход", cmQuit, "Alt+X")}},
         {"~П~равка",
          "",
          "",
@@ -625,7 +679,8 @@ Application studioMenus()
          "",
          0,
          false,
-         {item("Следующее", cmNext, "F6"), item("Мозаика", cmTile), item("Каскад", cmCascade),
+         {item("Редактор кода", CodeEditor, "F4"), item("Дизайнер форм", FormDesigner, "Shift+F4"),
+          item("Следующее", cmNext, "F6"), item("Мозаика", cmTile), item("Каскад", cmCascade),
           item("Тема", ThemeCommand)}},
         {"~?~",
          "",
@@ -726,18 +781,24 @@ class Studio : public tvision::TThemedApplication
                     project_->forms[size_t(i)] = p.second->document.form;
             }
     }
-    void saveAll()
+    bool saveAll()
     {
         for (auto *s : sources_)
             if (s->editor->modified)
-                s->save();
+                if (!s->save())
+                    return false;
         if (project_)
         {
             sync();
+            project_->openFiles.clear();
+            for (auto *s : sources_)
+                if (!s->closed && !s->path.empty() && within(s->path, project_->directory))
+                    project_->openFiles.push_back(utf8(fs::relative(s->path, project_->directory)));
             project_->save();
             for (auto &p : forms_)
                 p.second->document.markSaved();
         }
+        return true;
     }
     bool closeProject()
     {
@@ -752,8 +813,8 @@ class Studio : public tvision::TThemedApplication
                                 mfConfirmation | mfYesButton | mfNoButton | mfCancelButton);
             if (r == cmCancel)
                 return false;
-            if (r == cmYes)
-                saveAll();
+            if (r == cmYes && !saveAll())
+                return false;
         }
         builder_.stop();
         lsp_.stop();
@@ -792,7 +853,17 @@ class Studio : public tvision::TThemedApplication
         tree();
         if (!project_->forms.empty())
             openForm(project_->forms.front().name);
-        else if (fs::exists(project_->directory / "src/main.cpp"))
+        bool opened = false;
+        for (auto &name : project_->openFiles)
+        {
+            auto file = project_->directory / pathFromUtf8(name);
+            if (within(file, project_->directory) && fs::is_regular_file(file))
+            {
+                openSource(file);
+                opened = true;
+            }
+        }
+        if (!opened && fs::is_regular_file(project_->directory / "src/main.cpp"))
             openSource(project_->directory / "src/main.cpp");
     }
     void tree()
@@ -827,8 +898,16 @@ class Studio : public tvision::TThemedApplication
             files->children.push_back(n);
         }
         roots.push_back(files);
-        tree_ = new tvision::TTreeView(
+        auto *filesView = new ProjectFiles(
             TRect(1, 1, projectWindow_->size.x - 1, projectWindow_->size.y - 1), roots);
+        filesView->activate = [this](const std::string &path)
+        {
+            if (path.rfind("form:", 0) == 0)
+                openForm(path.substr(5));
+            else
+                openSource(pathFromUtf8(path));
+        };
+        tree_ = filesView;
         tree_->growMode = gfGrowHiX | gfGrowHiY;
         projectWindow_->insert(tree_);
         deskTop->insert(projectWindow_);
@@ -886,9 +965,9 @@ class Studio : public tvision::TThemedApplication
     }
     SourceWindow *openSource(const fs::path &path)
     {
-        auto absolute = fs::absolute(path).lexically_normal();
+        auto absolute = path.empty() ? fs::path{} : fs::absolute(path).lexically_normal();
         for (auto *s : sources_)
-            if (s->path == absolute)
+            if (!absolute.empty() && s->path == absolute)
             {
                 s->closed = false;
                 s->show();
@@ -987,7 +1066,8 @@ class Studio : public tvision::TThemedApplication
             notice("Сборка уже выполняется");
             return;
         }
-        saveAll();
+        if (!saveAll())
+            return;
         if (action == "build")
             generate(*project_);
         diagnostics_.clear();
@@ -1165,6 +1245,36 @@ class Studio : public tvision::TThemedApplication
     {
         switch (c)
         {
+        case NewSource:
+            openSource({});
+            break;
+        case CodeEditor:
+            if (auto *s = source())
+            {
+                s->show();
+                s->select();
+            }
+            else
+            {
+                SourceWindow *last = nullptr;
+                for (auto *s : sources_)
+                    if (!s->closed)
+                        last = s;
+                if (last)
+                {
+                    last->show();
+                    last->select();
+                }
+                else if (project_ && fs::is_regular_file(project_->directory / "src/main.cpp"))
+                    openSource(project_->directory / "src/main.cpp");
+                else
+                    openSource({});
+            }
+            break;
+        case FormDesigner:
+            if (project_ && !project_->forms.empty())
+                openForm(project_->forms.front().name);
+            break;
         case NewProject:
         {
             std::string name = "application", dir, lib = utf8(library_);
@@ -1208,9 +1318,15 @@ class Studio : public tvision::TThemedApplication
         }
         case Save:
             if (auto *s = source())
-                s->save();
-            else
-                saveAll();
+            {
+                if (s->save() && project_)
+                {
+                    tree();
+                    s->select();
+                }
+            }
+            else if (!saveAll())
+                return;
             break;
         case SaveAll:
             saveAll();
@@ -1259,7 +1375,8 @@ class Studio : public tvision::TThemedApplication
         case Generate:
             if (project_)
             {
-                saveAll();
+                if (!saveAll())
+                    return;
                 auto files = generate(*project_);
                 log("Генерация: " + std::to_string(files.size()) + " файлов\n");
                 tree();
@@ -1374,6 +1491,12 @@ class Studio : public tvision::TThemedApplication
             }
             break;
         case Complete:
+            if (auto *s = source())
+                if (!project_ || s->path.empty())
+                {
+                    s->editor->complete();
+                    break;
+                }
             try
             {
                 queryLsp("completion");
@@ -1478,12 +1601,22 @@ class Studio : public tvision::TThemedApplication
         if (!path.empty())
             load(path);
         else
+        {
             log("TV Studio C++ — создайте или откройте проект в меню «Файл». F1: помощь.\n");
+            openSource({});
+        }
     }
     void handleEvent(TEvent &e) override
     {
         try
         {
+            if (e.what == evKeyDown &&
+                TKey(e.keyDown.keyCode, e.keyDown.controlKeyState) == TKey('X', kbAltShift))
+            {
+                e.what = evCommand;
+                e.message.command = cmQuit;
+                e.message.infoPtr = nullptr;
+            }
             if (e.what == evCommand && e.message.command == cmQuit)
             {
                 if (closeProject())
@@ -1502,6 +1635,12 @@ class Studio : public tvision::TThemedApplication
                     c = Save;
                 else if (key == kbF3)
                     c = ProjectTree;
+                else if (TKey(key, e.keyDown.controlKeyState) == TKey(kbF4, kbShift))
+                    c = FormDesigner;
+                else if (key == kbF4)
+                    c = CodeEditor;
+                else if (key == kbCtrlN)
+                    c = NewSource;
                 else if (key == kbF7)
                     c = Build;
                 else if (key == kbF8)
@@ -1710,7 +1849,36 @@ int main(int argc, char **argv)
             if (editorText(*editor).find("return 0") == std::string::npos)
                 throw std::runtime_error("Editor undo");
             TObject::destroy(editor);
-            std::cout << "TV Studio: 14 widgets, menus, data OK\n";
+            auto file =
+                fs::temp_directory_path() /
+                pathFromUtf8(
+                    "tvstudio-editor-" +
+                    std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()) +
+                    ".cpp");
+            try
+            {
+                writeFile(file, "int main() {}\n", false);
+                auto *window = new SourceWindow(TRect(0, 0, 60, 15), file);
+                if (window->editor->curPtr != 0 || window->editor->curPos.y != 0)
+                    throw std::runtime_error("Editor initial cursor");
+                window->editor->insertText("// check\n", 9, False);
+                if (!window->save() || readFile(file).find("// check") != 0)
+                    throw std::runtime_error("Editor save");
+                TObject::destroy(window);
+                auto *empty = new SourceWindow(TRect(0, 0, 60, 15), {});
+                if (empty->editor->bufLen || !empty->path.empty())
+                    throw std::runtime_error("Untitled editor");
+                TObject::destroy(empty);
+            }
+            catch (...)
+            {
+                fs::remove(file);
+                fs::remove(pathFromUtf8(utf8(file) + ".bak"));
+                throw;
+            }
+            fs::remove(file);
+            fs::remove(pathFromUtf8(utf8(file) + ".bak"));
+            std::cout << "TV Studio: 14 widgets, menus, editor, data OK\n";
             return 0;
         }
         if (args.size() > 1 && args[1].rfind("--", 0) == 0)
