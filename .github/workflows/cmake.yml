@@ -61,6 +61,14 @@ jobs:
       shell: bash
       run: cmake --build . -j$(nproc)
 
+    - name: Build generated TV Studio application
+      shell: bash
+      run: |
+        ./tvstudio-generate-fixture studio-generated "$PWD"
+        cmake -S studio-generated -B studio-generated-build -DCMAKE_BUILD_TYPE=Release -DTV_OPTIMIZE_BUILD=OFF
+        cmake --build studio-generated-build --config Release --parallel 4
+
+
   build-linux-big-endian:
     name: Linux (GCC) (Big Endian)
     runs-on: ubuntu-latest
@@ -123,6 +131,7 @@ jobs:
           Release/json_parse.exe
           Release/filemanager.exe
           Release/data_demo.exe
+          Release/tvstudio.exe
           examples/modern/books.json
 
     - name: Upload Library
@@ -158,6 +167,14 @@ jobs:
       shell: bash
       run: cmake --build . --config Debug --target tvision -- -p:UseMultiToolTask=true -p:CL_MPcount=$(nproc)
 
+
+    - name: Build generated TV Studio application
+      shell: bash
+      run: |
+        ./Release/tvstudio-generate-fixture studio-generated "$PWD"
+        cmake -S studio-generated -B studio-generated-build -DCMAKE_BUILD_TYPE=Release -DTV_OPTIMIZE_BUILD=OFF
+        cmake --build studio-generated-build --config Release --parallel 4
+
     - name: Upload Examples
       uses: actions/upload-artifact@v7
       with:
@@ -176,6 +193,7 @@ jobs:
           Release/json_parse.exe
           Release/filemanager.exe
           Release/data_demo.exe
+          Release/tvstudio.exe
           examples/modern/books.json
 
     - name: Upload Library
@@ -217,3 +235,10 @@ jobs:
     - name: Build
       shell: bash
       run: cmake --build . -j$(sysctl -n hw.logicalcpu)
+
+    - name: Build generated TV Studio application
+      shell: bash
+      run: |
+        ./tvstudio-generate-fixture studio-generated "$PWD"
+        cmake -S studio-generated -B studio-generated-build -DCMAKE_BUILD_TYPE=Release -DTV_OPTIMIZE_BUILD=OFF
+        cmake --build studio-generated-build --config Release --parallel 4

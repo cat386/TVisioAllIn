@@ -180,6 +180,7 @@ class TTreeView : public TModernView
     {
         return cursor_;
     }
+    size_t topRow() const { return top_; }
     void setCursor(size_t index);
     TreeNode *node(const TreePath &path) const;
     TreeNode *current() const;

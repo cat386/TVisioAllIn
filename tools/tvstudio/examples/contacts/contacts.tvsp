@@ -1,0 +1,36 @@
+format: tvstudio-project
+version: 1
+name: contacts
+kind: tvision-cpp
+language: cpp
+tvision_path: ../../../..
+forms: [contact]
+open_files: [src/main.cpp]
+app:
+  title: Контакты
+  startup_form: ""
+  commands:
+    - name: EDIT_CONTACT
+      value: 100
+      action: form:contact
+      comment: Открыть карточку контакта
+  menu:
+    - title: "~Ф~айл"
+      items:
+        - title: "~К~арточка"
+          command: EDIT_CONTACT
+          key: F2
+        - separator: true
+        - title: "~В~ыход"
+          command: cm::QUIT
+          key: Alt+X
+  status:
+    - text: "~F2~ Карточка"
+      key: F2
+      command: EDIT_CONTACT
+    - text: "~Alt+X~ Выход"
+      key: Alt+X
+      command: cm::QUIT
+build:
+  profile: Debug
+  jobs: 0

@@ -172,3 +172,9 @@ add_subdirectory(examples)
 # Тесты
 
 add_subdirectory(test)
+
+# Инструменты разработки требуют современного компилятора C++17.
+option(TV_BUILD_TOOLS "Build TV Studio C++ developer tools" ${MASTER_PROJECT})
+if (TV_BUILD_TOOLS)
+    add_subdirectory(tools)
+endif()

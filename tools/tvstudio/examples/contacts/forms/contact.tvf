@@ -1,0 +1,88 @@
+format: tvstudio-form
+version: 1
+name: contact
+title: Карточка контакта
+class: Dialog
+w: 66
+h: 21
+centered: true
+palette: gray
+controls:
+  - kind: label
+    name: name_label
+    x: 2
+    y: 2
+    w: 12
+    h: 1
+    text: "~И~мя:"
+    link: full_name
+  - kind: input_line
+    name: full_name
+    x: 16
+    y: 2
+    w: 46
+    h: 1
+    max_len: 128
+    text: Иван Петров
+    history: 1
+  - kind: label
+    name: role_label
+    x: 2
+    y: 4
+    w: 12
+    h: 1
+    text: "~Г~руппа:"
+    link: category
+  - kind: combo_box
+    name: category
+    x: 16
+    y: 4
+    w: 24
+    h: 1
+    max_len: 64
+    items: [Семья, Друзья, Работа]
+    text: Работа
+  - kind: check_boxes
+    name: flags
+    x: 43
+    y: 4
+    w: 20
+    h: 2
+    items: [Избранный, Рассылка]
+    value: 1
+  - kind: table
+    name: phones
+    x: 2
+    y: 7
+    w: 60
+    h: 5
+    items: ["Тип:16", "Номер:32"]
+    text: "Рабочий|+7 495 123-45-67\nМобильный|+7 900 123-45-67"
+    header: true
+    grid: true
+    editable: true
+    row_numbers: true
+  - kind: memo
+    name: notes
+    x: 2
+    y: 13
+    w: 60
+    h: 3
+    text: Заметки о контакте
+  - kind: button
+    name: accept
+    x: 16
+    y: 17
+    w: 14
+    h: 2
+    text: Сохранить
+    command: cm::OK
+    default: true
+  - kind: button
+    name: cancel
+    x: 36
+    y: 17
+    w: 14
+    h: 2
+    text: Отмена
+    command: cm::CANCEL

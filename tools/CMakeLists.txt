@@ -1,0 +1,7 @@
+if (CMAKE_VERSION VERSION_LESS "3.16")
+    message(STATUS "TV Studio C++ requires CMake 3.16 or newer; building the library only")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9")
+    message(STATUS "TV Studio C++ requires GCC 9 or newer; building the library only")
+else()
+    add_subdirectory(tvstudio)
+endif()

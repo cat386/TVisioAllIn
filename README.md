@@ -10,6 +10,10 @@ This distribution targets modern Windows, Linux and macOS builds through CMake. 
 
 Optional C++14 additions inspired by [tvision-rs](https://github.com/cat386/tvision-rs): Gruvbox/Twilight themes, a 256-color picker, virtual tables, lazy trees, progress bars, numeric/combo inputs, JSON/CSV models and file panels. Gruvbox is the default color theme for all applications, including the classic examples. Include `<tvision/modern.h>` for the additional widgets and explicit theme selection; the classic API remains available. See the [comparison, API guide and ten examples](docs/modern.md). Build with `-DTV_BUILD_EXAMPLES=ON -DTV_BUILD_TESTS=ON` to also run the model and example smoke checks.
 
+## TV Studio C++
+
+[TV Studio C++](tools/tvstudio/README.md) is a C++17/CMake IDE and visual form designer built with TVisioAllIn, inspired by [cat386/tvstudio](https://github.com/cat386/tvstudio). It provides 14 component types, YAML project/form models, typed C++ generation, a source editor, background builds and optional clangd integration. Build the `tvstudio` target with `TV_BUILD_TOOLS=ON` (enabled by default for supported compilers). See the tool guide for supported features, differences from the Rust original, and the contacts example.
+
 Based on Turbo Vision by Borland and the modern port by magiblot and contributors. Original copyright and license notices are preserved in `COPYRIGHT`.
 
 ![tvedit in Konsole](https://user-images.githubusercontent.com/20713561/81506401-4fffdd80-92f6-11ea-8826-ee42612eb82a.png)
