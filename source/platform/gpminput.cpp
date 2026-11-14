@@ -76,10 +76,23 @@ int GpmInput::open(gpm::Connect &conn) noexcept
     }
     fcntl(fd, F_SETFD, FD_CLOEXEC);
 
-    // Send the connection request.
-    ssize_t r;
-    while ((r = write(fd, &conn, sizeof(conn))) == -1 && errno == EINTR);
-    if (r != (ssize_t) sizeof(conn))
+    // Complete the small handshake before switching event reads to nonblocking.
+    size_t sent = 0;
+    while (sent < sizeof(conn))
+    {
+        ssize_t n = write(fd, (const char *) &conn + sent, sizeof(conn) - sent);
+        if (n > 0)
+            sent += (size_t) n;
+        else if (n < 0 && errno == EINTR)
+            continue;
+        else
+        {
+            close(fd);
+            return -1;
+        }
+    }
+    int flags = fcntl(fd, F_GETFL);
+    if (flags == -1 || fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
     {
         close(fd);
         return -1;
@@ -117,9 +130,9 @@ GpmInput::~GpmInput()
 
 bool GpmInput::readEvent(gpm::Event &gpmEvent) noexcept
 {
-    ssize_t r;
-    while ((r = read(handle, &gpmEvent, sizeof(gpmEvent))) == -1 && errno == EINTR);
-    if (r != (ssize_t) sizeof(gpmEvent))
+    if (!eventReader.read(&gpmEvent, [this] (void *data, size_t size) {
+            return ::read(handle, data, size);
+        }))
         return false;
     // Let coordinates begin at zero instead of one.
     --gpmEvent.x;

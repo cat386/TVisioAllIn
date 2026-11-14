@@ -5,6 +5,8 @@
 
 #ifdef HAVE_GPM
 
+#include <internal/recordio.h>
+
 #define Uses_TPoint
 #define Uses_TEvent
 #include <tvision/tv.h>
@@ -72,6 +74,7 @@ enum : int
 class GpmInput final : public InputAdapter
 {
     uchar buttonState {0};
+    RecordReader<sizeof(gpm::Event)> eventReader;
     DisplayBuffer &displayBuf;
 
     GpmInput(int fd, DisplayBuffer &) noexcept;

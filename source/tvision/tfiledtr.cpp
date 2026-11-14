@@ -20,6 +20,9 @@
 #define Uses_opstream
 #define Uses_ipstream
 #include <tvision/tv.h>
+#ifndef __BORLANDC__
+#include <internal/filesave.h>
+#endif
 
 #if !defined( __LIMITS_H )
 #include <limits.h>
@@ -43,6 +46,7 @@
 
 #if !defined( __STDLIB_H )
 #include <alloc.h>
+#include <errno.h>
 #endif
 
 TFileEditor::TFileEditor( const TRect& bounds,
@@ -166,6 +170,7 @@ Boolean TFileEditor::saveAs() noexcept
     return res;
 }
 
+#ifdef __BORLANDC__
 static void writeBlock( ofstream& f, char *buf, uint len ) noexcept
 {
     while( len > 0 )
@@ -177,25 +182,92 @@ static void writeBlock( ofstream& f, char *buf, uint len ) noexcept
         }
 }
 
+#endif
+
 Boolean TFileEditor::saveFile() noexcept
 {
     char drive[MAXDRIVE];
     char dir[MAXDIR];
     char file[MAXFILE];
     char ext[MAXEXT];
+    char backupName[MAXPATH];
+    const char *backup = 0;
     if( (editorFlags & efBackupFiles) != 0 )
         {
         fnsplit( fileName, drive, dir, file, ext );
-        char backupName[MAXPATH];
         fnmerge( backupName, drive, dir, file, backupExt );
-        unlink( backupName );
-        rename( fileName, backupName );
+        backup = backupName;
         }
-
+#ifndef __BORLANDC__
+    if (!tvision::saveFileAtomic(fileName, backup, buffer, curPtr,
+                               buffer + curPtr + gapLen, bufLen - curPtr))
+    {
+        editorDialog(edWriteError, fileName);
+        return False;
+    }
+    modified = False;
+    update(ufUpdate);
+    return True;
+#else
+    char previousBackup[MAXPATH];
+    Boolean hadBackup = False;
+    Boolean movedOriginal = False;
+    if (backup)
+    {
+        // DOS rename cannot replace a file. Stage the previous backup rather
+        // than deleting it before the source has been moved successfully.
+        if (stricmp(fileName, backupName) == 0)
+        {
+            editorDialog(edWriteError, fileName);
+            return False;
+        }
+        for (unsigned attempt = 0; attempt < 100; ++attempt)
+        {
+            char suffix[5];
+            sprintf(suffix, ".%03u", attempt);
+            fnmerge(previousBackup, drive, dir, file, suffix);
+            if (stricmp(previousBackup, fileName) == 0)
+                continue;
+            if (rename(backupName, previousBackup) == 0)
+            {
+                hadBackup = True;
+                break;
+            }
+            if (errno == ENOENT)
+                break;
+            if (attempt == 99)
+            {
+                editorDialog(edWriteError, fileName);
+                return False;
+            }
+        }
+        if (rename(fileName, backupName) == 0)
+            movedOriginal = True;
+        else if (errno != ENOENT)
+        {
+            if (hadBackup)
+                rename(previousBackup, backupName);
+            editorDialog(edWriteError, fileName);
+            return False;
+        }
+        if (!movedOriginal && hadBackup)
+        {
+            if (rename(previousBackup, backupName) != 0)
+            {
+                editorDialog(edWriteError, fileName);
+                return False;
+            }
+            hadBackup = False;
+        }
+    }
     ofstream f( fileName, ios::out | ios::binary );
 
     if( !f )
         {
+        if (movedOriginal)
+            rename(backupName, fileName);
+        if (hadBackup)
+            rename(previousBackup, backupName);
         editorDialog( edCreateError, fileName );
         return False;
         }
@@ -203,9 +275,17 @@ Boolean TFileEditor::saveFile() noexcept
         {
         writeBlock( f, buffer, curPtr );
         writeBlock( f, buffer+curPtr+gapLen, bufLen-curPtr );
+        f.close();
 
         if( !f )
             {
+            if (movedOriginal)
+            {
+                unlink(fileName);
+                rename(backupName, fileName);
+            }
+            if (hadBackup)
+                rename(previousBackup, backupName);
             editorDialog( edWriteError, fileName );
             return False;
             }
@@ -215,7 +295,10 @@ Boolean TFileEditor::saveFile() noexcept
             update(ufUpdate);
             }
         }
+    if (hadBackup)
+        unlink(previousBackup);
     return True;
+#endif
 }
 
 Boolean TFileEditor::setBufSize( uint newSize )

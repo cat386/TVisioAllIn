@@ -46,7 +46,8 @@ ParseResult parseFar2lInput(GetChBuf &buf, TEvent &ev, InputState &state) noexce
             memcpy(&kev.wVirtualKeyCode,   &out[2],  2);
             memcpy(&kev.wVirtualScanCode,  &out[4],  2);
             memcpy(&kev.dwControlKeyState, &out[6],  4);
-            memcpy(&kev.uChar.UnicodeChar, &out[10], 4);
+            uint32_t unicode;
+            memcpy(&unicode, &out[10], sizeof(unicode));
 
 #ifdef TV_BIG_ENDIAN
             // The protocol states that "all integer values are in
@@ -55,10 +56,27 @@ ParseResult parseFar2lInput(GetChBuf &buf, TEvent &ev, InputState &state) noexce
             reverseBytes(kev.wVirtualKeyCode);
             reverseBytes(kev.wVirtualScanCode);
             reverseBytes(kev.dwControlKeyState);
-            reverseBytes((uint32_t &) kev.uChar.UnicodeChar);
+            reverseBytes(unicode);
 #endif
 
+            if (unicode > 0x10FFFF || (0xD800 <= unicode && unicode <= 0xDFFF))
+                return Ignored;
+#ifdef _WIN32
+            kev.uChar.UnicodeChar = unicode <= 0xFFFF ? (wchar_t) unicode : L'\xFFFD';
+#else
+            kev.uChar.UnicodeChar = unicode;
+#endif
             regenerateMissingScanCodeFromVirtualKeyCode(kev);
+#ifdef _WIN32
+            if (unicode > 0xFFFF && kev.uChar.UnicodeChar != 0)
+            {
+                // Feed UTF-16 surrogates through the existing text converter.
+                uint32_t scalar = unicode - 0x10000;
+                kev.uChar.UnicodeChar = (wchar_t) (0xD800 + (scalar >> 10));
+                getWin32Key(kev, ev, state);
+                kev.uChar.UnicodeChar = (wchar_t) (0xDC00 + (scalar & 0x3FF));
+            }
+#endif
 
             if (getWin32Key(kev, ev, state))
             {

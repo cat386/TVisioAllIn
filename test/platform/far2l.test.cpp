@@ -31,6 +31,8 @@ TEST(Far2l, ShouldReadFar2lInput)
         {"AQA5AAAACAAAADkAAABL\x07", {Accepted, keyDownEv(kb9, kbLeftCtrl, "9")}},
         {"AQBWAAAACgAAAFYAAABL\x07", {Accepted, keyDownEv(kbAltV, kbLeftCtrl | kbLeftAlt, "")}}, // UnicodeChar = 'V'
         {"AQBWAAAACgAAAAAAAABL\x07", {Accepted, keyDownEv(kbAltV, kbLeftCtrl | kbLeftAlt, "")}}, // UnicodeChar = 0
+        {"AQAAAAAAAAAAAAD2AQBL\x07", {Accepted, keyDownEv(kbNoKey, 0, "\xF0\x9F\x98\x80")}},
+        {"AQAAAAAAAAAAAAAAEQBL\x07", {Ignored}},
         {"AQAIAAAACAAAAAgAAABL\x07", {Accepted, keyDownEv(kbCtrlBack, kbLeftCtrl, "")}},// Ctrl + Back
         {"AQAuAAAAAAAAAH8AAABL\x07", {Accepted, keyDownEv(kbDel, 0x0000, "")}},// Del
         {"AQAMAAAAIgAAAAAAAABL\x07", {Ignored}}, // Alt + VK_CLEAR

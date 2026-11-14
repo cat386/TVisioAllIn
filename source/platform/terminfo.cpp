@@ -680,13 +680,25 @@ std::string TermInfo::tparm(const char *str, const int *params, int paramCount) 
                     ++q;
                 while (*q == '-' || *q == '+' || *q == '#' || *q == ' ')
                     ++q;
-                while ('0' <= *q && *q <= '9')
-                    ++q;
+                constexpr unsigned maxFormattedSize = 1 << 20;
+                auto scanNumber = [&] {
+                    unsigned n = 0;
+                    while ('0' <= *q && *q <= '9')
+                    {
+                        unsigned digit = (unsigned) (*q++ - '0');
+                        if (n > (maxFormattedSize - digit) / 10)
+                            return false;
+                        n = n * 10 + digit;
+                    }
+                    return true;
+                };
+                if (!scanNumber())
+                    return {};
                 if (*q == '.')
                 {
                     ++q;
-                    while ('0' <= *q && *q <= '9')
-                        ++q;
+                    if (!scanNumber())
+                        return {};
                 }
                 if (*q == 'd' || *q == 'o' || *q == 'x' || *q == 'X')
                 {
@@ -701,8 +713,19 @@ std::string TermInfo::tparm(const char *str, const int *params, int paramCount) 
                         fmt[len + 1] = *q;
                         fmt[len + 2] = '\0';
                         char buf[64];
-                        snprintf(buf, sizeof(buf), fmt, stack.pop());
-                        out += buf;
+                        int value = stack.pop();
+                        int needed = snprintf(buf, sizeof(buf), fmt, value);
+                        // Bound work for malformed/untrusted terminal descriptions.
+                        if (needed < 0 || (unsigned) needed > maxFormattedSize)
+                            return {};
+                        if ((size_t) needed < sizeof(buf))
+                            out.append(buf, (size_t) needed);
+                        else
+                        {
+                            std::vector<char> expanded((size_t) needed + 1);
+                            snprintf(expanded.data(), expanded.size(), fmt, value);
+                            out.append(expanded.data(), (size_t) needed);
+                        }
                     }
                     s = q + 1;
                 }
