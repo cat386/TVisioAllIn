@@ -6,6 +6,10 @@ This distribution reads terminfo directly, includes fallback terminal descriptio
 
 This distribution targets modern Windows, Linux and macOS builds through CMake. Borland/DOS build files, assembly sources and the optional AviSynth example have been removed. Historical API notes below describe the upstream design; Borland/DOS is not a supported build target of TVisioAllIn.
 
+## Modern widgets, themes and data
+
+Optional C++14 additions inspired by [tvision-rs](https://github.com/cat386/tvision-rs): Gruvbox/Twilight themes, a 256-color picker, virtual tables, lazy trees, progress bars, numeric/combo inputs, JSON/CSV models and file panels. Include `<tvision/modern.h>`; the classic API remains available. See the [comparison, API guide and ten examples](docs/modern.md). Build with `-DTV_BUILD_EXAMPLES=ON -DTV_BUILD_TESTS=ON` to also run the model and example smoke checks.
+
 Based on Turbo Vision by Borland and the modern port by magiblot and contributors. Original copyright and license notices are preserved in `COPYRIGHT`.
 
 ![tvedit in Konsole](https://user-images.githubusercontent.com/20713561/81506401-4fffdd80-92f6-11ea-8826-ee42612eb82a.png)

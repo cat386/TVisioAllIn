@@ -43,6 +43,8 @@ if (TV_BUILD_EXAMPLES)
     target_link_libraries(hello PUBLIC ${PROJECT_NAME})
     tv_app_common(hello)
 
+    add_subdirectory(modern)
+
     foreach(app ${TVAPPS})
         add_subdirectory(${app})
     endforeach()

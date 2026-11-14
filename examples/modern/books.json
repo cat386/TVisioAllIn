@@ -1,0 +1,5 @@
+[
+  {"title": "The Rust Book", "year": 2024, "price": 39.95, "available": true},
+  {"title": "Turbo Vision", "year": 1994, "price": 12.50, "available": false},
+  {"title": "Привет / 日本語", "year": 2026, "price": 9007199254740993, "available": true}
+]

@@ -113,6 +113,17 @@ jobs:
           Release/tvdemo.exe
           Release/tvedit.exe
           Release/tvhc.exe
+          Release/themes.exe
+          Release/colors256.exe
+          Release/table.exe
+          Release/treeview.exe
+          Release/progress.exe
+          Release/json_table.exe
+          Release/json_load.exe
+          Release/json_parse.exe
+          Release/filemanager.exe
+          Release/data_demo.exe
+          examples/modern/books.json
 
     - name: Upload Library
       uses: actions/upload-artifact@v7
@@ -155,6 +166,17 @@ jobs:
           Release/tvdemo.exe
           Release/tvedit.exe
           Release/tvhc.exe
+          Release/themes.exe
+          Release/colors256.exe
+          Release/table.exe
+          Release/treeview.exe
+          Release/progress.exe
+          Release/json_table.exe
+          Release/json_load.exe
+          Release/json_parse.exe
+          Release/filemanager.exe
+          Release/data_demo.exe
+          examples/modern/books.json
 
     - name: Upload Library
       uses: actions/upload-artifact@v7
