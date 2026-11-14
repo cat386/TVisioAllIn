@@ -8,7 +8,7 @@ This distribution targets modern Windows, Linux and macOS builds through CMake. 
 
 ## Modern widgets, themes and data
 
-Optional C++14 additions inspired by [tvision-rs](https://github.com/cat386/tvision-rs): Gruvbox/Twilight themes, a 256-color picker, virtual tables, lazy trees, progress bars, numeric/combo inputs, JSON/CSV models and file panels. Include `<tvision/modern.h>`; the classic API remains available. See the [comparison, API guide and ten examples](docs/modern.md). Build with `-DTV_BUILD_EXAMPLES=ON -DTV_BUILD_TESTS=ON` to also run the model and example smoke checks.
+Optional C++14 additions inspired by [tvision-rs](https://github.com/cat386/tvision-rs): Gruvbox/Twilight themes, a 256-color picker, virtual tables, lazy trees, progress bars, numeric/combo inputs, JSON/CSV models and file panels. Gruvbox is the default color theme for all applications, including the classic examples. Include `<tvision/modern.h>` for the additional widgets and explicit theme selection; the classic API remains available. See the [comparison, API guide and ten examples](docs/modern.md). Build with `-DTV_BUILD_EXAMPLES=ON -DTV_BUILD_TESTS=ON` to also run the model and example smoke checks.
 
 Based on Turbo Vision by Borland and the modern port by magiblot and contributors. Original copyright and license notices are preserved in `COPYRIGHT`.
 

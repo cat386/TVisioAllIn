@@ -1,6 +1,6 @@
 # Дополнения из tvision-rs
 
-Сравнение выполнено с локальными исходниками [cat386/tvision-rs](https://github.com/cat386/tvision-rs). Это реализация возможностей на C++14: Rust, Cargo, serde и дополнительные системные библиотеки для сборки не требуются. Классический API и стандартная палитра `TApplication` сохранены. Дополнения подключаются через `<tvision/modern.h>` и находятся в `namespace tvision`.
+Сравнение выполнено с локальными исходниками [cat386/tvision-rs](https://github.com/cat386/tvision-rs). Это реализация возможностей на C++14: Rust, Cargo, serde и дополнительные системные библиотеки для сборки не требуются. Классический API сохранён. Gruvbox — цветовая тема по умолчанию для `TProgram`, `TApplication` и `TThemedApplication`, включая классические примеры. Чёрно-белый и монохромный режимы сохраняют свои палитры. Дополнения подключаются через `<tvision/modern.h>` и находятся в `namespace tvision`.
 
 Снимок tvision-rs: `17d8bddbc84ae19aec9863601ffa0805669beb4b`.
 
@@ -58,7 +58,7 @@ public:
 };
 ```
 
-`TProgInit` — виртуальная база Turbo Vision: её инициализирует самый производный класс. `TThemedApplication` по умолчанию выбирает Gruvbox. Для собственного `TApplication` можно использовать `ThemePalette` и переопределить `getPalette()`. Метод `TModernView::setColors` задаёт индивидуальные цвета виджета, `usePalette()` возвращает наследование палитры владельца.
+`TProgInit` — виртуальная база Turbo Vision: её инициализирует самый производный класс. Для старой цветовой схемы вызовите `setTheme(Theme::Classic)` у `TThemedApplication`. Для собственного `TApplication` можно использовать `ThemePalette` и переопределить `getPalette()`. Метод `TModernView::setColors` задаёт индивидуальные цвета виджета, `usePalette()` возвращает наследование палитры владельца.
 
 ## Таблица и модели
 

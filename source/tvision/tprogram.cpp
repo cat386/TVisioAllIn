@@ -27,6 +27,7 @@
 #define Uses_TDialog
 #define Uses_TTimerQueue
 #include <tvision/tv.h>
+#include <tvision/themes.h>
 
 // Public variables
 
@@ -168,16 +169,16 @@ void TProgram::getEvent(TEvent& event)
 
 TPalette& TProgram::getPalette() const
 {
-    static TPalette color ( cpAppColor, sizeof( cpAppColor )-1 );
+    if( appPalette == apColor )
+        {
+        static tvision::ThemePalette extended(tvision::Theme::Gruvbox, true);
+        static tvision::ThemePalette bios(tvision::Theme::Gruvbox, false);
+        return (TScreen::screenMode & TDisplay::smColor256) != 0
+            ? extended.palette() : bios.palette();
+        }
     static TPalette blackwhite(cpAppBlackWhite, sizeof( cpAppBlackWhite )-1 );
     static TPalette monochrome(cpAppMonochrome, sizeof( cpAppMonochrome )-1 );
-    static TPalette *palettes[] =
-        {
-        &color,
-        &blackwhite,
-        &monochrome
-        };
-    return *(palettes[appPalette]);
+    return appPalette == apBlackWhite ? blackwhite : monochrome;
 }
 
 void TProgram::handleEvent( TEvent& event )
