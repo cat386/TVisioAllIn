@@ -150,6 +150,7 @@ class Demo : public TThemedApplication
     TProgressBar *progress_ = nullptr;
     TDualPanel *panels_ = nullptr;
     TFileEditor *editor_ = nullptr;
+    TCombo *combo_ = nullptr;
     std::future<Json> loading_;
     std::atomic<bool> cancel_{false};
     std::atomic<unsigned> percent_{0};
@@ -305,8 +306,9 @@ class Demo : public TThemedApplication
                 new TInputLong(TRect(2, w->size.y - 4, 25, w->size.y - 3), -1000000, 1000000));
             w->insert(new TStaticText(TRect(29, w->size.y - 5, 65, w->size.y - 4),
                                       "Combo: arrows / F4 list"));
-            w->insert(new TCombo(TRect(29, w->size.y - 4, 65, w->size.y - 3), 100,
-                                 {"Classic", "Gruvbox", "Twilight", "Привет"}));
+            combo_ = new TCombo(TRect(29, w->size.y - 4, 65, w->size.y - 3), 100,
+                                {"Classic", "Gruvbox", "Twilight", "Привет"});
+            w->insert(combo_);
         }
     }
     ~Demo()
@@ -376,7 +378,9 @@ class Demo : public TThemedApplication
             break;
         }
         case cmModernAction:
-            if (editor_)
+            if (combo_ && (combo_->state & sfFocused))
+                combo_->openList();
+            else if (editor_)
             {
                 std::string text(editor_->buffer, editor_->curPtr);
                 text.append(editor_->buffer + editor_->curPtr + editor_->gapLen,

@@ -355,6 +355,31 @@ TEST(ModernColors, SelectorKeyboardAndDataTransfer)
     selector.setData(&color);
     EXPECT_EQ(selector.value(), 143u);
 }
+TEST(ModernColors, DialogInitiallyFocusesSelector)
+{
+    TColor256Dialog dialog(42);
+    ASSERT_TRUE(dialog.current != nullptr);
+    EXPECT_EQ(dialog.current->dataSize(), 1u);
+    auto right = modernKey(kbRight);
+    dialog.handleEvent(right);
+    unsigned char value = 0;
+    dialog.getData(&value);
+    EXPECT_EQ(value, 43);
+    dialog.shutDown();
+}
+TEST(ModernInputs, ComboPopupKeyboardSelectsItem)
+{
+    TEvent accept{};
+    accept.what = evCommand;
+    accept.message.command = cmOK;
+    TestGroup group({modernKey(kbDown), accept}, accept);
+    group.changeBounds(TRect(0, 0, 60, 15));
+    auto *combo = new TCombo(TRect(1, 1, 30, 2), 30, {"Alpha", "Beta"});
+    group.insert(combo);
+    EXPECT_TRUE(combo->openList());
+    EXPECT_EQ(std::string(combo->data), "Beta");
+    group.shutDown();
+}
 TEST(ModernFiles, UnicodeGlobsAndFileClasses)
 {
     EXPECT_TRUE(globMatch("?.txt", "я.txt"));

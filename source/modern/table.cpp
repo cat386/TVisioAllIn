@@ -14,6 +14,16 @@ TModernView::TModernView(const TRect &r) : TView(r)
 }
 TPalette &TModernView::getPalette() const
 {
+    // Empty group palettes pass indices through. Standard dialogs expose
+    // 32 roles, while ordinary windows expose the 8 window/editor roles.
+    const TView *parent = owner;
+    while (parent && (uchar)parent->getPalette()[0] == 0)
+        parent = parent->owner;
+    if (parent && (uchar)parent->getPalette()[0] == 32)
+    {
+        static TPalette dialog("\x1A\x1C\x12\x1F\x1A", 5);
+        return dialog;
+    }
     static TPalette p("\x06\x07\x03\x08\x01", 5);
     return p;
 }

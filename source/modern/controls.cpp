@@ -197,9 +197,11 @@ TColor256Dialog::TColor256Dialog(unsigned value, TStringView title)
     : TWindowInit(&TColor256Dialog::initFrame), TDialog(TRect(0, 0, 68, 21), title)
 {
     options |= ofCentered;
-    insert(new TColor256Selector(TRect(2, 1, 66, 17), value));
+    auto *selector = new TColor256Selector(TRect(2, 1, 66, 17), value);
+    insert(selector);
     insert(new TButton(TRect(20, 18, 32, 20), "O~K~", cmOK, bfDefault));
     insert(new TButton(TRect(35, 18, 49, 20), "~C~ancel", cmCancel, bfNormal));
+    setCurrent(selector, normalSelect);
 }
 TInputLong::TInputLong(const TRect &r, int64_t lo, int64_t hi, bool hexadecimal)
     : TInputLine(r, 32), low_(lo), high_(std::max(lo, hi)), hex_(hexadecimal)
@@ -337,6 +339,7 @@ bool TCombo::openList()
     table->setCursor(current_, 0);
     dialog->insert(table);
     dialog->insert(new TButton(TRect(2, height - 3, 12, height - 1), "O~K~", cmOK, bfDefault));
+    dialog->setCurrent(table, normalSelect);
     ushort result = owner->execView(dialog);
     size_t selected = table->row();
     dialog->shutDown();
