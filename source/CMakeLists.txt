@@ -1,7 +1,6 @@
 # Turbo Vision sources.
 
 file(GLOB_RECURSE TVSOURCE "${CMAKE_CURRENT_LIST_DIR}/*/*.cpp")
-list(REMOVE_ITEM TVSOURCE "${CMAKE_CURRENT_LIST_DIR}/tvision/geninc.cpp")
 
 add_library(${PROJECT_NAME} STATIC ${TVSOURCE})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -98,10 +97,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TV_BUILD_USING_GPM)
     target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GPM)
 endif()
 
-if (TV_BUILD_AVSCOLOR AND NOT WIN32)
-    # The AviSynth plugin is a shared library that links to this one.
-    set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-endif()
 
 tv_set_output_dir(${PROJECT_NAME})
 
@@ -141,7 +136,6 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.16.0" AND TV_OPTIMIZE_BUILD)
         file(GLOB_RECURSE TVSOURCE_NOUNITY "${CMAKE_CURRENT_LIST_DIR}/tvision/s*.cpp")
         list(APPEND TVSOURCE_NOUNITY "${CMAKE_CURRENT_LIST_DIR}/tvision/new.cpp")
         list(REMOVE_ITEM TVSOURCE_NOUNITY
-            "${CMAKE_CURRENT_LIST_DIR}/tvision/snprintf.cpp"
             "${CMAKE_CURRENT_LIST_DIR}/tvision/stddlg.cpp"
             "${CMAKE_CURRENT_LIST_DIR}/tvision/strmstat.cpp"
             "${CMAKE_CURRENT_LIST_DIR}/tvision/syserr.cpp"

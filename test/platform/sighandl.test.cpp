@@ -4,6 +4,7 @@
 
 #include <test.h>
 
+#include <unistd.h>
 #include <sys/wait.h>
 #include <sys/mman.h>
 

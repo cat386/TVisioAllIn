@@ -12,8 +12,6 @@
 #   or newer).
 # * TV_LIBRARY_UNITY_BUILD (default OFF) to reduce the build time of the main library
 #   (CMake 3.16 or newer), at the cost of possibly increasing its size.
-# * TV_BUILD_AVSCOLOR (default OFF) to build an AviSynth plugin for testing the
-#   terminal color quantization (Unix only; AviSynth is only needed at runtime).
 # * TV_BUILD_TESTS (default OFF) to build and run tests.
 
 cmake_minimum_required (VERSION 3.5...3.30)
@@ -149,7 +147,6 @@ endif()
 
 option(TV_OPTIMIZE_BUILD "Use CMake's Precompiled Headers" ON)
 
-option(TV_BUILD_AVSCOLOR "Build AviSynth TermColor plugin" OFF)
 
 include(GNUInstallDirs)
 

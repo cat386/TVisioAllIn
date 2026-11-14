@@ -61,7 +61,9 @@ bool saveFileAtomic(const char *path, const char *backup,
     std::string target = resolved ? resolved : path;
     free(resolved);
     std::string backupPath = backup ? backup : "";
-    if (backupPath == target)
+    // realpath may add a platform prefix (e.g. /var -> /private/var on macOS).
+    // Compare the caller's names as well as the resolved destination.
+    if (backup && (backupPath == path || backupPath == target))
         backupPath += ".bak";
     std::string pattern = target + ".tvXXXXXX";
     std::vector<char> temp(pattern.begin(), pattern.end());

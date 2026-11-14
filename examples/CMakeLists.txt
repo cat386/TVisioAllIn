@@ -48,5 +48,3 @@ if (TV_BUILD_EXAMPLES)
     endforeach()
 
 endif()
-
-add_subdirectory(avscolor)

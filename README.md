@@ -4,6 +4,8 @@ TVisioAllIn is a self-contained C++ distribution of the modern Turbo Vision 2.0 
 
 This distribution reads terminfo directly, includes fallback terminal descriptions, communicates with GPM without libgpm, and bundles its test framework. No Ncurses or external GoogleTest library is required. The compatible `tvision` CMake target, library name, headers and C++ API are retained.
 
+This distribution targets modern Windows, Linux and macOS builds through CMake. Borland/DOS build files, assembly sources and the optional AviSynth example have been removed. Historical API notes below describe the upstream design; Borland/DOS is not a supported build target of TVisioAllIn.
+
 Based on Turbo Vision by Borland and the modern port by magiblot and contributors. Original copyright and license notices are preserved in `COPYRIGHT`.
 
 ![tvedit in Konsole](https://user-images.githubusercontent.com/20713561/81506401-4fffdd80-92f6-11ea-8826-ee42612eb82a.png)
@@ -31,7 +33,6 @@ The original location of this project is https://github.com/magiblot/tvision.
     * [Unix/Linux](#build-linux)
     * [Windows (MSVC)](#build-msvc)
     * [Windows (MinGW)](#build-mingw)
-    * [Windows/DOS (Borland C++)](#build-borland)
     * [Vcpkg](#build-vcpkg)
     * [Turbo Vision as a CMake dependency](#build-cmake)
 * [Features](#features)
@@ -76,11 +77,9 @@ This project has no stable releases for the time being. If you are a developer, 
 If you just want to test the demo applications:
 
 * Unix systems: you'll have to build Turbo Vision yourself. You may follow the [build instructions](#build-linux) below.
-* Windows/DOS: you can find up-to-date binaries in the [Actions](https://github.com/magiblot/tvision/actions?query=branch:master+event:push) section. Click on the first successful workflow (with a green tick) in the list. At the bottom of the workflow page, as long as you have logged in to GitHub, you'll find an *Artifacts* section with the following files:
+* Windows: build artifacts are available from successful runs in [TVisioAllIn Actions](https://github.com/cat386/TVisioAllIn/actions). Click on the first successful workflow (with a green tick) in the list. At the bottom of the workflow page, as long as you have logged in to GitHub, you'll find an *Artifacts* section with the following files:
     * `examples-x86.zip`: 32-bit executables built with MSVC. Windows Vista or later required.
     * `examples-x64.zip`: 64-bit executables built with MSVC. x64 Windows Vista or later required.
-    * `examples-dos.zip`: 16-bit DOS executables built with Borland C++. No Unicode support.
-    * `examples-dpmi32.zip`: 32-bit Windows/DOS executables built with Borland C++. No Unicode support.
 
 ## Build environment
 
@@ -186,40 +185,6 @@ If you wish to link an application against Turbo Vision, simply add `-L./build/l
 
 Turbo Vision applications can run on Windows XP or newer, if your compiler supports it.
 
-<div id="build-borland"></div>
-
-### Windows/DOS (Borland C++)
-
-Turbo Vision can still be built either as a DOS or Windows library with Borland C++. Obviously, there is no Unicode support here.
-
-I can confirm the build process works with:
-
-* Borland C++ 4.52 with the Borland PowerPack for DOS.
-* Turbo Assembler 4.0.
-
-You may face different problems depending on your build environment. For instance, Turbo Assembler needs a patch to work under Windows 95. On Windows XP everything seems to work fine. On Windows 10, MAKE may emit the error `Fatal: Command arguments too long`, which can be fixed by upgrading MAKE to the one bundled with Borland C++ 5.x.
-
-Yes, this works on 64-bit Windows 10. What won't work is the Borland C++ installer, which is a 16-bit application. You will have to run it on another environment or try your luck with [winevdm](https://github.com/otya128/winevdm).
-
-A Borland Makefile can be found in the `project` directory. Build can be done by doing:
-
-```sh
-cd project
-make.exe <options>
-```
-
-Where `<options>` can be:
-
-* `-DDOS32` for 32-bit DPMI applications (which still work on 64-bit Windows).
-* `-DWIN32` for 32-bit native Win32 applications (not possible for TVDEMO, which relies on `farcoreleft()` and other antiquities).
-* `-DDEBUG` to build debug versions of the application and the library.
-* `-DTVDEBUG` to link the applications with the debug version of the library.
-* `-DOVERLAY`, `-DALIGNMENT={2,4}`, `-DEXCEPTION`, `-DNO_STREAMABLE`, `-DNOTASM` for things I have nave never used but appeared in the original makefiles.
-
-This will compile the library into a `LIB` directory next to `project`, and will compile executables for the demo applications in their respective `examples/*` directories.
-
-I'm sorry, the root makefile assumes it is executed from the `project` directory. You can still run the original makefiles directly (in `source/tvision` and `examples/*`) if you want to use different settings.
-
 <div id="build-vcpkg"></div>
 
 ### Vcpkg
@@ -238,7 +203,7 @@ The `tvision` port in vcpkg is kept up to date by Microsoft team members and com
 
 <div id="build-cmake"></div>
 
-### Turbo Vision as a CMake dependency (not Borland C++)
+### Turbo Vision as a CMake dependency
 
 If you choose the CMake build system for your application, there are two main ways to link against Turbo Vision:
 
