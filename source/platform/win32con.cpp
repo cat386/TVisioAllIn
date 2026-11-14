@@ -301,7 +301,8 @@ bool Win32Input::getEvent(const INPUT_RECORD &ir, TEvent &ev) noexcept
 // Win32Display
 
 Win32Display::Win32Display(ConsoleCtl &aCon, bool isLegacyConsole) noexcept :
-    con(aCon)
+    con(aCon),
+    legacyConsole(isLegacyConsole)
 {
     if (!isLegacyConsole)
         ansiScreenWriter = new AnsiScreenWriter(con, TermCap::getDisplayCapabilities(con, *this));
@@ -359,7 +360,8 @@ int Win32Display::getColorCount() noexcept
 {
     // https://devblogs.microsoft.com/commandline/24-bit-color-in-the-windows-console/
     // Assume high color support when not in the legacy console.
-    if (ansiScreenWriter)
+    // This is also queried while constructing ansiScreenWriter.
+    if (!legacyConsole)
         return 256*256*256;
     return 16;
 }

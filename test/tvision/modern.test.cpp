@@ -37,7 +37,86 @@ class ModernDrawGroup : public TestGroup
         return out;
     }
 };
+class ModernThemeRoot : public TestGroup
+{
+    std::vector<TScreenCell> screen_;
+
+  public:
+    ThemePalette palette;
+    explicit ModernThemeRoot(bool buffered) : screen_(64 * 20)
+    {
+        changeBounds(TRect(0, 0, 64, 20));
+        setState(sfExposed, True);
+        if (buffered)
+            getBuffer();
+        else
+        {
+            options &= ~ofBuffered;
+            buffer = screen_.data(); // Like TProgram's externally owned screen buffer.
+        }
+    }
+    TPalette &getPalette() const override
+    {
+        return palette.palette();
+    }
+    TColorAttr attribute(int x, int y) const
+    {
+        return buffer[y * size.x + x].attribute;
+    }
+};
+class ModernThemeProbe : public TView
+{
+  public:
+    unsigned draws = 0;
+    ModernThemeProbe() : TView(TRect(0, 0, 16, 1)) {}
+    TPalette &getPalette() const override
+    {
+        static TPalette palette("\x0D", 1);
+        return palette;
+    }
+    void draw() override
+    {
+        ++draws;
+        TDrawBuffer line;
+        line.moveChar(0, 'X', mapColor(1), size.x);
+        writeLine(0, 0, size.x, 1, line);
+    }
+};
 } // namespace
+TEST(ModernThemes, RefreshRepaintsNestedCachedGroupsForEveryTheme)
+{
+    for (bool buffered : {true, false})
+    {
+        auto *root = new ModernThemeRoot(buffered);
+        auto *outer = new TGroup(TRect(0, 0, 32, 10));
+        auto *inner = new TGroup(TRect(0, 0, 24, 5));
+        auto *probe = new ModernThemeProbe;
+        inner->insert(probe);
+        outer->insert(inner);
+        root->insert(outer);
+        refreshTheme(*root);
+        auto before = root->attribute(0, 0);
+        auto draws = probe->draws;
+        root->palette.setTheme(Theme::Classic);
+        root->redraw();
+        EXPECT_EQ(root->attribute(0, 0), before); // Ordinary redraw reuses the cached image.
+        EXPECT_EQ(probe->draws, draws);
+        for (auto theme : {Theme::Classic, Theme::Twilight, Theme::Gruvbox})
+        {
+            root->palette.setTheme(theme);
+            refreshTheme(*root);
+            EXPECT_EQ(root->attribute(0, 0), themeColors(theme)[12]);
+            EXPECT_TRUE(probe->draws > draws);
+            draws = probe->draws;
+            EXPECT_TRUE((root->state & sfExposed) != 0);
+        }
+        root->setState(sfExposed, False);
+        refreshTheme(*root);
+        EXPECT_EQ(probe->draws, draws);
+        EXPECT_FALSE((root->state & sfExposed) != 0);
+        TObject::destroy(root);
+    }
+}
 TEST(ModernDrawing, TableProgressAndColorGridRenderIntoGroup)
 {
     auto *group = new ModernDrawGroup;

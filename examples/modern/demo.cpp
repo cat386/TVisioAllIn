@@ -166,12 +166,13 @@ class Demo : public TThemedApplication
                                       *new TStatusItem("~F8~ Extra", kbF8, cmModernExtra) +
                                       *new TStatusItem("~Alt-X~ Exit", kbAltX, cmQuit));
     }
-    TWindow *window(const std::string &title)
+    TWindow *window(const std::string &title, bool dialogPalette = false)
     {
         auto r = deskTop->getExtent();
         r.b.x = std::min<int>(r.b.x, 78);
         r.b.y = std::min<int>(r.b.y, 22);
-        auto *w = new TWindow(r, title.c_str(), wnNoNumber);
+        TWindow *w = dialogPalette ? static_cast<TWindow *>(new TDialog(r, title.c_str()))
+                                   : new TWindow(r, title.c_str(), wnNoNumber);
         w->flags = wfMove | wfGrow | wfZoom;
         deskTop->insert(w);
         return w;
@@ -295,7 +296,7 @@ class Demo : public TThemedApplication
         }
         else
         {
-            auto *w = window("Themes / data: F2 edits, F6 themes, F7 palette");
+            auto *w = window("Themes / data: F2 edits, F6 themes, F7 palette", true);
             table_ = new TTable(TRect(1, 1, w->size.x - 1, w->size.y - 6), sampleTable());
             table_->multiSelect = true;
             table_->rowNumbers = true;
@@ -373,7 +374,7 @@ class Demo : public TThemedApplication
                 auto &palette = getPalette();
                 for (int i : {13, 21, 29, 37, 69, 101})
                     palette[i].setForeground(TColorXTerm(chosen));
-                redraw();
+                refreshTheme(*this);
             }
             break;
         }

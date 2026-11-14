@@ -74,6 +74,19 @@ void ThemePalette::setTheme(Theme t, bool extended)
     for (size_t i = 0; i < colors.size(); ++i)
         palette_[int(i + 1)] = colors[i];
 }
+void refreshTheme(TGroup &root)
+{
+    bool exposed = (root.state & sfExposed) != 0;
+    root.setState(sfExposed, False);
+    if (exposed)
+    {
+        root.setState(sfExposed, True);
+        if (root.options & ofBuffered)
+            root.drawView();
+        else
+            root.redraw();
+    }
+}
 TThemedApplication::TThemedApplication(Theme t)
     : TProgInit(&TApplication::initStatusLine, &TApplication::initMenuBar,
                 &TApplication::initDeskTop),
@@ -81,7 +94,7 @@ TThemedApplication::TThemedApplication(Theme t)
 {
     // The desktop and menus were first painted by TProgram's constructor,
     // before virtual getPalette() could dispatch to this class.
-    redraw();
+    refreshTheme(*this);
 }
 TPalette &TThemedApplication::getPalette() const
 {
@@ -91,6 +104,6 @@ void TThemedApplication::setTheme(Theme t)
 {
     theme_ = t;
     palette_.setTheme(t, (TScreen::screenMode & TDisplay::smColor256) != 0);
-    redraw();
+    refreshTheme(*this);
 }
 } // namespace tvision

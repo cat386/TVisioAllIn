@@ -4,6 +4,7 @@
 #define Uses_TApplication
 #define Uses_TScreen
 #define Uses_TColorAttr
+#define Uses_TGroup
 #include <array>
 #include <string>
 #include <tvision/tv.h>
@@ -19,6 +20,8 @@ const char *themeName(Theme theme) noexcept;
 TColorAttr color256(unsigned char foreground, unsigned char background) noexcept;
 unsigned char contrast256(unsigned char color) noexcept;
 std::array<TColorAttr, 135> themeColors(Theme theme, bool extended = true);
+// Discard cached group images before painting with an updated palette.
+void refreshTheme(TGroup &root);
 class ThemePalette
 {
     TPalette palette_;

@@ -82,6 +82,7 @@ public:
 private:
 
     ConsoleCtl &con;
+    const bool legacyConsole;
 
     TPoint size {};
     CONSOLE_FONT_INFO lastFontInfo {};
