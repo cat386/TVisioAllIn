@@ -17,6 +17,9 @@ jobs:
       shell: bash
       run: cmake --build . -j$(nproc)
 
+    - name: Test
+      run: ctest --output-on-failure -C Release
+
   build-linux-gcc5:
     name: Linux (GCC 5)
     runs-on: ubuntu-latest
@@ -61,12 +64,23 @@ jobs:
       shell: bash
       run: cmake --build . -j$(nproc)
 
+    - name: Test
+      shell: bash
+      run: ctest --output-on-failure -C Release
+
     - name: Build generated TV Studio application
       shell: bash
       run: |
         ./tvstudio-generate-fixture studio-generated "$PWD"
         cmake -S studio-generated -B studio-generated-build -DCMAKE_BUILD_TYPE=Release -DTV_OPTIMIZE_BUILD=OFF
         cmake --build studio-generated-build --config Release --parallel 4
+
+    - name: Build and test standalone TV Studio
+      shell: bash
+      run: |
+        cmake -S tools/tvstudio -B studio-standalone -DTV_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+        cmake --build studio-standalone --parallel 4
+        ctest --test-dir studio-standalone --output-on-failure
 
 
   build-linux-big-endian:
@@ -90,6 +104,7 @@ jobs:
           cd /app
           cmake . -DCMAKE_BUILD_TYPE= -DTV_BUILD_USING_GPM=OFF -DTV_BUILD_EXAMPLES=OFF -DTV_BUILD_TESTS=ON -DTV_LIBRARY_UNITY_BUILD=ON -DCMAKE_CXX_FLAGS=
           cmake --build . -j$(nproc)
+          ctest --output-on-failure
 
   build-windows-msvc32:
     name: Windows (MSVC) (Win32)
@@ -168,6 +183,10 @@ jobs:
       run: cmake --build . --config Debug --target tvision -- -p:UseMultiToolTask=true -p:CL_MPcount=$(nproc)
 
 
+    - name: Test
+      shell: bash
+      run: ctest --output-on-failure -C Release
+
     - name: Build generated TV Studio application
       shell: bash
       run: |
@@ -235,6 +254,10 @@ jobs:
     - name: Build
       shell: bash
       run: cmake --build . -j$(sysctl -n hw.logicalcpu)
+
+    - name: Test
+      shell: bash
+      run: ctest --output-on-failure -C Release
 
     - name: Build generated TV Studio application
       shell: bash

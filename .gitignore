@@ -1,6 +1,8 @@
 *
 
 # Вручную включаем каталоги верхнего уровня.
+!docs/
+!docs/**/
 !examples/
 !examples/**/
 !include/

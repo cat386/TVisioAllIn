@@ -7,11 +7,9 @@ foreach(app ${TV_MODERN_EXAMPLES})
     tv_app_common(${app})
 endforeach()
 if(TV_BUILD_TESTS)
-    add_custom_target(modern-examples-smoke ALL DEPENDS ${TV_MODERN_EXAMPLES})
     foreach(app ${TV_MODERN_EXAMPLES})
-        add_custom_command(TARGET modern-examples-smoke POST_BUILD
-            COMMAND $<TARGET_FILE:${app}> --smoke
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-            VERBATIM)
+        add_test(NAME modern-${app}-smoke COMMAND $<TARGET_FILE:${app}> --smoke)
+        set_tests_properties(modern-${app}-smoke PROPERTIES
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR} TIMEOUT 60)
     endforeach()
 endif()

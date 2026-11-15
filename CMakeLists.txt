@@ -10,7 +10,7 @@
 # или новее. TV_LIBRARY_UNITY_BUILD (по умолчанию OFF) — ускорять сборку
 # основной библиотеки за счёт объединения единиц трансляции; требуется
 # CMake 3.16 или новее, размер библиотеки может увеличиться.
-# TV_BUILD_TESTS (по умолчанию OFF) — собирать и запускать тесты.
+# TV_BUILD_TESTS (по умолчанию OFF) — собирать тесты; запуск через CTest.
 #
 #
 
@@ -159,7 +159,10 @@ if (MAY_USE_STATIC_RTL)
     tv_message_mp(STATUS "Link w/static RTL: ${TV_USE_STATIC_RTL}")
 endif()
 
-option(TV_BUILD_TESTS "Build and run tests" OFF)
+option(TV_BUILD_TESTS "Build tests (run with CTest)" OFF)
+if (TV_BUILD_TESTS)
+    enable_testing()
+endif()
 
 # Библиотека
 

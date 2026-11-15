@@ -421,3 +421,24 @@ TEST(StudioProcess, ArgumentsNeverBecomeShellOperators)
     EXPECT_EQ(args[2], "C:\\source");
     EXPECT_TRUE(rejects([] { splitArguments("\"missing"); }));
 }
+
+TEST(StudioProcess, PreservesWindowsPathsAndEmptyArguments)
+{
+    auto args = splitArguments(R"args(\\server\share "\\server\shared folder" C:\source\file.cpp "C:\folder with spaces\\" '' "")args");
+    ASSERT_EQ(args.size(), 6u);
+    EXPECT_EQ(args[0], R"(\\server\share)");
+    EXPECT_EQ(args[1], R"(\\server\shared folder)");
+    EXPECT_EQ(args[2], R"(C:\source\file.cpp)");
+    EXPECT_EQ(args[3], R"(C:\folder with spaces\)");
+    EXPECT_EQ(args[4], "");
+    EXPECT_EQ(args[5], "");
+}
+TEST(StudioProcess, QuotesHaveExplicitEscapingRules)
+{
+    auto args = splitArguments(R"args("say \"hello\"" 'C:\path\' "it's fine" a\"b)args");
+    ASSERT_EQ(args.size(), 4u);
+    EXPECT_EQ(args[0], "say \"hello\"");
+    EXPECT_EQ(args[1], R"(C:\path\)");
+    EXPECT_EQ(args[2], "it's fine");
+    EXPECT_EQ(args[3], "a\"b");
+}

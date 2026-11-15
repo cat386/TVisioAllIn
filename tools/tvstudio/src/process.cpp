@@ -56,10 +56,29 @@ std::vector<std::string> splitArguments(const std::string &s)
     for (size_t i = 0; i < s.size(); ++i)
     {
         char c = s[i];
-        if (c == '\\' && i + 1 < s.size() &&
-            (s[i + 1] == '"' || s[i + 1] == '\\' || s[i + 1] == '\''))
+        // Backslashes are path separators unless directly before a double quote.
+        // There, use Windows argument rules: pairs are literal slashes and an
+        // odd final slash escapes the quote. Single-quoted text is literal.
+        if (c == '\\' && quote != '\'')
         {
-            word += s[++i];
+            size_t end = i;
+            while (end < s.size() && s[end] == '\\')
+                ++end;
+            size_t count = end - i;
+            if (end < s.size() && s[end] == '"')
+            {
+                word.append(count / 2, '\\');
+                if (count % 2)
+                    word += '"';
+                else
+                    quote = quote ? 0 : '"';
+                i = end;
+            }
+            else
+            {
+                word.append(count, '\\');
+                i = end - 1;
+            }
             started = true;
         }
         else if (quote)

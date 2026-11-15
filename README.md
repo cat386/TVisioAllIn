@@ -8,7 +8,7 @@ This distribution targets modern Windows, Linux and macOS builds through CMake. 
 
 ## Modern widgets, themes and data
 
-Optional C++14 additions inspired by [tvision-rs](https://github.com/cat386/tvision-rs): Gruvbox/Twilight themes, a 256-color picker, virtual tables, lazy trees, progress bars, numeric/combo inputs, JSON/CSV models and file panels. Gruvbox is the default color theme for all applications, including the classic examples. Include `<tvision/modern.h>` for the additional widgets and explicit theme selection; the classic API remains available. See the [comparison, API guide and ten examples](docs/modern.md). Build with `-DTV_BUILD_EXAMPLES=ON -DTV_BUILD_TESTS=ON` to also run the model and example smoke checks.
+Optional C++14 additions inspired by [tvision-rs](https://github.com/cat386/tvision-rs): Gruvbox/Twilight themes, a 256-color picker, virtual tables, lazy trees, progress bars, numeric/combo inputs, JSON/CSV models and file panels. Gruvbox is the default color theme for all applications, including the classic examples. Include `<tvision/modern.h>` for the additional widgets and explicit theme selection; the classic API remains available. See the [comparison, API guide and ten examples](docs/modern.md). Build with `-DTV_BUILD_EXAMPLES=ON -DTV_BUILD_TESTS=ON`, then run CTest for the model and example smoke checks.
 
 ## TV Studio C++
 
@@ -18,19 +18,27 @@ Based on Turbo Vision by Borland and the modern port by magiblot and contributor
 
 ![tvedit in Konsole](https://user-images.githubusercontent.com/20713561/81506401-4fffdd80-92f6-11ea-8826-ee42612eb82a.png)
 
-I started this as a personal project at the very end of 2018. By May 2020 I considered it was very close to feature parity with the original, and decided to make it open.
+## Quick start
 
-The original goals of this project were:
+Build the library, examples and TV Studio with a C++17 compiler and CMake 3.16+:
 
-* Making Turbo Vision work on Unix/Linux by altering the legacy codebase as little as possible.
-* Keeping it functional on DOS/Windows.
-* Being as compatible as possible at the source code level with old Turbo Vision applications. This led me to implement some of the Borland C++ RTL functions, as explained below.
+```sh
+cmake -S . -B build -DTV_BUILD_TESTS=ON
+cmake --build build --config Release --parallel
+ctest --test-dir build -C Release --output-on-failure
+```
 
-At one point I considered I had done enough, and that any attempts at revamping the library and overcoming its original limitations would require either extending the API or breaking backward compatibility, and that a major rewrite would be most likely necessary.
+Run `build/hello` or `build/tvstudio`; with Visual Studio, use
+`build/Release/hello.exe` or `build/Release/tvstudio.exe`.
+For a C++14 library-only build, pass `-DTV_BUILD_TOOLS=OFF -DTV_BUILD_EXAMPLES=OFF`. Tests require C++17.
+Tests run explicitly through CTest after building; compilation alone does not run them.
+Use `ctest --test-dir build -C Release -N` to list tests or `-R tvstudio` to
+select the Studio checks.
 
-However, between July and August 2020 I found the way to integrate full-fledged Unicode support into the existing architecture, wrote the [Turbo](https://github.com/magiblot/turbo) text editor and also made the new features available on Windows. So I am confident that Turbo Vision can now meet many of the expectations of modern users and programmers.
-
-The original location of this project is https://github.com/magiblot/tvision.
+Supported targets are Windows, Linux and macOS. The API reference below is
+inherited from the upstream port and includes historical Borland/DOS notes;
+these do not imply support for building this distribution on DOS.
+See [upstream history](docs/upstream-history.md) for the original author's account.
 
 # Table of contents
 
@@ -71,8 +79,8 @@ Turbo Vision does not excel at any of those, but it certainly overcomes many of 
 
 ## How do I use Turbo Vision?
 
-You can get started with the [Turbo Vision For C++ User's Guide](https://archive.org/details/BorlandTurboVisionForCUserSGuide/mode/1up), and look at the sample applications [`hello`](https://github.com/magiblot/tvision/blob/master/hello.cpp), [`tvdemo`](https://github.com/magiblot/tvision/tree/master/examples/tvdemo) and [`tvedit`](https://github.com/magiblot/tvision/tree/master/examples/tvedit). Once you grasp the basics,
-I suggest you take a look at the [Turbo Vision 2.0 Programming Guide](https://archive.org/details/bitsavers_borlandTurrogrammingGuide1992_25707423), which is, in my opinion, more intuitive and easier to understand, despite using Pascal. By then you will probably be interested in the [`palette`](https://github.com/magiblot/tvision/tree/master/examples/palette) example, which contains a detailed description of how palettes are used.
+You can get started with the [Turbo Vision For C++ User's Guide](https://archive.org/details/BorlandTurboVisionForCUserSGuide/mode/1up), and look at the sample applications [`hello`](hello.cpp), [`tvdemo`](examples/tvdemo) and [`tvedit`](examples/tvedit). Once you grasp the basics,
+I suggest you take a look at the [Turbo Vision 2.0 Programming Guide](https://archive.org/details/bitsavers_borlandTurrogrammingGuide1992_25707423), which is, in my opinion, more intuitive and easier to understand, despite using Pascal. By then you will probably be interested in the [`palette`](examples/palette) example, which contains a detailed description of how palettes are used.
 
 Don't forget to check out the <a href="#features">features</a> and <a href="#apichanges">API changes</a> sections as well.
 

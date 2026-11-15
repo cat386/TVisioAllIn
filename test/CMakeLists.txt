@@ -15,14 +15,8 @@ if (TV_BUILD_TESTS)
         ${PROJECT_NAME}
     )
 
-    add_custom_command(
-        OUTPUT ${PROJECT_NAME}-test-passed
-        COMMAND ${PROJECT_NAME}-test
-        COMMAND ${CMAKE_COMMAND} -E touch ${PROJECT_NAME}-test-passed
-        DEPENDS ${PROJECT_NAME}-test
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    )
-    add_custom_target(${PROJECT_NAME}-test-run ALL DEPENDS ${PROJECT_NAME}-test-passed)
+    add_test(NAME tvision-unit COMMAND $<TARGET_FILE:${PROJECT_NAME}-test>)
+    set_tests_properties(tvision-unit PROPERTIES TIMEOUT 120)
 
     if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.16.0" AND TV_OPTIMIZE_BUILD)
         target_precompile_headers(${PROJECT_NAME}-test PRIVATE "${CMAKE_CURRENT_LIST_DIR}/test.h")

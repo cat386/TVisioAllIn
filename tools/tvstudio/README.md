@@ -11,6 +11,7 @@
 ```sh
 cmake -S . -B build -DTV_BUILD_TOOLS=ON -DTV_BUILD_TESTS=ON
 cmake --build build --config Release --parallel
+ctest --test-dir build -C Release --output-on-failure
 ```
 
 Ninja/Make: `build/tvstudio`; Windows MSVC: `build/Release/tvstudio.exe`. В Windows MinGW это `build/tvstudio.exe`. Запускайте в UTF-8 терминале; рекомендуется размер от 100×30. Также можно собрать отдельно: `cmake -S tools/tvstudio -B build-studio`.
@@ -104,7 +105,13 @@ if (forms::contact::run(app, data) == cmOK) {
 }
 ```
 
-Поля `build`: `cmake`, `generator`, `compiler`, `profile`, `target`, `extra`, `run_args`, `executable`, `jobs`. Для существующего CMake-проекта задайте `target` и, при необходимости, `executable`. Путь исполняемого файла может быть абсолютным либо относительно проекта. `extra` и `run_args` разбираются как аргументы с кавычками, не как shell-скрипт. Команда LSP хранится в верхнем поле `clangd`, например `"C:/LLVM/bin/clangd.exe" --clang-tidy`.
+Поля `build`: `cmake`, `generator`, `compiler`, `profile`, `target`, `extra`, `run_args`, `executable`, `jobs`. Для существующего CMake-проекта задайте `target` и, при необходимости, `executable`. Путь исполняемого файла может быть абсолютным либо относительно проекта. `extra` и `run_args` разбираются как аргументы с кавычками, не как shell-скрипт. Обратные слеши в путях сохраняются, включая UNC `\\server\share`.
+Одинарные кавычки задают буквальный аргумент. Перед двойной кавычкой пары
+обратных слешей дают один слеш, а нечётный последний слеш экранирует кавычку.
+Например, аргумент с пробелами и завершающим слешем: `"C:\my folder\\"`.
+Эти правила относятся к содержимому `extra`/`run_args` после чтения YAML/JSON.
+
+Команда LSP хранится в верхнем поле `clangd`, например `"C:/LLVM/bin/clangd.exe" --clang-tidy`.
 
 ## Отличия от Rust TV Studio
 
@@ -114,4 +121,4 @@ YAML поддерживает используемые моделями влож
 
 Свойства редактируются через YAML, а не через полный набор специализированных диалогов Rust-версии. Пока нет rubber-band выбора, LSP hover/quick-fix/rename, автопар скобок, полного лексера C++, поиска по всем файлам, recent-projects и постоянных общих настроек. CTest запускает тесты вашего CMake-проекта, если они в нём объявлены.
 
-Тесты моделей, генератора, Unicode-путей, процессов, отмены, LSP и всех видов компонентов запускаются при сборке с `TV_BUILD_TESTS=ON`; `tvstudio --smoke` дополнительно проверяет пересоздание дизайнера и отмену в редакторе.
+Тесты моделей, генератора, Unicode-путей, процессов, отмены, LSP и всех видов компонентов собираются с `TV_BUILD_TESTS=ON` и запускаются через CTest; `tvstudio --smoke` дополнительно проверяет пересоздание дизайнера и отмену в редакторе.
